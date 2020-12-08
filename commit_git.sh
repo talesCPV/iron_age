@@ -6,10 +6,10 @@ git init
 
 git add .
 
+git commit -m "by_script_tales"
+
 git remote add origin "https://github.com/talesCPV/iron_age.git"
 
 git commit -m "by_script"
 
 git push -f origin master
-
-

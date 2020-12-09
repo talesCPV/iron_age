@@ -32,6 +32,7 @@ function setup() {
     textSize(20);
     textAlign(10, 10);
     scene.push(new Background("top","cavern","ceiling_01",48));
+    scene.push(new Background("down","cavern","ceiling_01",48));
 
 }
 
@@ -95,12 +96,24 @@ function draw_background(){
     let y = scene[i].y;
     let kind = scene[i].kind;
     let name = scene[i].name;
+    let dir = scene[i].dir;
 
-    let dots = back_sprites["cavern"]["ceiling_01"].dots;
+    let dots = back_sprites[kind][name].dots;
     let lines = back_sprites[kind][name].lines;
 
-    draw_pixel(x,y,dots);
-    draw_pixel(x,y,lines);
+    if(dir == "top"){
+        draw_pixel(x,y,dots);
+        draw_pixel(x,y,lines);
+    }else{
+        push();
+        scale(1,-1)
+        draw_pixel(x,y,dots);
+        draw_pixel(x,y,lines);
+        pop();
+
+    }
+
+
 
     scene[i].move();
 
@@ -158,7 +171,7 @@ function Background(dir,kind,name,width){
   if(dir == "top"){
     this.y = 70;
   }else{
-    this.y = height;
+    this.y = -height + 40;
   }
 }
 

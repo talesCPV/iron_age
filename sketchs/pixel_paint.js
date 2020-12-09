@@ -23,14 +23,15 @@ function setup() {
     bSlider.position(30, 60);
     btnClear = createButton('New');
     btnClear.position(360, 15);
+    btnClear.mousePressed(limpa);
     btnSave = createButton('Save');
     btnSave.position(360, 45);
-    btnClear.mousePressed(limpa);
+    btnSave.mousePressed(generator);
     sld_X = createSlider(0, 150, grid_size[0]);
     sld_X.position(520, 17);
     sld_Y = createSlider(0, 150, grid_size[1]);
     sld_Y.position(520, 42);
-    sld_Z = createSlider(0, 30, grid);
+    sld_Z = createSlider(4, 40, grid);
     sld_Z.position(520, 67);
     fill(100);
     limpa(0);
@@ -40,18 +41,18 @@ function draw() {
     background(0, 0, 0);
     draw_header();
     if (mouseIsPressed) {
-        if(mouseY > header && mouseX < grid * grid_size[0] && mouseX > grid ){
-            let hor = Math.floor(width/grid);
-            let ver = Math.floor(height/grid);
-            let x = Math.floor(map(mouseX,0,width,0,hor));
-            let y = Math.floor(map(mouseY ,0,height,0,ver));
-        if(mouseButton === LEFT){
-                my_draw[x][y - Math.floor(header/grid)] = color;
+        if(mouseY > header && mouseX < grid * grid_size[0] + grid && mouseX > grid ){
+//            let hor = Math.floor(width/grid);
+//            let ver = Math.floor(height/grid);
+            let x = Math.floor( (mouseX - grid) / grid);
+            let y = Math.floor((mouseY - header) / grid);
+            if(mouseButton === LEFT){
+                my_draw[x][y] = color;
             }
             if(mouseButton === CENTER){
-                rSlider.elt.value = my_draw[x][y - Math.floor(header/grid)][0];
-                gSlider.elt.value = my_draw[x][y - Math.floor(header/grid)][1];
-                bSlider.elt.value = my_draw[x][y - Math.floor(header/grid)][2];
+                rSlider.elt.value = my_draw[x][y][0];
+                gSlider.elt.value = my_draw[x][y][1];
+                bSlider.elt.value = my_draw[x][y][2];
             }
         }else if(mouseX  >= 290 && mouseX <= 345 && mouseY >= 10 && mouseY <= 55){
           bg_color = color;
@@ -91,10 +92,10 @@ function draw_header(){
 
 function draw_grid(){
 
-  for(let i=1; i<grid_size[0]; i++){
+  for(let i=0; i<grid_size[0]; i++){
     for(let j=0; j<grid_size[1];j++){
         fill(my_draw[i][j]);
-        rect(i * grid,j * grid + header, grid, grid);
+        rect((i + 1) * grid,j * grid + header, grid, grid);
     }
   }
 
@@ -111,6 +112,15 @@ function limpa(N){
       for(let j=0; j<grid_size[1];j++){
           my_draw[i].push(color);
       }
+    }
+  }
+}
+
+function generator(){
+  for(let i=0; i<my_draw.length ; i++){ // create grid array
+    my_draw.push([]);
+    for(let j=0; j<my_draw[i].length;j++){
+        alert([j,i,my_draw[j][i]])
     }
   }
 }

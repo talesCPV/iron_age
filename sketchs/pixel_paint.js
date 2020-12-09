@@ -115,7 +115,7 @@ function limpa(N){
 }
 
 function Blank_obj(x,y){
-  this.nome = [];
+  this.nome =  new Object();
   this.nome.x = x;
   this.nome.y = y;
   this.nome.dots = []
@@ -125,15 +125,14 @@ function Blank_obj(x,y){
 
 function generator(){
   let used_colors = [];
+  let last_color = bg_color;
   let dots = [];
   let lines = [];
   let json_file = new Blank_obj(grid_size[0],grid_size[1]);
 
-/*
   for(let y=0; y<my_draw.length ; y++){ // create grid array
-    my_draw.push([]);
     for(let x=0; x<my_draw[y].length;x++){
-      if(used_colors.indexOf(my_draw[x][y]) != -1)
+      if(json_file.nome.indexOf(my_draw[x][y]) != -1)
       {
          // element found
       }else{
@@ -143,7 +142,7 @@ function generator(){
 //        alert([x,y,my_draw[x][y]])
     }
   }
-*/
+
 
 console.log (json_file);
 

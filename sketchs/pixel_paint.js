@@ -1,7 +1,7 @@
 let screen = [1200,800];
 let header = 90;
-let grid = 20;
-let grid_size = [40,20]
+let grid = 34;
+let grid_size = [20,20]
 let my_draw = [];
 let color = [0,0,0];
 let bg_color = [0,0,0];
@@ -42,10 +42,8 @@ function draw() {
     draw_header();
     if (mouseIsPressed) {
         if(mouseY > header && mouseX < grid * grid_size[0] + grid && mouseX > grid ){
-//            let hor = Math.floor(width/grid);
-//            let ver = Math.floor(height/grid);
             let x = Math.floor( (mouseX - grid) / grid);
-            let y = Math.floor((mouseY - header) / grid);
+            let y = grid_size[1] - 1 - (Math.floor((mouseY - header) / grid));
             if(mouseButton === LEFT){
                 my_draw[x][y] = color;
             }
@@ -94,8 +92,8 @@ function draw_grid(){
 
   for(let i=0; i<grid_size[0]; i++){
     for(let j=0; j<grid_size[1];j++){
-        fill(my_draw[i][j]);
-        rect((i + 1) * grid,j * grid + header, grid, grid);
+        fill(my_draw[i][grid_size[1]- 1 - j]); // inverte o eixo Y
+        rect((i + 1) * grid,j * grid + header , grid, grid);
     }
   }
 
@@ -116,11 +114,37 @@ function limpa(N){
   }
 }
 
+function Blank_obj(x,y){
+  this.nome = [];
+  this.nome.x = x;
+  this.nome.y = y;
+  this.nome.dots = []
+  this.nome.lines = []
+}
+
+
 function generator(){
-  for(let i=0; i<my_draw.length ; i++){ // create grid array
+  let used_colors = [];
+  let dots = [];
+  let lines = [];
+  let json_file = new Blank_obj(grid_size[0],grid_size[1]);
+
+/*
+  for(let y=0; y<my_draw.length ; y++){ // create grid array
     my_draw.push([]);
-    for(let j=0; j<my_draw[i].length;j++){
-        alert([j,i,my_draw[j][i]])
+    for(let x=0; x<my_draw[y].length;x++){
+      if(used_colors.indexOf(my_draw[x][y]) != -1)
+      {
+         // element found
+      }else{
+        used_colors.push(my_draw[x][y])
+        console.log(my_draw[x][y]);
+      }
+//        alert([x,y,my_draw[x][y]])
     }
   }
+*/
+
+console.log (json_file);
+
 }

@@ -1,9 +1,10 @@
-let screen = [800,600];
-let header = 80;
+let screen = [1200,800];
+let header = 90;
 let grid = 20;
+let grid_size = [40,20]
 let my_draw = [];
 let color = [0,0,0];
-
+let bg_color = [0,0,0];
 
 function preload() {
 
@@ -20,27 +21,54 @@ function setup() {
     gSlider.position(30, 35);
     bSlider = createSlider(0, 255, 50);
     bSlider.position(30, 60);
+    btnClear = createButton('New');
+    btnClear.position(360, 15);
     btnSave = createButton('Save');
-    btnSave.position(300, 15);
-    btnClear = createButton('Clear');
-    btnClear.position(380, 15);
+    btnSave.position(360, 45);
     btnClear.mousePressed(limpa);
-
+    sld_X = createSlider(0, 150, grid_size[0]);
+    sld_X.position(520, 17);
+    sld_Y = createSlider(0, 150, grid_size[1]);
+    sld_Y.position(520, 42);
+    sld_Z = createSlider(0, 30, grid);
+    sld_Z.position(520, 67);
     fill(100);
-    for(let i=0; i<width/grid; i++){ // create grid array
-        my_draw.push([]);
-        for(let j=0; j<(height - header)/grid;j++){
-            my_draw[i].push(color);
-        }
-    }
+    limpa(0);
 }
 
 function draw() {
     background(0, 0, 0);
+    draw_header();
+    if (mouseIsPressed) {
+        if(mouseY > header && mouseX < grid * grid_size[0] && mouseX > grid ){
+            let hor = Math.floor(width/grid);
+            let ver = Math.floor(height/grid);
+            let x = Math.floor(map(mouseX,0,width,0,hor));
+            let y = Math.floor(map(mouseY ,0,height,0,ver));
+        if(mouseButton === LEFT){
+                my_draw[x][y - Math.floor(header/grid)] = color;
+            }
+            if(mouseButton === CENTER){
+                rSlider.elt.value = my_draw[x][y - Math.floor(header/grid)][0];
+                gSlider.elt.value = my_draw[x][y - Math.floor(header/grid)][1];
+                bSlider.elt.value = my_draw[x][y - Math.floor(header/grid)][2];
+            }
+        }else if(mouseX  >= 290 && mouseX <= 345 && mouseY >= 10 && mouseY <= 55){
+          bg_color = color;
+        }
+
+      }
+    draw_grid();
+
+
+}
+
+function draw_header(){
     const r = rSlider.value();
     const g = gSlider.value();
     const b = bSlider.value();
     color = [r,g,b];
+    grid = sld_Z.value();
     fill(0, 102, 153);
     noStroke();
     text('R', 5, 17);
@@ -49,61 +77,40 @@ function draw() {
     text(r, 190, 17);
     text(g, 190, 42);
     text(b, 190, 67);
-    stroke(150);
+    text("BRUSH", 225, 75);
+    text("BCKGD", 290, 75);
+    text("GRID X "+sld_X.value(), 435, 25);
+    text("GRID Y "+sld_Y.value(), 435, 50);
+    text("ZOOM "+sld_Z.value(), 435, 75);
     fill(color)
-    rect(225,10, 55,55)
-
-    if (mouseIsPressed) {
-        if(mouseY > header){
-            let hor = Math.floor(width/grid);
-            let ver = Math.floor(height/grid);
-            let x = Math.floor(map(mouseX,0,width,0,hor));
-            let y = Math.floor(map(mouseY ,0,height,0,ver));
-        if(mouseButton === LEFT){
-                my_draw[x][y - Math.floor(header/grid)] = color;        
-            }
-            if(mouseButton === CENTER){
-                rSlider.elt.value = my_draw[x][y - Math.floor(header/grid)][0];
-                gSlider.elt.value = my_draw[x][y - Math.floor(header/grid)][1];
-                bSlider.elt.value = my_draw[x][y - Math.floor(header/grid)][2];
-            }
-        }
-      }
-
-    draw_grid();
-    
+    stroke(150);
+    rect(225,10, 55,45)
+    fill(bg_color)
+    rect(290,10, 55,45)
 }
 
 function draw_grid(){
-    for(let i=0; i<width/grid; i++){
-        for(let j=0; j<(height - header)/grid;j++){
-            fill(my_draw[i][j]);
-            rect(i * grid,j * grid + header, grid, grid);
-        }
+
+  for(let i=1; i<grid_size[0]; i++){
+    for(let j=0; j<grid_size[1];j++){
+        fill(my_draw[i][j]);
+        rect(i * grid,j * grid + header, grid, grid);
     }
+  }
+
 }
 
-function limpa(){
-    if (confirm('Deseja apagar todo o desenho?')) {
-        for(let i=0; i<width/grid; i++){
-            for(let j=0; j<(height - header)/grid;j++){
-                my_draw[i][j] = [0,0,0];
-            }
-        }    
+function limpa(N){
+  if (N==0 || confirm('Deseja apagar todo o desenho?')) {
+    my_draw = [];
+    color = [0,0,0];
+    bg_color = [0,0,0];
+    grid_size = [sld_X.value(),sld_Y.value()];
+    for(let i=0; i<grid_size[0]; i++){ // create grid array
+      my_draw.push([]);
+      for(let j=0; j<grid_size[1];j++){
+          my_draw[i].push(color);
+      }
     }
-}
-
-function keyPressed() {
-  keyIndex = key.charCodeAt(0);
-
-  if(keyIndex == 32 || keyCode === UP_ARROW){ // SPACE OR UP => TURN THE PIECE
-
-  }else if(keyCode === LEFT_ARROW){    
-
-  }else if(keyCode === RIGHT_ARROW){
-
-  }else if(keyCode === DOWN_ARROW){
- 
   }
 }
-

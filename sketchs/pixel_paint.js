@@ -1,7 +1,7 @@
 let screen = [1200,800];
 let header = 90;
 let grid = 34;
-let grid_size = [20,20]
+let grid_size = [5,5]
 let my_draw = [];
 let color = [0,0,0];
 let bg_color = [0,0,0];
@@ -126,24 +126,44 @@ function Blank_obj(x,y){
 function generator(){
   let used_colors = [];
   let last_color = bg_color;
+  let last_x = 0;
+
   let dots = [];
   let lines = [];
   let json_file = new Blank_obj(grid_size[0],grid_size[1]);
 
   for(let y=0; y<my_draw.length ; y++){ // create grid array
     for(let x=0; x<my_draw[y].length;x++){
-      if(json_file.nome.indexOf(my_draw[x][y]) != -1)
+      if(my_draw[x][y] != last_color){
+        last_color = my_draw[x][y];
+        alert([x,last_x]);
+        if(x - last_x > 1 || x == grid_size[0] - 1){
+          lines.push([x,y,x - last_x,1])
+        }else{
+          dots.push([x,y])
+        }
+        last_x = x;
+
+      }
+
+
+      if(json_file.nome.dots.indexOf(my_draw[x][y]) != -1)
       {
          // element found
       }else{
         used_colors.push(my_draw[x][y])
-        console.log(my_draw[x][y]);
+//        console.log(my_draw[x][y]);
       }
 //        alert([x,y,my_draw[x][y]])
+      last_color = my_draw[x][y]
     }
+    console.log("dots:"+dots);
+    console.log("lines:"+lines);
+    lines = [];
+    dots = [];
   }
 
 
-console.log (json_file);
+//console.log ("json:"+json_file);
 
 }

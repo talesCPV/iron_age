@@ -40,7 +40,7 @@ function setup() {
     sld_Z.position(560, 67);
     edtName = createInput();
     edtName.position(790, 17);
-    edtName.elt.value = "Object";
+    edtName.elt.value = "object_name";
     fill(100);
     limpa(0);
 }
@@ -54,7 +54,7 @@ function draw() {
             let y = grid_size[1] - 1 - (Math.floor((mouseY - header) / grid));
             if(mouseButton === LEFT){
               if(tool == "BRUSH"){
-                my_draw[x][y] = color;                
+                my_draw[x][y] = color;
               }else{
 
               }

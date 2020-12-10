@@ -185,6 +185,7 @@ function generator(){
   json_output = JSON.stringify(json_file);
 
   console.log ("json:"+json_output);
+  saveJSON(json_output, 'sprite.json');
 
 }
 

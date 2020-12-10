@@ -1,7 +1,7 @@
 let screen = [1200,800];
 let header = 90;
 let grid = 34;
-let grid_size = [5,5]
+let grid_size = [10,5]
 let my_draw = [];
 let color = [0,0,0];
 let bg_color = [0,0,0];
@@ -28,12 +28,15 @@ function setup() {
     btnSave = createButton('Save');
     btnSave.position(360, 45);
     btnSave.mousePressed(generator);
-    sld_X = createSlider(0, 150, grid_size[0]);
+    sld_X = createSlider(1, 150, grid_size[0]);
     sld_X.position(520, 17);
-    sld_Y = createSlider(0, 150, grid_size[1]);
+    sld_Y = createSlider(1, 150, grid_size[1]);
     sld_Y.position(520, 42);
     sld_Z = createSlider(4, 40, grid);
     sld_Z.position(520, 67);
+    edtName = createInput();
+    edtName.position(750, 17);
+    edtName.elt.value = "Object";
     fill(100);
     limpa(0);
 }
@@ -82,6 +85,7 @@ function draw_header(){
     text("GRID X "+sld_X.value(), 435, 25);
     text("GRID Y "+sld_Y.value(), 435, 50);
     text("ZOOM "+sld_Z.value(), 435, 75);
+    text("Name:", 680, 25);
     fill(color)
     stroke(150);
     rect(225,10, 55,45)
@@ -115,12 +119,12 @@ function limpa(N){
   }
 }
 
-function Blank_obj(x,y){
-  this.nome =  new Object();
-  this.nome.x = x;
-  this.nome.y = y;
-  this.nome.dots = []
-  this.nome.lines = []
+function Blank_obj(x,y,name){
+  this[name] =  new Object();
+  this[name].x = x;
+  this[name].y = y;
+  this[name].dots = []
+  this[name].lines = []
 }
 
 function Data_obj(color){
@@ -141,9 +145,9 @@ function generator(){
   let r1,g1,b1,r2,g2,b2;
   let index = 0;
 
-  let json_file = new Blank_obj(grid_size[0],grid_size[1]);
+  let json_file = new Blank_obj(grid_size[0],grid_size[1],edtName.elt.value);
 
-  for(let y=0; y<my_draw.length ; y++){ 
+  for(let y=0; y<my_draw[0].length ; y++){
     last_x = 0;
     r1 = my_draw[0][y][0];
     g1 = my_draw[0][y][1];
@@ -153,8 +157,8 @@ function generator(){
         r2 = my_draw[x][y][0];
         g2 = my_draw[x][y][1];
         b2 = my_draw[x][y][2];
-       
-        if(r1!=r2 || g1!=g2 || b1!=b2){
+
+        if(r1!=r2 || g1!=g2 || b1!=b2 || x == my_draw[y].length -1){
           index = find_color(r1,g1,b1,colors);// colors.indexOf([r1,g1,b1]);
           if(index == -1){
             colors.push([r1,g1,b1])
@@ -180,8 +184,12 @@ function generator(){
 //  console.log("dots:"+JSON.stringify(dots));
 //  console.log("lines:"+JSON.stringify(lines));
 
-  json_file.nome.dots.push(dots);
-  json_file.nome.lines.push(lines);
+//  json_file.nome.dots.push(dots);
+//  json_file.nome.lines.push(lines);
+alert(json_file[edtName.elt.value])
+  json_file[edtName.elt.value].dots = dots;
+  json_file[edtName.elt.value].lines = lines;
+
   json_output = JSON.stringify(json_file);
 
   console.log ("json:"+json_output);

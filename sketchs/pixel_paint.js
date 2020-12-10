@@ -147,13 +147,16 @@ function generator(){
 
   let json_file = new Blank_obj(grid_size[0],grid_size[1],edtName.elt.value);
 
+
+//  alert([my_draw.length,my_draw[0].length])
+
   for(let y=0; y<my_draw[0].length ; y++){
     last_x = 0;
     r1 = my_draw[0][y][0];
     g1 = my_draw[0][y][1];
     b1 = my_draw[0][y][2];
 
-    for(let x=0; x<my_draw[y].length;x++){
+    for(let x=0; x<my_draw.length;x++){
         r2 = my_draw[x][y][0];
         g2 = my_draw[x][y][1];
         b2 = my_draw[x][y][2];
@@ -186,14 +189,15 @@ function generator(){
 
 //  json_file.nome.dots.push(dots);
 //  json_file.nome.lines.push(lines);
-alert(json_file[edtName.elt.value])
   json_file[edtName.elt.value].dots = dots;
   json_file[edtName.elt.value].lines = lines;
 
   json_output = JSON.stringify(json_file);
+  alert(json_output);
+
 
   console.log ("json:"+json_output);
-  saveJSON(json_output, 'sprite.json');
+  saveJSON(json_output, edtName.elt.value+'.json');
 
 }
 

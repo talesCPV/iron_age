@@ -31,7 +31,7 @@ function setup() {
     createCanvas(screen[0], screen[1]);
     textSize(20);
     textAlign(10, 10);
-    scene.push(new Background("top","cavern","ceiling_01",48));
+    scene.push(new Background("top","cavern","teste2",48));
     scene.push(new Background("down","cavern","ceiling_01",48));
 
 }

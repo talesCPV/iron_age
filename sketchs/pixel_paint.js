@@ -6,6 +6,8 @@ let my_draw = [];
 let color = [0,0,0];
 let bg_color = [0,0,0];
 let json_output;
+let tool = "BRUSH";
+
 
 function preload() {
 
@@ -16,6 +18,8 @@ function setup() {
     createCanvas(screen[0], screen[1]);
     textSize(15);
     stroke(255);
+    sld_tool = createSlider(0, 2, 0);
+    sld_tool.position(360, 45);
     rSlider = createSlider(0, 255, 50);
     rSlider.position(30, 10);
     gSlider = createSlider(0, 255, 50);
@@ -26,16 +30,16 @@ function setup() {
     btnClear.position(360, 15);
     btnClear.mousePressed(limpa);
     btnSave = createButton('Save');
-    btnSave.position(360, 45);
+    btnSave.position(790, 45);
     btnSave.mousePressed(generator);
     sld_X = createSlider(1, 150, grid_size[0]);
-    sld_X.position(520, 17);
+    sld_X.position(560, 17);
     sld_Y = createSlider(1, 150, grid_size[1]);
-    sld_Y.position(520, 42);
+    sld_Y.position(560, 42);
     sld_Z = createSlider(4, 40, grid);
-    sld_Z.position(520, 67);
+    sld_Z.position(560, 67);
     edtName = createInput();
-    edtName.position(750, 17);
+    edtName.position(790, 17);
     edtName.elt.value = "Object";
     fill(100);
     limpa(0);
@@ -49,7 +53,11 @@ function draw() {
             let x = Math.floor( (mouseX - grid) / grid);
             let y = grid_size[1] - 1 - (Math.floor((mouseY - header) / grid));
             if(mouseButton === LEFT){
-                my_draw[x][y] = color;
+              if(tool == "BRUSH"){
+                my_draw[x][y] = color;                
+              }else{
+
+              }
             }
             if(mouseButton === CENTER){
                 rSlider.elt.value = my_draw[x][y][0];
@@ -80,17 +88,23 @@ function draw_header(){
     text(r, 190, 17);
     text(g, 190, 42);
     text(b, 190, 67);
-    text("BRUSH", 225, 75);
+    text(tool, 225, 75);
     text("BCKGD", 290, 75);
-    text("GRID X "+sld_X.value(), 435, 25);
-    text("GRID Y "+sld_Y.value(), 435, 50);
-    text("ZOOM "+sld_Z.value(), 435, 75);
-    text("Name:", 680, 25);
+    text("BRUSH/FILL", 360, 75);
+    text("GRID X "+sld_X.value(), 475, 25);
+    text("GRID Y "+sld_Y.value(), 475, 50);
+    text("ZOOM "+sld_Z.value(), 475, 75);
+    text("Name:", 720, 25);
     fill(color)
     stroke(150);
     rect(225,10, 55,45)
     fill(bg_color)
     rect(290,10, 55,45)
+    if(sld_tool.value() == 0){
+      tool = "BRUSH";
+    }else{
+      tool = "FILL"
+    }
 }
 
 function draw_grid(){

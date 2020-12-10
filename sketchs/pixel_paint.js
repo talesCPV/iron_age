@@ -5,6 +5,7 @@ let grid_size = [5,5]
 let my_draw = [];
 let color = [0,0,0];
 let bg_color = [0,0,0];
+let json_output;
 
 function preload() {
 
@@ -122,48 +123,76 @@ function Blank_obj(x,y){
   this.nome.lines = []
 }
 
+function Data_obj(color){
+  this.color = color;
+  this.data = [];
+}
+
+Data_obj.prototype.add = function(data){
+  this.data.push(data);
+}
+
 
 function generator(){
-  let used_colors = [];
-  let last_color = bg_color;
-  let last_x = 0;
-
+  let last_x;
+  let colors = [];
   let dots = [];
   let lines = [];
+  let r1,g1,b1,r2,g2,b2;
+  let index = 0;
+
   let json_file = new Blank_obj(grid_size[0],grid_size[1]);
 
-  for(let y=0; y<my_draw.length ; y++){ // create grid array
+  for(let y=0; y<my_draw.length ; y++){ 
+    last_x = 0;
+    r1 = my_draw[0][y][0];
+    g1 = my_draw[0][y][1];
+    b1 = my_draw[0][y][2];
+
     for(let x=0; x<my_draw[y].length;x++){
-      if(my_draw[x][y] != last_color){
-        last_color = my_draw[x][y];
-        alert([x,last_x]);
-        if(x - last_x > 1 || x == grid_size[0] - 1){
-          lines.push([x,y,x - last_x,1])
-        }else{
-          dots.push([x,y])
-        }
-        last_x = x;
+        r2 = my_draw[x][y][0];
+        g2 = my_draw[x][y][1];
+        b2 = my_draw[x][y][2];
+       
+        if(r1!=r2 || g1!=g2 || b1!=b2){
+          index = find_color(r1,g1,b1,colors);// colors.indexOf([r1,g1,b1]);
+          if(index == -1){
+            colors.push([r1,g1,b1])
+            dots.push(new Data_obj([r1,g1,b1]))
+            lines.push(new Data_obj([r1,g1,b1]))
+            index = colors.length - 1; // aponta p/ ultimo registro
+          }
+        if(x - last_x == 1 ){
+            dots[index].data.push([last_x,y]);
+          }else{
+            lines[index].data.push([last_x,y,x - last_x,1]);
+          }
+          last_x = x;
+          r1 = my_draw[x][y][0];
+          g1 = my_draw[x][y][1];
+          b1 = my_draw[x][y][2];
 
       }
 
-
-      if(json_file.nome.dots.indexOf(my_draw[x][y]) != -1)
-      {
-         // element found
-      }else{
-        used_colors.push(my_draw[x][y])
-//        console.log(my_draw[x][y]);
-      }
-//        alert([x,y,my_draw[x][y]])
-      last_color = my_draw[x][y]
     }
-    console.log("dots:"+dots);
-    console.log("lines:"+lines);
-    lines = [];
-    dots = [];
+
   }
+//  console.log("dots:"+JSON.stringify(dots));
+//  console.log("lines:"+JSON.stringify(lines));
 
+  json_file.nome.dots.push(dots);
+  json_file.nome.lines.push(lines);
+  json_output = JSON.stringify(json_file);
 
-//console.log ("json:"+json_file);
+  console.log ("json:"+json_output);
 
+}
+
+function find_color(r,g,b, obj){
+  for(let i=0; i< obj.length;i++){
+    if(obj[i][0] == r && obj[i][1] == g && obj[i][2] == b ){
+      return i;
+    }
+  }
+  return -1;
 }

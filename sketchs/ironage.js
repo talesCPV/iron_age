@@ -2,7 +2,7 @@
 let screen = [800,600];
 let sprites;
 let back_sprites;
-let pixel = 3; // tamanho do pixel
+let pixel = 6; // tamanho do pixel
 let fps = [0,45]; // 1- contador | 2- qtd de frames
 let score = 0;
 let player_speed = 3;
@@ -31,7 +31,7 @@ function setup() {
     createCanvas(screen[0], screen[1]);
     textSize(20);
     textAlign(10, 10);
-    scene.push(new Background("top","cavern","teste"));
+    scene.push(new Background("top","cavern","object_name"));
     scene.push(new Background("down","cavern","ceiling_01"));
 
 }
@@ -179,7 +179,7 @@ Background.prototype.move = function(){
   this.x --;
   this.count ++;
 
-  if(this.count == (this.width * pixel) - 3 * pixel ) {
+  if(this.count == (this.width * pixel) ) {
     scene.push(new Background(this.dir, this.kind,this.name, this.width));
   }
   if(this.x <= -50*pixel){

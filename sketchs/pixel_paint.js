@@ -1,7 +1,7 @@
 let screen = [1200,800];
 let header = 150;
 let grid = 34;
-let grid_size = [10,5]
+let grid_size = [25,10]
 let my_draw = [];
 let color = [0,0,0];
 let bg_color = [0,0,0];
@@ -13,37 +13,45 @@ function setup() {
     createCanvas(screen[0], screen[1]);
     textSize(15);
     stroke(255);
+
     btnNew = createButton('New');
-    btnNew.position(30, 15);
+    btnNew.position(25, 15);
     btnNew.mousePressed(new_file);
+    btnSave = createButton('Save');
+    btnSave.position(25, 45);
+    btnSave.mousePressed(generator);
+
     sld_tool = createSlider(0, 1, 0);
-    sld_tool.position(90, 90);
+    sld_tool.position(110, 90);
+
     sld_R = createSlider(0, 255, 50);
     sld_R.position(270, 10);
     sld_G = createSlider(0, 255, 50);
     sld_G.position(270, 35);
     sld_B = createSlider(0, 255, 50);
     sld_B.position(270, 60);
+
     sld_X = createSlider(1, 150, grid_size[0]);
     sld_X.position(560, 10);
     sld_Y = createSlider(1, 150, grid_size[1]);
     sld_Y.position(560, 35);
     sld_Z = createSlider(4, 40, grid);
     sld_Z.position(560, 60);
+
+    input = createFileInput();
+    input.position(790, 17);
+
     edtName = createInput();
-    edtName.position(790, 17);
+    edtName.position(790, 50);
     edtName.elt.value = "object_name";
-    btnSave = createButton('Save');
-    btnSave.position(30, 45);
-    btnSave.mousePressed(generator);
     btnFlipX = createButton('Flip X');
-    btnFlipX.position(790, 45);
+    btnFlipX.position(300, 90);
     btnFlipX.mousePressed(flip_x);
     btnFlipY = createButton('Flip Y');
-    btnFlipY.position(870, 45);
+    btnFlipY.position(400, 90);
     btnFlipY.mousePressed(flip_y);
     btnUnod = createButton('Undo');
-    btnUnod.position(950, 45);
+    btnUnod.position(500, 90);
     btnUnod.mousePressed(restore_undo);
     fill(100);
     new_file(0);
@@ -53,32 +61,38 @@ function draw() {
     background(0, 0, 0);
     draw_header();
     if (mouseIsPressed) {
-        if(mouseY > header && mouseX < grid * grid_size[0] + grid && mouseX > grid ){
-            let x = Math.floor( (mouseX - grid) / grid);
-            let y = grid_size[1] - 1 - (Math.floor((mouseY - header) / grid));
-            if(mouseButton === LEFT){
-              add_undo();
-              if(tool == "BRUSH"){
-                my_draw[x][y] = color;
-              }else{
-                let old_col = [ my_draw[x][y][0],my_draw[x][y][1],my_draw[x][y][2] ];
-                fill_color(x,y,color, old_col);
-
-              }
-            }
-            if(mouseButton === CENTER){
-              sld_R.elt.value = my_draw[x][y][0];
-              sld_G.elt.value = my_draw[x][y][1];
-              sld_B.elt.value = my_draw[x][y][2];
-            }
-        }else if(mouseX  >= 175 && mouseX <= 230 && mouseY >= 10 && mouseY <= 55){
-          bg_color = color;
+      if(mouseY > header && mouseX < grid * grid_size[0] + grid && mouseX > grid ){
+        let x = Math.floor( (mouseX - grid) / grid);
+        let y = grid_size[1] - 1 - (Math.floor((mouseY - header) / grid));
+        if(mouseButton === LEFT){
+//          add_undo();
+          if(tool == "BRUSH"){
+            my_draw[x][y] = color;
+          }else{
+            let old_col = [ my_draw[x][y][0],my_draw[x][y][1],my_draw[x][y][2] ];
+            fill_color(x,y,color, old_col);
+  
+          }
         }
-
+        if(mouseButton === CENTER){
+          sld_R.elt.value = my_draw[x][y][0];
+          sld_G.elt.value = my_draw[x][y][1];
+          sld_B.elt.value = my_draw[x][y][2];
+        }
+      }else if(mouseX  >= 175 && mouseX <= 230 && mouseY >= 10 && mouseY <= 55){
+        bg_color = color;
       }
+
+    }
     draw_grid();
 
 
+}
+
+function mousePressed() {
+  if(mouseY > header && mouseX < grid * grid_size[0] + grid && mouseX > grid && mouseButton === LEFT){   
+      add_undo();
+  }
 }
 
 function draw_header(){ // monta o cabeçalho com as ferramentas
@@ -101,7 +115,7 @@ function draw_header(){ // monta o cabeçalho com as ferramentas
     text("GRID X "+sld_X.value(), 460, 17);
     text("GRID Y "+sld_Y.value(), 460, 42);
     text("ZOOM "+sld_Z.value(), 460, 67);
-    text("Name:", 725, 40);
+    text("Name:", 725, 75);
     fill(color)
     stroke(150);
     rect(110,10, 55,45)
@@ -126,7 +140,7 @@ function draw_grid(){ // monta desenho na tela
 
 function new_file(N){ // novo arquivo => apaga tudo
   if (N==0 || confirm('Deseja apagar todo o desenho?')) {
-    add_undo();
+    undo = [];
     my_draw = [];
     color = [0,0,0];
     bg_color = [0,0,0];
@@ -277,11 +291,20 @@ function flip_y(){
 }
 
 function add_undo(){
-  let copy_draw = my_draw.slice();
-  undo.push(copy_draw);
-  if(undo.length > 10){
-    undo.splice(0,1);
-  }
+//  if(my_draw.length > 0){
+    let copy_draw =[];
+    for(let x=0; x<my_draw.length ; x++){
+      copy_draw.push([])
+      let copy_line = my_draw[x].slice();
+      for(let y=0; y<copy_line.length ; y++){
+        copy_draw[x].push(copy_line[y]);
+      }
+    }
+    undo.push(copy_draw);
+    if(undo.length > 15){
+      undo.splice(0,1);
+    }
+//  }
 }
 
 function restore_undo(){

@@ -8,12 +8,6 @@ let bg_color = [0,0,0];
 let json_output;
 let tool = "BRUSH";
 
-
-function preload() {
-
-
-}
-
 function setup() {
     createCanvas(screen[0], screen[1]);
     textSize(15);
@@ -76,7 +70,7 @@ function draw() {
 
 }
 
-function draw_header(){
+function draw_header(){ // monta o cabeçalho com as ferramentas
     const r = sld_R.value();
     const g = sld_G.value();
     const b = sld_B.value();
@@ -109,8 +103,7 @@ function draw_header(){
     }
 }
 
-function draw_grid(){
-
+function draw_grid(){ // monta desenho na tela
   for(let i=0; i<grid_size[0]; i++){
     for(let j=0; j<grid_size[1];j++){
         fill(my_draw[i][grid_size[1]- 1 - j]); // inverte o eixo Y
@@ -120,7 +113,7 @@ function draw_grid(){
 
 }
 
-function new_file(N){
+function new_file(N){ // novo arquivo => apaga tudo
   if (N==0 || confirm('Deseja apagar todo o desenho?')) {
     my_draw = [];
     color = [0,0,0];
@@ -152,66 +145,59 @@ Data_obj.prototype.add = function(data){
   this.data.push(data);
 }
 
-
-function generator(){
+function generator(){ // gera o JSON dos sprites
   let last_x;
   let last_color;
   let colors = [];
   let dots = [];
   let lines = [];
-  let index = 0;
   let json_file = new Blank_obj(grid_size[0],grid_size[1],edtName.elt.value);
 
   for(let y=0; y<my_draw[0].length ; y++){
     last_x = 0;
     last_color = my_draw[0][y];
-    for(let x=0; x<my_draw.length;x++){
-      
+    for(let x=0; x<my_draw.length;x++){      
       if( !comp_colors(last_color,my_draw[x][y]) ){
-        index = find_color(last_color,colors);
-        if(index == -1 ){              
-          colors.push(last_color)
-          dots.push(new Data_obj(last_color))
-          lines.push(new Data_obj(last_color))
-          index = colors.length - 1; // aponta p/ ultimo registro
-        }
-        if(x - last_x == 1 ){
-          dots[index].data.push([last_x,y]);
-        }else{
-          lines[index].data.push([last_x,y,x - last_x,1]);
-        }
+        add_points(x,y,last_x,last_color,colors,dots,lines);
         last_x = x;
         last_color = my_draw[x][y];
       }
 
     }
-    index = find_color(last_color,colors);
-    if(index == -1 ){              
-      colors.push(last_color)
-      dots.push(new Data_obj(last_color))
-      lines.push(new Data_obj(last_color))
-      index = colors.length - 1; // aponta p/ ultimo registro
-    }
-    if(my_draw.length - last_x == 1 ){
-      dots[index].data.push([last_x,y]);
-    }else{
-      lines[index].data.push([last_x,y,my_draw.length - last_x,1]);
-    }
+    add_points(my_draw.length,y,last_x,last_color,colors,dots,lines);
 
   }
-
+  let index = find_color(bg_color,colors);
+  if(index >= 0 ){
+    dots.splice(index,1);
+    lines.splice(index,1);
+  }
+  
   json_file[edtName.elt.value].dots = dots;
   json_file[edtName.elt.value].lines = lines;
-
   json_output = JSON.stringify(json_file);
   alert(json_output);
-
   console.log ("json:"+json_output);
   saveJSON(json_output, edtName.elt.value+'.json');
 
 }
 
-function find_color(col, obj){
+function add_points(x,y,last_x,last_color,colors,dots,lines){ // adiciona os pontos nos vetores
+  let index = find_color(last_color,colors);
+  if(index == -1 ){              
+    colors.push(last_color)
+    dots.push(new Data_obj(last_color))
+    lines.push(new Data_obj(last_color))
+    index = colors.length - 1; // aponta p/ ultimo registro
+  }
+  if(x - last_x == 1 ){
+    dots[index].data.push([last_x,y]);
+  }else{
+    lines[index].data.push([last_x,y,x - last_x,1]);
+  }  
+}
+
+function find_color(col, obj){ // verifica se esta cor já apareceu antes, se sim retorna o indice
   for(let i=0; i< obj.length;i++){
     if(comp_colors(obj[i],col)){
       return i;
@@ -220,54 +206,42 @@ function find_color(col, obj){
   return -1;
 }
 
-
-function comp_colors(C1,C2){
-
+function comp_colors(C1,C2){ // compara duas cores 
   if(C1[0] == C2[0] && C1[1] == C2[1] && C1[2] == C2[2] ){
     return true;
   }else{
     return false;
   }
-
 }
 
-
-function fill_color(x,y,new_col, old_col){
-
-  let this_col = [my_draw[x][y][0],my_draw[x][y][1],my_draw[x][y][2]];
-
+function fill_color(x,y,new_col, old_col){ // pinta uma área
   if(comp_colors(my_draw[x][y],old_col) && !comp_colors(new_col,old_col)){
-//    alert([x,y,new_col,old_col,this_col])
-
     my_draw[x][y] = [new_col[0],new_col[1],new_col[2]];
 
+    // Verifica os vizinhos
     if(x > 0){
       if( comp_colors(my_draw[x-1][y][0], old_col[0]) ){
         fill_color(x-1,y,new_col, old_col);
       }
-
     }
+
     if(x < my_draw.length -1){
       if( comp_colors(my_draw[x+1][y][0], old_col[0]) ){
         fill_color(x+1,y,new_col, old_col);
       }
-
     }
+
     if(y > 0){
       if( comp_colors(my_draw[x][y-1][0], old_col[0]) ){
         fill_color(x,y-1,new_col, old_col);
       }      
-
     }
+
     if(y < my_draw[0].length -1){
       if( comp_colors(my_draw[x][y+1][0], old_col[0]) ){
         fill_color(x,y+1,new_col, old_col);
       }       
-
     }
 
   }
-
-
-
 }

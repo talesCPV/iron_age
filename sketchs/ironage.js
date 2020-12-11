@@ -2,7 +2,7 @@
 let screen = [800,600];
 let sprites;
 let back_sprites;
-let pixel = 6; // tamanho do pixel
+let pixel = 3; // tamanho do pixel
 let fps = [0,45]; // 1- contador | 2- qtd de frames
 let score = 0;
 let player_speed = 3;

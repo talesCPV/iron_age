@@ -38,12 +38,12 @@ function setup() {
     sld_Z = createSlider(4, 40, grid);
     sld_Z.position(560, 60);
 
-    input = createFileInput();
+    input = createFileInput(open_file);
     input.position(790, 17);
-
     edtName = createInput();
     edtName.position(790, 50);
     edtName.elt.value = "object_name";
+
     btnFlipX = createButton('Flip X');
     btnFlipX.position(300, 90);
     btnFlipX.mousePressed(flip_x);
@@ -53,6 +53,7 @@ function setup() {
     btnUnod = createButton('Undo');
     btnUnod.position(500, 90);
     btnUnod.mousePressed(restore_undo);
+    
     fill(100);
     new_file(0);
 }
@@ -152,6 +153,20 @@ function new_file(N){ // novo arquivo => apaga tudo
       }
     }
   }
+}
+
+function open_file(file) {
+  alert(file)
+/*  print(file);
+  if (file.type === 'image') {
+    img = createImg(file.data, '');
+    img.hide();
+  } else {
+    img = null;
+  }
+
+  */
+
 }
 
 function Blank_obj(x,y,name){

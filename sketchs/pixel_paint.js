@@ -116,6 +116,7 @@ function draw_header(){ // monta o cabeçalho com as ferramentas
     text("GRID X "+sld_X.value(), 460, 17);
     text("GRID Y "+sld_Y.value(), 460, 42);
     text("ZOOM "+sld_Z.value(), 460, 67);
+    text("Open:", 725, 32);
     text("Name:", 725, 75);
     fill(color)
     stroke(150);
@@ -156,18 +157,43 @@ function new_file(N){ // novo arquivo => apaga tudo
 }
 
 function open_file(file) {
-  alert(file)
-/*  print(file);
-  if (file.type === 'image') {
-    img = createImg(file.data, '');
-    img.hide();
-  } else {
-    img = null;
+  if(file.subtype == "json"){
+    let temp_file =  JSON.parse(file.data);
+    let name = Object.keys(temp_file)[0];
+    sld_X.elt.value = temp_file[name].x;
+    sld_Y.elt.value = temp_file[name].y;
+    edtName.elt.value = name;
+    new_file(0);
+    let dots = temp_file[name].dots;
+    let lines = temp_file[name].lines;
+
+    draw_pixel(dots);
+    draw_pixel(lines);
+//    print(file);
+  }else{
+    alert("This is not a correct JSON file.");
   }
 
-  */
-
 }
+
+function draw_pixel(N){
+  for(let i=0;i<N.length;i++){
+      let color = N[i].color;
+      for(let j=0; j<N[i].data.length; j++){
+          let x = N[i].data[j][0];
+          let y = N[i].data[j][1];          
+          if(N[i].data[j].length > 2){
+            let x2 =  N[i].data[j][2];
+            for(let k=0;k<x2;k++){
+              my_draw[x+k][y] = color;
+            }
+          }else{
+            my_draw[x][y] = color;
+          }
+      }
+  }
+}
+
 
 function Blank_obj(x,y,name){
   this[name] =  new Object();

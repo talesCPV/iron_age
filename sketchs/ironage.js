@@ -10,14 +10,12 @@ let sprite_name = "main"
 let shooting = [];
 let bombing = [];
 let scene = [];
-
-
+let scene_speed = 2;
 
 let player = {
     x :  screen[0] / 2,
     y : screen[1] /2
 }
-
 
 let p1 = player;
 let enemy = [];
@@ -33,7 +31,6 @@ function setup() {
     textAlign(10, 10);
     scene.push(new Background("top","cavern","object_name"));
     scene.push(new Background("down","cavern","ceiling_01"));
-
 }
 
 function draw() {
@@ -44,14 +41,11 @@ function draw() {
     fps[0] += 1;
     if(fps[0] >= fps[1]){
         fps[0] = 0;
-
-
     }
 
     for(let i=0;i<shooting.length;i++){
         shooting[i].draw();
     }
-
 
     draw_background();
 
@@ -97,7 +91,6 @@ function draw_background(){
     let kind = scene[i].kind;
     let name = scene[i].name;
     let dir = scene[i].dir;
-
     let dots = back_sprites[kind][name].dots;
     let lines = back_sprites[kind][name].lines;
 
@@ -112,12 +105,7 @@ function draw_background(){
         pop();
 
     }
-
-
-
     scene[i].move();
-
-
   }
 
 }
@@ -176,10 +164,10 @@ function Background(dir,kind,name){
 }
 
 Background.prototype.move = function(){
-  this.x --;
+  this.x -= scene_speed;
   this.count ++;
 
-  if(this.count == (this.width * pixel) ) {
+  if(this.count ==  Math.floor(this.width / scene_speed * pixel)  ) {
     scene.push(new Background(this.dir, this.kind,this.name, this.width));
   }
   if(this.x <= -50*pixel){
@@ -189,6 +177,7 @@ Background.prototype.move = function(){
 }
 
 function joystick(){
+
     if(keyIsDown(LEFT_ARROW) && p1.x > 20) {
         p1.x -= player_speed;
     }else if(keyIsDown(RIGHT_ARROW) && p1.x < width - 100) {
@@ -206,12 +195,8 @@ function joystick(){
     }
 }
 
-
-
 function keyPressed() {
     keyIndex = key.charCodeAt(0);
-
-//    alert(keyIndex)
 
     if(keyIndex == 32 || keyIndex == 122 ){ // SPACE OR UP => TURN THE PIECE
         shooting.push(new Shoting(player.x,player.y));

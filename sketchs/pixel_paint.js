@@ -7,6 +7,7 @@ let color = [0,0,0];
 let bg_color = [0,0,0];
 let json_output;
 let tool = "BRUSH";
+let undo = [];
 
 function setup() {
     createCanvas(screen[0], screen[1]);
@@ -35,6 +36,15 @@ function setup() {
     btnSave = createButton('Save');
     btnSave.position(30, 45);
     btnSave.mousePressed(generator);
+    btnFlipX = createButton('Flip X');
+    btnFlipX.position(790, 45);
+    btnFlipX.mousePressed(flip_x);
+    btnFlipY = createButton('Flip Y');
+    btnFlipY.position(870, 45);
+    btnFlipY.mousePressed(flip_y);
+    btnUnod = createButton('Undo');
+    btnUnod.position(950, 45);
+    btnUnod.mousePressed(restore_undo);
     fill(100);
     new_file(0);
 }
@@ -47,6 +57,7 @@ function draw() {
             let x = Math.floor( (mouseX - grid) / grid);
             let y = grid_size[1] - 1 - (Math.floor((mouseY - header) / grid));
             if(mouseButton === LEFT){
+              add_undo();
               if(tool == "BRUSH"){
                 my_draw[x][y] = color;
               }else{
@@ -115,6 +126,7 @@ function draw_grid(){ // monta desenho na tela
 
 function new_file(N){ // novo arquivo => apaga tudo
   if (N==0 || confirm('Deseja apagar todo o desenho?')) {
+    add_undo();
     my_draw = [];
     color = [0,0,0];
     bg_color = [0,0,0];
@@ -156,7 +168,7 @@ function generator(){ // gera o JSON dos sprites
   for(let y=0; y<my_draw[0].length ; y++){
     last_x = 0;
     last_color = my_draw[0][y];
-    for(let x=0; x<my_draw.length;x++){      
+    for(let x=0; x<my_draw.length;x++){
       if( !comp_colors(last_color,my_draw[x][y]) ){
         add_points(x,y,last_x,last_color,colors,dots,lines);
         last_x = x;
@@ -172,7 +184,7 @@ function generator(){ // gera o JSON dos sprites
     dots.splice(index,1);
     lines.splice(index,1);
   }
-  
+
   json_file[edtName.elt.value].dots = dots;
   json_file[edtName.elt.value].lines = lines;
   json_output = JSON.stringify(json_file);
@@ -184,7 +196,7 @@ function generator(){ // gera o JSON dos sprites
 
 function add_points(x,y,last_x,last_color,colors,dots,lines){ // adiciona os pontos nos vetores
   let index = find_color(last_color,colors);
-  if(index == -1 ){              
+  if(index == -1 ){
     colors.push(last_color)
     dots.push(new Data_obj(last_color))
     lines.push(new Data_obj(last_color))
@@ -194,7 +206,7 @@ function add_points(x,y,last_x,last_color,colors,dots,lines){ // adiciona os pon
     dots[index].data.push([last_x,y]);
   }else{
     lines[index].data.push([last_x,y,x - last_x,1]);
-  }  
+  }
 }
 
 function find_color(col, obj){ // verifica se esta cor já apareceu antes, se sim retorna o indice
@@ -206,7 +218,7 @@ function find_color(col, obj){ // verifica se esta cor já apareceu antes, se si
   return -1;
 }
 
-function comp_colors(C1,C2){ // compara duas cores 
+function comp_colors(C1,C2){ // compara duas cores
   if(C1[0] == C2[0] && C1[1] == C2[1] && C1[2] == C2[2] ){
     return true;
   }else{
@@ -234,14 +246,49 @@ function fill_color(x,y,new_col, old_col){ // pinta uma área
     if(y > 0){
       if( comp_colors(my_draw[x][y-1][0], old_col[0]) ){
         fill_color(x,y-1,new_col, old_col);
-      }      
+      }
     }
 
     if(y < my_draw[0].length -1){
       if( comp_colors(my_draw[x][y+1][0], old_col[0]) ){
         fill_color(x,y+1,new_col, old_col);
-      }       
+      }
     }
 
+  }
+}
+
+function flip_x(){
+  add_undo();
+  let copy_draw = my_draw.slice();
+  for(let x=0; x<my_draw.length ; x++){
+    my_draw[x] = copy_draw[my_draw.length - 1 - x];
+  }
+}
+
+function flip_y(){
+  add_undo();
+  for(let x=0; x<my_draw.length ; x++){
+    let copy_line = my_draw[x].slice();
+    for(let y=0; y<copy_line.length ; y++){
+      my_draw[x][y] = copy_line[copy_line.length - 1 - y];
+    }
+  }
+}
+
+function add_undo(){
+  let copy_draw = my_draw.slice();
+  undo.push(copy_draw);
+  if(undo.length > 10){
+    undo.splice(0,1);
+  }
+}
+
+function restore_undo(){
+//  alert(undo.length)
+  if(undo.length > 0){
+    let copy_draw = undo[undo.length-1].slice();
+    my_draw = copy_draw;
+    undo.splice(undo.length-1,1);
   }
 }

@@ -7,10 +7,12 @@ let fps = [0,45]; // 1- contador | 2- qtd de frames
 let score = 0;
 let player_speed = 3;
 let sprite_name = "main"
+let player_weapon = "laser";
+let player_bomb = "bomb";
 let shooting = [];
 let bombing = [];
 let scene = [];
-let scene_speed = 2;
+let scene_speed = 1;
 
 let player = {
     x :  screen[0] / 2,
@@ -29,8 +31,8 @@ function setup() {
     createCanvas(screen[0], screen[1]);
     textSize(20);
     textAlign(10, 10);
-    scene.push(new Background("top","cavern","object_name"));
-    scene.push(new Background("down","cavern","ceiling_01"));
+    scene.push(new Background("top","cavern","montanhas"));
+    scene.push(new Background("down","cavern","arvores"));
 }
 
 function draw() {
@@ -94,17 +96,15 @@ function draw_background(){
     let dots = back_sprites[kind][name].dots;
     let lines = back_sprites[kind][name].lines;
 
+    push();
+//    alert([name,x,y])
     if(dir == "top"){
-        draw_pixel(x,y,dots);
-        draw_pixel(x,y,lines);
-    }else{
-        push();
-        scale(1,-1)
-        draw_pixel(x,y,dots);
-        draw_pixel(x,y,lines);
-        pop();
-
+//        alert([dir,y])
+        scale(1,-1);
     }
+    draw_pixel(x,y,dots);
+    draw_pixel(x,y,lines);
+    pop();
     scene[i].move();
   }
 
@@ -118,7 +118,7 @@ function Shoting(x,y){
 
 Shoting.prototype.draw = function(){
     this.x += 6;
-    draw_sprite(this.x,this.y,"weapons","main")
+    draw_sprite(this.x,this.y,"weapons",player_weapon)
 
     if(this.x > width + 10){
         shooting.splice(0,1);
@@ -157,9 +157,9 @@ function Background(dir,kind,name){
   this.count = 0;
   this.x =  screen[0]+100 ;
   if(dir == "top"){
-    this.y = 70;
+    this.y = -50;
   }else{
-    this.y = -height + 40;
+    this.y = height - 20;
   }
 }
 
@@ -168,7 +168,7 @@ Background.prototype.move = function(){
   this.count ++;
 
   if(this.count ==  Math.floor(this.width / scene_speed * pixel)  ) {
-    scene.push(new Background(this.dir, this.kind,this.name, this.width));
+    scene.push(new Background(this.dir, this.kind,this.name));
   }
   if(this.x <= -50*pixel){
     scene.splice(0,1);

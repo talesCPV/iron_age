@@ -17,6 +17,7 @@ let stage = 0;
 let song;
 let stage_length;
 let stage_percent = 0;
+let sound_efects = [];
 
 let player = {
     x :  screen[0] / 2,
@@ -30,7 +31,11 @@ function preload() {
     sprites = loadJSON('assets/ironage.json');
     back_sprites = loadJSON('assets/background.json');
     font = loadFont('assets/press_start.ttf');
-//    song = loadSound('assets/Trooper.mp3');
+    sound_efects.push(loadSound('assets/efects/start.wav')) // [0]
+    sound_efects.push(loadSound('assets/efects/shot.wav')) // [1]
+
+    
+    song = loadSound('assets/Trooper.mp3');
 
 }
 

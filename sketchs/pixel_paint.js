@@ -257,10 +257,18 @@ function add_points(x,y,last_x,last_color,colors,dots,lines){ // adiciona os pon
     lines.push(new Data_obj(last_color))
     index = colors.length - 1; // aponta p/ ultimo registro
   }
+
+  // muda o pivot pro centro do sprite
+  let new_x = last_x - Math.ceil(grid_size[0] / 2);  
+  let new_y = y - Math.ceil(grid_size[1] / 2);  
+
+
   if(x - last_x == 1 ){
-    dots[index].data.push([last_x,y]);
+    dots[index].data.push([new_x,new_y]);
+//    dots[index].data.push([last_x,y]);
   }else{
-    lines[index].data.push([last_x,y,x - last_x,1]);
+    lines[index].data.push([new_x,new_y,x - last_x,1]);
+//    lines[index].data.push([last_x,y,x - last_x,1]);
   }
 }
 

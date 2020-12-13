@@ -41,7 +41,6 @@ Enemy_ball.prototype.move = function(N){
     push();
     translate(this.x, this.y);
     rotate(this.angle);
- 
     draw_sprite(0,0,"enemys",this.name);
     pop();
 

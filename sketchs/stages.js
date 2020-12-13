@@ -1,4 +1,6 @@
 
+let button_press = false;
+
 
 function draw_screen(sel_stage){
 
@@ -12,11 +14,24 @@ function draw_screen(sel_stage){
         text("PUSH ENTER TO START ", 210, 400, width, 150);
         text("2020 - by Tales & Cabelo ", 160, 550, width, 150);
 
+        if(button_press){
+            if(!sound_efects[0].isPlaying()){
+                sound_efects[0].play();
+            }  
+
+            if( Math.floor(sound_efects[0].duration()) <  Math.ceil(sound_efects[0].currentTime()) ){
+                song.playMode('restart');
+                song.play();
+                //            stage_length = Math.floor(song.duration());
+                stage = 1;
+                button_press = false;
+            }
+
+
+        }
+
         if(keyIsDown(ENTER) ) {
-//            song.playMode('restart');
-//            song.play();
-//            stage_length = Math.floor(song.duration());
-            stage = 1;
+            button_press = true;
         }
         
     }else if(sel_stage == 1){

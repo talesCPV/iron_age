@@ -3,16 +3,18 @@ let screen = [800,600];
 let sprites;
 let back_sprites;
 let pixel = 3; // tamanho do pixel
-let fps = [0,45]; // 1- contador | 2- qtd de frames
 let score = 0;
 let player_speed = 3;
 let sprite_name = "main"
 let player_weapon = "laser";
 let player_bomb = "bomb";
+let enemys = [];
 let shooting = [];
 let bombing = [];
 let scene = [];
 let scene_speed = 1;
+let stage = 0;
+let song;
 
 let player = {
     x :  screen[0] / 2,
@@ -25,34 +27,29 @@ let enemy = [];
 function preload() {
     sprites = loadJSON('assets/ironage.json');
     back_sprites = loadJSON('assets/background.json');
+    font = loadFont('assets/press_start.ttf');
+    song = loadSound('assets/Trooper.mp3');
+
 }
 
 function setup() {
     createCanvas(screen[0], screen[1]);
     textSize(20);
     textAlign(10, 10);
+    textFont(font);
     scene.push(new Background("top","cavern","montanhas"));
     scene.push(new Background("down","cavern","arvores"));
+    enemy.push(new Enemy(1000,500,"moais_open",50));
+
 }
 
 function draw() {
     background(0, 0, 0);
-    fill(255,0,0);
-    text("SCORE: "+score, 10, 10, 150, 150);
+    fill(255);
 
-    fps[0] += 1;
-    if(fps[0] >= fps[1]){
-        fps[0] = 0;
-    }
+    draw_screen(stage);
 
-    for(let i=0;i<shooting.length;i++){
-        shooting[i].draw();
-    }
 
-    draw_background();
-
-    joystick();
-    draw_sprite(p1.x,p1.y,"player",sprite_name);
 
 }
 
@@ -97,9 +94,7 @@ function draw_background(){
     let lines = back_sprites[kind][name].lines;
 
     push();
-//    alert([name,x,y])
     if(dir == "top"){
-//        alert([dir,y])
         scale(1,-1);
     }
     draw_pixel(x,y,dots);
@@ -111,97 +106,5 @@ function draw_background(){
 }
 
 
-function Shoting(x,y){
-    this.x = x + 25 * pixel;
-    this.y = y - 5 * pixel;
-}
 
-Shoting.prototype.draw = function(){
-    this.x += 6;
-    draw_sprite(this.x,this.y,"weapons",player_weapon)
 
-    if(this.x > width + 10){
-        shooting.splice(0,1);
-    }
-}
-
-function Bombing(x,y){
-    this.x = x + 5 * pixel;
-    this.y = y + pixel;
-    this.start = [x + 5* pixel,y];
-}
-
-Bombing.prototype.draw = function(){
-    let SPT;
-    if(this.x < this.start[0] + 8 * pixel){
-        this.x += 1;
-        SPT = "bomb";
-    }else{
-        this.x += 1;
-        this.y += 3;
-        SPT = "falling_bomb";
-    }
-    draw_sprite(this.x,this.y,"weapons",SPT)
-
-    if(this.y > height + 10){
-        shooting.splice(0,1);
-    }
-
-}
-
-function Background(dir,kind,name){
-  this.dir = dir;
-  this.name = name;
-  this.kind = kind;
-  this.width = back_sprites[kind][name].x;
-  this.count = 0;
-  this.x =  screen[0]+100 ;
-  if(dir == "top"){
-    this.y = -50;
-  }else{
-    this.y = height - 20;
-  }
-}
-
-Background.prototype.move = function(){
-  this.x -= scene_speed;
-  this.count ++;
-
-  if(this.count ==  Math.floor(this.width / scene_speed * pixel)  ) {
-    scene.push(new Background(this.dir, this.kind,this.name));
-  }
-  if(this.x <= -50*pixel){
-    scene.splice(0,1);
-  }
-
-}
-
-function joystick(){
-
-    if(keyIsDown(LEFT_ARROW) && p1.x > 20) {
-        p1.x -= player_speed;
-    }else if(keyIsDown(RIGHT_ARROW) && p1.x < width - 100) {
-        p1.x += player_speed;
-    }
-
-    if(keyIsDown(UP_ARROW) && p1.y > 50) {
-        p1.y -= player_speed;
-        sprite_name = "up";
-    }else if(keyIsDown(DOWN_ARROW) && p1.y < height - 40) {
-        p1.y += player_speed;
-        sprite_name = "down";
-    }else{
-        sprite_name = "main";
-    }
-}
-
-function keyPressed() {
-    keyIndex = key.charCodeAt(0);
-
-    if(keyIndex == 32 || keyIndex == 122 ){ // SPACE OR UP => TURN THE PIECE
-        shooting.push(new Shoting(player.x,player.y));
-    }
-    if( keyIndex == 120 ){ // SPACE OR UP => TURN THE PIECE
-        shooting.push(new Bombing(player.x,player.y));
-    }
-}

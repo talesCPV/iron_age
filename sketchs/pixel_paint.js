@@ -75,7 +75,7 @@ function draw() {
   
           }
         }
-        if(mouseButton === CENTER){
+        if(mouseButton === CENTER && y >= 0){          
           sld_R.elt.value = my_draw[x][y][0];
           sld_G.elt.value = my_draw[x][y][1];
           sld_B.elt.value = my_draw[x][y][2];

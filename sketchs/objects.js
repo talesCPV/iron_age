@@ -1,19 +1,4 @@
 
-function Enemy(x,y,name, energy){
-    this.x = x;
-    this.y = y;
-    this.name = name;
-    this.energy = energy;
-}
-
-Enemy.prototype.move = function(){
-    this.x -= 1;
-    draw_sprite(this.x,this.y,"enemys",this.name);
-
-    if(this.x < -100){
-        enemy.splice(0,1);
-    }
-}
 
 function Shoting(x,y){
     this.x = x + 25 * pixel;

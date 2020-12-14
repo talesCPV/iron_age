@@ -1,6 +1,6 @@
 
 let button_press = false;
-
+let time = 0;
 
 function draw_screen(sel_stage){
 
@@ -8,7 +8,7 @@ function draw_screen(sel_stage){
 
     if(sel_stage == 0){
 
-        draw_sprite(width/2 - 85 * pixel / 2,250,"splash","logo");
+        draw_sprite(width/2 - 85 * pixel / 2,250,pl_sprites.splash["logo"]);
         fill(255);
 
         text("PUSH ENTER TO START ", 210, 400, width, 150);
@@ -22,7 +22,7 @@ function draw_screen(sel_stage){
             if( Math.floor(sound_efects[0].duration()) <  Math.ceil(sound_efects[0].currentTime()) ){
                 song.playMode('restart');
                 song.play();
-                //            stage_length = Math.floor(song.duration());
+                stage_length = Math.floor(song.duration());
                 stage = 1;
                 button_press = false;
             }
@@ -37,8 +37,28 @@ function draw_screen(sel_stage){
     }else if(sel_stage == 1){
 
         text("SCORE: "+score, 10, 25, width, 150);
-//        stage_percent = Math.floor(song.currentTime()/stage_length*100) ;
+        stage_percent = Math.floor(song.currentTime()/stage_length*100) ;
 //        score = stage_percent;
+
+        //enemys span
+        if(time < stage_percent){
+            time = stage_percent;
+            if(time == 1){
+                new_moais("down");
+            }else if(time == 5){
+                new_enemy_balls(6);
+            }else if(time == 8){
+                new_enemy_balls(6);
+                new_moais("down");
+            }else if(time == 10){
+                new_moais("top");
+            }else if(time == 3){
+                new_enemy_balls(6);
+                new_moais("top");
+            }
+
+        }
+
 
         // show all shottings
         for(let i=0;i<shooting.length;i++){
@@ -50,12 +70,14 @@ function draw_screen(sel_stage){
             enemy[i].move(i);
         }
     
+        hit();
+
         draw_background();
     
         joystick();
 
         // draw player
-        draw_sprite(p1.x,p1.y,"player",sprite_name);
+        draw_sprite(p1.x,p1.y,pl_sprites.player[sprite_name]);
 
     }
 
@@ -82,11 +104,11 @@ function draw_pixel(x,y,N){
 }
 
 
-function draw_sprite(x,y,EN,SN){
-    let dots = sprites[EN][SN].dots
+function draw_sprite(x,y,JSON){
+    let dots = JSON.dots
     draw_pixel(x,y,dots);
 
-    let lines = sprites[EN][SN].lines
+    let lines = JSON.lines
     draw_pixel(x,y,lines);
 }
 
@@ -99,8 +121,8 @@ function draw_background(){
     let kind = scene[i].kind;
     let name = scene[i].name;
     let dir = scene[i].dir;
-    let dots = back_sprites[kind][name].dots;
-    let lines = back_sprites[kind][name].lines;
+    let dots = bk_sprites[kind][name].dots;
+    let lines = bk_sprites[kind][name].lines;
 
     push();
     if(dir == "top"){
@@ -111,7 +133,24 @@ function draw_background(){
     pop();
     scene[i].move();
   }
-
 }
 
 
+function hit(){
+    for(let i=0; i<enemy.length;i++){
+        let e_x = enemy[i].x;
+        let e_y = enemy[i].y;
+        let h_x = enemy[i].hitbox[0];
+        let h_y = enemy[i].hitbox[1];
+    for(let j=0; j<shooting.length;j++){
+            let s_x = shooting[j].x + h_x/2;
+            let s_y = shooting[j].y + h_y/2;
+
+            if(s_x >= e_x && s_x <= e_x + h_x && s_y >= e_y && s_y <= e_y + h_y){
+
+                    shooting.splice(j,1);
+                enemy[i].energy -= 1;
+            }
+        }
+    }
+}

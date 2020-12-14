@@ -1,13 +1,14 @@
 
 
-function Shoting(x,y){
+function Shoting(x,y,name){
     this.x = x + 25 * pixel;
     this.y = y - 5 * pixel;
+    this.name = name
 }
 
 Shoting.prototype.draw = function(){
     this.x += 6;
-    draw_sprite(this.x,this.y,"weapons",player_weapon)
+    draw_sprite(this.x,this.y,pl_sprites.weapons[this.name]);
 
     if(this.x > width + 10){
         shooting.splice(0,1);
@@ -30,7 +31,7 @@ Bombing.prototype.draw = function(){
         this.y += 3;
         SPT = "falling_bomb";
     }
-    draw_sprite(this.x,this.y,"weapons",SPT)
+    draw_sprite(this.x,this.y,pl_sprites.weapons[SPT])
 
     if(this.y > height + 10){
         shooting.splice(0,1);
@@ -42,7 +43,7 @@ function Background(dir,kind,name){
   this.dir = dir;
   this.name = name;
   this.kind = kind;
-  this.width = back_sprites[kind][name].x;
+  this.width = bk_sprites[kind][name].x;
   this.count = 0;
   this.x =  screen[0]+100 ;
   if(dir == "top"){

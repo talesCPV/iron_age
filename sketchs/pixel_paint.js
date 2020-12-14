@@ -8,6 +8,7 @@ let bg_color = [0,0,0];
 let json_output;
 let tool = "BRUSH";
 let undo = [];
+let pivot = [1,1];
 
 function setup() {
     createCanvas(screen[0], screen[1]);
@@ -43,6 +44,19 @@ function setup() {
     edtName = createInput();
     edtName.position(790, 50);
     edtName.elt.value = "object_name";
+    cmbPivot = createSelect();
+    cmbPivot.position(790, 90);
+    cmbPivot.option('X Left   | Y Top');
+    cmbPivot.option('X Center | Y Top');
+    cmbPivot.option('X Rigth  | Y Top');
+    cmbPivot.option('X Left   | Y Center');
+    cmbPivot.option('X Center | Y Center');
+    cmbPivot.option('X Rigth  | Y Center');
+    cmbPivot.option('X Left   | Y Botton');
+    cmbPivot.option('X Center | Y Botton');
+    cmbPivot.option('X Rigth  | Y Botton');
+    cmbPivot.selected('X Center | Y Center');
+    cmbPivot.changed(change_pivot);
 
     btnFlipX = createButton('Flip X');
     btnFlipX.position(300, 90);
@@ -118,6 +132,7 @@ function draw_header(){ // monta o cabeçalho com as ferramentas
     text("ZOOM "+sld_Z.value(), 460, 67);
     text("Open:", 725, 32);
     text("Name:", 725, 75);
+    text("Pivot:", 730, 108);
     fill(color)
     stroke(150);
     rect(110,10, 55,45)
@@ -162,13 +177,30 @@ function open_file(file) {
     let name = Object.keys(temp_file)[0];
     sld_X.elt.value = temp_file[name].x;
     sld_Y.elt.value = temp_file[name].y;
+    pivot = [temp_file[name].pivot_x,temp_file[name].pivot_y];
+    restore_pivot();
+
     edtName.elt.value = name;
     new_file(0);
     let dots = temp_file[name].dots;
     let lines = temp_file[name].lines;
+    let offset_x = 0;  
+    let offset_y = 0;  
 
-    draw_pixel(dots);
-    draw_pixel(lines);
+    if(pivot[0] == 1 ){
+      offset_x = Math.ceil(temp_file[name].x / 2);  
+    }else if(pivot[0] == 2){
+      offset_x = temp_file[name].x;  
+    }
+
+    if(pivot[1] == 1 ){
+      offset_y = Math.ceil(temp_file[name].y / 2);  
+    }else if(pivot[1] == 2){
+      offset_y = temp_file[name].y;  
+    }    
+
+    draw_pixel(dots, offset_x, offset_y);
+    draw_pixel(lines, offset_x, offset_y);
 //    print(file);
   }else{
     alert("This is not a correct JSON file.");
@@ -176,12 +208,13 @@ function open_file(file) {
 
 }
 
-function draw_pixel(N){
+function draw_pixel(N,of_x, of_y){
   for(let i=0;i<N.length;i++){
       let color = N[i].color;
       for(let j=0; j<N[i].data.length; j++){
-          let x = N[i].data[j][0];
-          let y = N[i].data[j][1];          
+          let x = N[i].data[j][0] + of_x;
+          let y = N[i].data[j][1] + of_y;    
+    
           if(N[i].data[j].length > 2){
             let x2 =  N[i].data[j][2];
             for(let k=0;k<x2;k++){
@@ -199,6 +232,8 @@ function Blank_obj(x,y,name){
   this[name] =  new Object();
   this[name].x = x;
   this[name].y = y;
+  this[name].pivot_x = pivot[0];
+  this[name].pivot_y = pivot[1];
   this[name].dots = []
   this[name].lines = []
 }
@@ -258,16 +293,32 @@ function add_points(x,y,last_x,last_color,colors,dots,lines){ // adiciona os pon
     index = colors.length - 1; // aponta p/ ultimo registro
   }
 
+
+  let offset_x = last_x;  
+  let offset_y = y;  
+
+  if(pivot[0] == 1 ){
+    offset_x -= Math.ceil(grid_size[0] / 2);  
+  }else if(pivot[0] == 2){
+    offset_x -= grid_size[0];  
+  }
+
+  if(pivot[1] == 1 ){
+    offset_y = y - Math.ceil(grid_size[1] / 2);  
+  }else if(pivot[1] == 2){
+    offset_y = y - grid_size[1];  
+  }   
+
+
+
   // muda o pivot pro centro do sprite
-  let new_x = last_x - Math.ceil(grid_size[0] / 2);  
-  let new_y = y - Math.ceil(grid_size[1] / 2);  
 
 
   if(x - last_x == 1 ){
-    dots[index].data.push([new_x,new_y]);
+    dots[index].data.push([offset_x,offset_y]);
 //    dots[index].data.push([last_x,y]);
   }else{
-    lines[index].data.push([new_x,new_y,x - last_x,1]);
+    lines[index].data.push([offset_x,offset_y,x - last_x,1]);
 //    lines[index].data.push([last_x,y,x - last_x,1]);
   }
 }
@@ -363,4 +414,36 @@ function restore_undo(){
     my_draw = copy_draw;
     undo.splice(undo.length-1,1);
   }
+}
+
+function change_pivot(){
+  if(cmbPivot.value() == "X Left   | Y Top"){
+    pivot = [0,2];
+  }else if(cmbPivot.value() == "X Center | Y Top"){
+    pivot = [1,2];
+  }else if(cmbPivot.value() == "X Rigth  | Y Top"){
+    pivot = [2,2];
+  }else if(cmbPivot.value() == "X Left   | Y Center"){
+    pivot = [0,1];
+  }else if(cmbPivot.value() == "X Center | Y Center"){
+    pivot = [1,1];
+  }else if(cmbPivot.value() == "X Rigth  | Y Center"){
+    pivot = [2,1];
+  }else if(cmbPivot.value() == "X Left   | Y Botton"){
+    pivot = [0,0];
+  }else if(cmbPivot.value() == "X Center | Y Botton"){
+    pivot = [1,0];
+  }else if(cmbPivot.value() == "X Rigth  | Y Botton"){
+    pivot = [2,0];
+  }
+}
+
+function restore_pivot(){
+
+  let opt = [[ "X Left   | Y Botton","X Center | Y Botton","X Rigth  | Y Botton"],
+              ["X Left   | Y Center","X Center | Y Center","X Rigth  | Y Center"],
+              ["X Left   | Y Top",   "X Center | Y Top",   "X Rigth  | Y Top"]];
+
+  cmbPivot.selected(opt[pivot[0]][pivot[1]]);
+
 }

@@ -155,3 +155,53 @@ Enemy_ring.prototype.move =  function(N){
 
 }
 
+function new_viper(N){
+    for(let i=0; i<N;i++){
+        enemy.push(new Viper(200 + pixel*i*50));
+    }
+}
+
+class Viper extends Enemy{
+    constructor(x){
+        let y = Math.floor(2,4) * 300;
+        super(x,y);
+        this.speed = 3;
+        this.name = "viper";
+        this.energy = 3;
+        this.angle = 0;
+        this.fall = false;
+        this.hitbox = [en_sprites.enemys[this.name].x * pixel, en_sprites.enemys[this.name].y * pixel];
+    }
+}
+
+Viper.prototype.move = function(N){
+
+    if(this.x < player.x){
+        this.x += this.speed/2;        
+    }else{
+        this.x -= this.speed/2;        
+    }
+
+    if(this.y < player.y){
+        this.y += this.speed/2;        
+    }else{
+        this.y -= this.speed/2;        
+    }    
+
+    this.angle =   Math.floor(Math.atan2( Math.floor(this.x - player.x) * pixel,Math.floor(this.y - player.y) * pixel) * 57,2958) ;
+//    alert(this.angle)
+//    alert([this.angle,Math.floor(this.y - player.y),Math.floor(this.x - player.x)] )
+
+    push();
+    translate(this.x, this.y);
+    rotate(this.angle);
+    draw_sprite(0,0,en_sprites.enemys[this.name]);
+    pop();
+
+    if(this.x < -100 || this.energy == 0){
+        enemy.splice(N,1);
+        if(this.energy == 0){
+            score += this.value;
+        }
+    }
+}

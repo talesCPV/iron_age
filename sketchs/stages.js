@@ -45,6 +45,8 @@ function draw_screen(sel_stage){
             time = stage_percent;
             if(time == 1){
                 new_moais("down");
+            }else if(time == 2){
+                new_viper(5);
             }else if(time == 5){
                 new_enemy_balls(6);
             }else if(time == 8){

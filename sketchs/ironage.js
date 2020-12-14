@@ -53,7 +53,8 @@ function setup() {
 
     scene.push(new Background("top","cavern","montanhas"));
     scene.push(new Background("down","cavern","arvores"));
-    
+    new_viper(1);
+
 }
 
 function draw() {

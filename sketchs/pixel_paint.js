@@ -22,8 +22,12 @@ function setup() {
     btnSave.position(25, 45);
     btnSave.mousePressed(generator);
 
-    sld_tool = createSlider(0, 1, 0);
-    sld_tool.position(110, 90);
+//    sld_tool = createSlider(0, 1, 0);
+//    sld_tool.position(110, 90);
+    cmbTool = createSelect();
+    cmbTool.position(110, 90);
+    cmbTool.option('BRUSH');
+    cmbTool.option('FILL');
 
     sld_R = createSlider(0, 255, 50);
     sld_R.position(270, 10);
@@ -138,11 +142,8 @@ function draw_header(){ // monta o cabeçalho com as ferramentas
     rect(110,10, 55,45)
     fill(bg_color)
     rect(175,10, 55,45)
-    if(sld_tool.value() == 0){
-      tool = "BRUSH";
-    }else{
-      tool = "FILL"
-    }
+    tool = cmbTool.value();
+
 }
 
 function draw_grid(){ // monta desenho na tela

@@ -12,7 +12,7 @@ function draw_screen(sel_stage){
         fill(255);
 
         text("PUSH ENTER TO START ", 210, 400, width, 150);
-        text("2020 - by Tales & Cabelo ", 160, 550, width, 150);
+        text("2020 - by Tales C. Dantas ", 160, 550, width, 150);
 
         if(button_press){
             if(!sound_efects[0].isPlaying()){
@@ -27,7 +27,6 @@ function draw_screen(sel_stage){
                 button_press = false;
             }
 
-
         }
 
         if(keyIsDown(ENTER) ) {
@@ -36,9 +35,9 @@ function draw_screen(sel_stage){
         
     }else if(sel_stage == 1){
 
-        text("SCORE: "+score, 10, 25, width, 150);
+        text("SCORE: "+score, 10, 25, 200, 150);
+        text("SHIELD: "+shield+"%", 210, 25, 200, 150);
         stage_percent = Math.floor(song.currentTime()/stage_length*100) ;
-//        score = stage_percent;
 
         //enemys span
         if(time < stage_percent){
@@ -61,21 +60,22 @@ function draw_screen(sel_stage){
 
         }
 
-
         // show all shottings
         for(let i=0;i<shooting.length;i++){
-            shooting[i].draw();
+            shooting[i].move(i);
         }
     
         // show all enemys
         for(let i=0;i<enemy.length;i++){
             enemy[i].move(i);
         }
-    
-        hit();
 
-        draw_background();
-    
+        // show background    
+        for(let i=0;i<scene.length;i++){
+            scene[i].move(i);
+        }
+
+        hit();    
         joystick();
 
         // draw player
@@ -114,45 +114,65 @@ function draw_sprite(x,y,JSON){
     draw_pixel(x,y,lines);
 }
 
-function draw_background(){
-
-  for(let i=0;i<scene.length;i++){
-
-    let x = scene[i].x;
-    let y = scene[i].y;
-    let kind = scene[i].kind;
-    let name = scene[i].name;
-    let dir = scene[i].dir;
-    let dots = bk_sprites[kind][name].dots;
-    let lines = bk_sprites[kind][name].lines;
-
-    push();
-    if(dir == "top"){
-        scale(1,-1);
-    }
-    draw_pixel(x,y,dots);
-    draw_pixel(x,y,lines);
-    pop();
-    scene[i].move();
-  }
-}
-
-
 function hit(){
     for(let i=0; i<enemy.length;i++){
         let e_x = enemy[i].x;
         let e_y = enemy[i].y;
         let h_x = enemy[i].hitbox[0];
         let h_y = enemy[i].hitbox[1];
-    for(let j=0; j<shooting.length;j++){
-            let s_x = shooting[j].x + h_x/2;
-            let s_y = shooting[j].y + h_y/2;
 
-            if(s_x >= e_x && s_x <= e_x + h_x && s_y >= e_y && s_y <= e_y + h_y){
+        let sh_x = shoot_hitbox[0];
+        let sh_y = shoot_hitbox[1];
+        // atack
+        for(let j=0; j<shooting.length;j++){
+            let s_x = shooting[j].x;
+            let s_y = shooting[j].y;
+    
+//            let s_x = shooting[j].x + h_x/2;
+//            let s_y = shooting[j].y + h_y/2;
 
-                    shooting.splice(j,1);
+//            if(s_x >= e_x && s_x <= e_x + h_x && s_y >= e_y && s_y <= e_y + h_y){
+//                shooting.splice(j,1);
+//                enemy[i].energy -= 1;
+//            }
+
+            if(collision([s_x,s_y,sh_x,sh_y],[e_x,e_y,h_x,h_y])){
+                shooting.splice(j,1);
                 enemy[i].energy -= 1;
-            }
+}
+
+
+        }
+        // defense
+
+        if(collision([p1.x,p1.y,p1.hitbox[0],p1.hitbox[1]],[e_x,e_y,h_x,h_y])){
+            shield -= enemy[i].power ;
+            enemy.splice(i,1);
+        }
+
+    }
+}
+
+function collision(rect1,rect2){
+
+    let x1 = rect1[0];
+    let y1 = rect1[1];
+    let x1r = (rect1[2] * pixel) / 2;
+    let y1r = (rect1[3] * pixel) / 2;
+
+    let x2 = rect2[0];
+    let y2 = rect2[1];
+    let x2r = (rect2[2] * pixel) / 2;
+    let y2r = (rect2[3] * pixel) / 2;
+ 
+    // axis X
+    if( Math.abs(x1-x2)<Math.abs(x1r-x2r)){
+        // axis Y
+        if(  Math.abs(y1-y2)<Math.abs(y1r-y2r)){
+            return true;
         }
     }
+
+    return false;
+
 }

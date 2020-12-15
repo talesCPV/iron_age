@@ -3,7 +3,8 @@ class Enemy{
         this.x = width + x ;
         this.y = y;
         this.value = 100;
-        this.hitbox = [50,50];
+        this.hitbox = [0,0];
+        this.power = 1;
     }
 }
 
@@ -53,7 +54,7 @@ Enemy_ball.prototype.move = function(N){
     draw_sprite(0,0,en_sprites.enemys[this.name]);
     pop();
 
-    if(this.x < -100 || this.energy == 0){
+    if(this.x < -100 || this.energy <= 0){
         enemy.splice(N,1);
         if(this.energy == 0){
             score += this.value;
@@ -111,10 +112,11 @@ Moais.prototype.move = function(N){
 
     if(this.x < -100){
         enemy.splice(N,1);
-    }else if(this.energy == 0){    
+    }else if(this.energy <= 0){    
         score += this.value;
         this.name = "moais_broken";
         this.count = -1000;
+        this.hitbox = [0,0];
     }
 }
 
@@ -146,7 +148,7 @@ Enemy_ring.prototype.move =  function(N){
 
     draw_sprite(this.x,this.y,en_sprites.shoot[this.name]);
 
-    if(this.x < -100 || this.energy == 0){
+    if(this.x < -100 || this.energy <= 0){
         enemy.splice(N,1);
         if(this.energy == 0){
             score += this.value;
@@ -170,11 +172,17 @@ class Viper extends Enemy{
         this.energy = 3;
         this.angle = 0;
         this.fall = false;
+        this.count = 0;
         this.hitbox = [en_sprites.enemys[this.name].x * pixel, en_sprites.enemys[this.name].y * pixel];
     }
 }
 
 Viper.prototype.move = function(N){
+    this.count ++;
+
+    if(this.count % 50 == 0){
+        enemy.push(new Viper_shot(this.x,this.y));
+    }
 
     if(this.x < player.x){
         this.x += this.speed/2;        
@@ -188,9 +196,7 @@ Viper.prototype.move = function(N){
         this.y -= this.speed/2;        
     }    
 
-    this.angle =   Math.floor(Math.atan2( Math.floor(this.x - player.x) * pixel,Math.floor(this.y - player.y) * pixel) * 57,2958) ;
-//    alert(this.angle)
-//    alert([this.angle,Math.floor(this.y - player.y),Math.floor(this.x - player.x)] )
+    this.angle = Math.atan2(  Math.floor(this.y - player.y) * pixel , (this.x - player.x) * pixel );
 
     push();
     translate(this.x, this.y);
@@ -198,10 +204,43 @@ Viper.prototype.move = function(N){
     draw_sprite(0,0,en_sprites.enemys[this.name]);
     pop();
 
-    if(this.x < -100 || this.energy == 0){
+    if(this.x < -100 || this.energy <= 0){
         enemy.splice(N,1);
         if(this.energy == 0){
             score += this.value;
         }
     }
+}
+
+class Viper_shot extends Enemy{
+    constructor(x,y){
+        super(x - width,y);
+        this.speed = 3;
+//        this.name = "ring";
+        this.name = "viper_shoot";
+        this.power = 1;
+        this.energy = 1;
+
+        this.offset_x = (x - player.x)/100;
+        this.offset_y = (y - player.y)/100;
+        this.hitbox = [pixel,pixel];
+
+    }
+}
+
+Viper_shot.prototype.move =  function(N){
+    
+//    this.x -=  this.offset_x;
+    this.y -=  this.offset_y;
+    this.x -= 2;
+
+//    alert([this.x,this.y])
+
+
+    draw_sprite(this.x,this.y,en_sprites.shoot[this.name]);
+
+    if(this.x < -100 || this.x > 1000 || this.energy <= 0){
+        enemy.splice(N,1);
+    }    
+
 }

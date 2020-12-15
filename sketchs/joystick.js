@@ -22,11 +22,13 @@ function keyPressed() {
 
     if(keyIndex == 32 || keyIndex == 122 ){ // SPACE OR UP => TURN THE PIECE
         let wp = ["main","laser","riple","spread"];
-        shooting.push(new Shoting(player.x,player.y, wp[sel_weapon]));
+//        shooting.push(new Shoting(player.x,player.y, wp[sel_weapon]));
+        shot(sel_weapon);
         sound_efects[1].play();
 
     }
     if( keyIndex == 120 ){ // SPACE OR UP => TURN THE PIECE
-        shooting.push(new Bombing(player.x,player.y));
+        shot(10);
+//        shooting.push(new Bombing(player.x,player.y));
     }
 }

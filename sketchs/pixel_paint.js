@@ -67,7 +67,7 @@ function setup() {
     btnUnod = createButton('Undo');
     btnUnod.position(500, 90);
     btnUnod.mousePressed(restore_undo);
-    
+
     fill(100);
     new_file(0);
 }
@@ -86,10 +86,10 @@ function draw() {
           }else{
             let old_col = [ my_draw[x][y][0],my_draw[x][y][1],my_draw[x][y][2] ];
             fill_color(x,y,color, old_col);
-  
+
           }
         }
-        if(mouseButton === CENTER && y >= 0){          
+        if(mouseButton === CENTER && y >= 0){
           sld_R.elt.value = my_draw[x][y][0];
           sld_G.elt.value = my_draw[x][y][1];
           sld_B.elt.value = my_draw[x][y][2];
@@ -105,7 +105,7 @@ function draw() {
 }
 
 function mousePressed() {
-  if(mouseY > header && mouseX < grid * grid_size[0] + grid && mouseX > grid && mouseButton === LEFT){   
+  if(mouseY > header && mouseX < grid * grid_size[0] + grid && mouseX > grid && mouseButton === LEFT){
       add_undo();
   }
 }
@@ -146,12 +146,25 @@ function draw_header(){ // monta o cabeçalho com as ferramentas
 }
 
 function draw_grid(){ // monta desenho na tela
+  textSize(grid/2);
+
   for(let i=0; i<grid_size[0]; i++){
+    fill(0, 102, 153);
+    noStroke();
+    text(i, grid +grid/5 + (i*grid), (header+grid_size[1]*grid) + grid );
     for(let j=0; j<grid_size[1];j++){
+      fill(0, 102, 153);
+      noStroke();
+      text("  "+(grid_size[1] - j-1), 0, (header+j*grid) + 1.2*grid/2);
+
+      stroke(150);
+
         fill(my_draw[i][grid_size[1]- 1 - j]); // inverte o eixo Y
         rect((i + 1) * grid,j * grid + header , grid, grid);
     }
   }
+
+  textSize(15);
 
 }
 
@@ -184,20 +197,20 @@ function open_file(file) {
     new_file(0);
     let dots = temp_file[name].dots;
     let lines = temp_file[name].lines;
-    let offset_x = 0;  
-    let offset_y = 0;  
+    let offset_x = 0;
+    let offset_y = 0;
 
     if(pivot[0] == 1 ){
-      offset_x = Math.ceil(temp_file[name].x / 2);  
+      offset_x = Math.ceil(temp_file[name].x / 2);
     }else if(pivot[0] == 2){
-      offset_x = temp_file[name].x;  
+      offset_x = temp_file[name].x;
     }
 
     if(pivot[1] == 1 ){
-      offset_y = Math.ceil(temp_file[name].y / 2);  
+      offset_y = Math.ceil(temp_file[name].y / 2);
     }else if(pivot[1] == 2){
-      offset_y = temp_file[name].y;  
-    }    
+      offset_y = temp_file[name].y;
+    }
 
     draw_pixel(dots, offset_x, offset_y);
     draw_pixel(lines, offset_x, offset_y);
@@ -213,8 +226,8 @@ function draw_pixel(N,of_x, of_y){
       let color = N[i].color;
       for(let j=0; j<N[i].data.length; j++){
           let x = N[i].data[j][0] + of_x;
-          let y = N[i].data[j][1] + of_y;    
-    
+          let y = N[i].data[j][1] + of_y;
+
           if(N[i].data[j].length > 2){
             let x2 =  N[i].data[j][2];
             for(let k=0;k<x2;k++){
@@ -294,20 +307,20 @@ function add_points(x,y,last_x,last_color,colors,dots,lines){ // adiciona os pon
   }
 
 
-  let offset_x = last_x;  
-  let offset_y = y;  
+  let offset_x = last_x;
+  let offset_y = y;
 
   if(pivot[0] == 1 ){
-    offset_x -= Math.ceil(grid_size[0] / 2);  
+    offset_x -= Math.ceil(grid_size[0] / 2);
   }else if(pivot[0] == 2){
-    offset_x -= grid_size[0];  
+    offset_x -= grid_size[0];
   }
 
   if(pivot[1] == 1 ){
-    offset_y = y - Math.ceil(grid_size[1] / 2);  
+    offset_y = y - Math.ceil(grid_size[1] / 2);
   }else if(pivot[1] == 2){
-    offset_y = y - grid_size[1];  
-  }   
+    offset_y = y - grid_size[1];
+  }
 
 
 

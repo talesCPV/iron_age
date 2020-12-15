@@ -28,7 +28,9 @@ let p_bomb = ["bomb"]
 let player = {
     x :  screen[0] / 2,
     y : screen[1] /2,
-    hitbox : [0,0]
+    hitbox : [0,0],
+    power : 5
+
 }
 
 let p1 = player;

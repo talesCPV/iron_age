@@ -115,64 +115,46 @@ function draw_sprite(x,y,JSON){
 }
 
 function hit(){
+
+    let sh_x = shoot_hitbox[0]/2;
+    let sh_y = shoot_hitbox[1]/2;
+
+    let ph_x = p1.hitbox[0]/2;
+    let ph_y = p1.hitbox[1]/2;
+
     for(let i=0; i<enemy.length;i++){
         let e_x = enemy[i].x;
         let e_y = enemy[i].y;
-        let h_x = enemy[i].hitbox[0];
-        let h_y = enemy[i].hitbox[1];
 
-        let sh_x = shoot_hitbox[0];
-        let sh_y = shoot_hitbox[1];
+        let eh_x = enemy[i].hitbox[0]/2;
+        let eh_y = enemy[i].hitbox[1]/2;
+
         // atack
         for(let j=0; j<shooting.length;j++){
             let s_x = shooting[j].x;
             let s_y = shooting[j].y;
-    
-//            let s_x = shooting[j].x + h_x/2;
-//            let s_y = shooting[j].y + h_y/2;
-
-//            if(s_x >= e_x && s_x <= e_x + h_x && s_y >= e_y && s_y <= e_y + h_y){
-//                shooting.splice(j,1);
-//                enemy[i].energy -= 1;
-//            }
-
-            if(collision([s_x,s_y,sh_x,sh_y],[e_x,e_y,h_x,h_y])){
+            if(collision([s_x,s_y,sh_x,sh_y],[e_x,e_y,eh_x,eh_y])){
+                enemy[i].energy -= shooting[j].power;
                 shooting.splice(j,1);
-                enemy[i].energy -= 1;
-}
-
-
+            }            
         }
-        // defense
 
-        if(collision([p1.x,p1.y,p1.hitbox[0],p1.hitbox[1]],[e_x,e_y,h_x,h_y])){
+        // defense
+        if(collision([p1.x,p1.y,ph_x,ph_y],[e_x,e_y,eh_x,eh_y])){
             shield -= enemy[i].power ;
-            enemy.splice(i,1);
+            enemy[i].energy -= 5;
         }
 
     }
 }
 
-function collision(rect1,rect2){
-
-    let x1 = rect1[0];
-    let y1 = rect1[1];
-    let x1r = (rect1[2] * pixel) / 2;
-    let y1r = (rect1[3] * pixel) / 2;
-
-    let x2 = rect2[0];
-    let y2 = rect2[1];
-    let x2r = (rect2[2] * pixel) / 2;
-    let y2r = (rect2[3] * pixel) / 2;
- 
+function collision(obj1,obj2){
     // axis X
-    if( Math.abs(x1-x2)<Math.abs(x1r-x2r)){
+    if( Math.abs(obj1[0]-obj2[0]) < Math.abs(obj1[2]+obj2[2])){
         // axis Y
-        if(  Math.abs(y1-y2)<Math.abs(y1r-y2r)){
+        if( Math.abs(obj1[1]-obj2[1]) < Math.abs(obj1[3]+obj2[3])){
             return true;
         }
     }
-
     return false;
-
 }

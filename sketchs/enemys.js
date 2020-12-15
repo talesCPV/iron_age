@@ -5,6 +5,7 @@ class Enemy{
         this.value = 100;
         this.hitbox = [0,0];
         this.power = 1;
+        this.energy = 1;
     }
 }
 
@@ -20,7 +21,6 @@ class Enemy_ball extends Enemy{
         super(x,y);
         this.speed = 3;
         this.name = "enemy_ball";
-        this.energy = 1;
         this.angle = 0;
         this.fall = false;
         this.side = random(0,2);
@@ -55,10 +55,10 @@ Enemy_ball.prototype.move = function(N){
     pop();
 
     if(this.x < -100 || this.energy <= 0){
-        enemy.splice(N,1);
-        if(this.energy == 0){
+        if(this.energy <= 0){
             score += this.value;
         }
+        enemy.splice(N,1);
     }
 }
 
@@ -112,8 +112,10 @@ Moais.prototype.move = function(N){
 
     if(this.x < -100){
         enemy.splice(N,1);
-    }else if(this.energy <= 0){    
-        score += this.value;
+    }else if(this.energy <= 0){   
+        if(this.name != "moais_broken"){
+        score += this.value;            
+        }
         this.name = "moais_broken";
         this.count = -1000;
         this.hitbox = [0,0];
@@ -125,7 +127,6 @@ class Enemy_ring extends Enemy{
         super(x,y);
         this.speed = 3;
         this.name = "ring";
-        this.energy = 1;
         this.fall = false;
         this.value = 50;
         this.hitbox = [en_sprites.shoot[this.name].x * pixel, en_sprites.shoot[this.name].y * pixel];
@@ -149,10 +150,10 @@ Enemy_ring.prototype.move =  function(N){
     draw_sprite(this.x,this.y,en_sprites.shoot[this.name]);
 
     if(this.x < -100 || this.energy <= 0){
-        enemy.splice(N,1);
-        if(this.energy == 0){
+        if(this.energy <= 0){
             score += this.value;
         }
+        enemy.splice(N,1);
     }    
 
 }
@@ -205,10 +206,10 @@ Viper.prototype.move = function(N){
     pop();
 
     if(this.x < -100 || this.energy <= 0){
-        enemy.splice(N,1);
-        if(this.energy == 0){
+        if(this.energy <= 0){
             score += this.value;
         }
+        enemy.splice(N,1);
     }
 }
 

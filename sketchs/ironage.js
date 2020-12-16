@@ -6,35 +6,26 @@ let bk_sprites;
 let pixel = 3; // tamanho do pixel
 let score = 0;
 
-let player_speed = 3;
-let shield = 100;
+
+let player = new Player();
+
 let sprite_name = "main"
-let player_bomb = "bomb";
+
+
+let weap_names = ["NONE","DEFALT","LASER","RIPPLE",]
+
+let enemy = [];
 let shooting = [];
 let bombing = [];
-let shoot_hitbox = [3*pixel,pixel];
-
-let enemys = [];
+let itens = [];
 let scene = [];
+
 let scene_speed = 1;
 let stage = 0;
 let song;
 let stage_length;
 let stage_percent = 0;
 let sound_efects = [];
-let sel_weapon = 0;
-let p_bomb = ["bomb"]
-
-let player = {
-    x :  screen[0] / 2,
-    y : screen[1] /2,
-    hitbox : [0,0],
-    power : 5
-
-}
-
-let p1 = player;
-let enemy = [];
 
 function preload() {
 
@@ -54,8 +45,10 @@ function setup() {
     textAlign(10, 10);
     textFont(font);
 
-    p1.hitbox[0] = pl_sprites.player.main.x;
-    p1.hitbox[1] = pl_sprites.player.main.y;
+    player.hitbox = [pl_sprites.player.main.x, pl_sprites.player.main.y];
+
+
+
     scene.push(new Background("up","cavern","montanhas"));
     scene.push(new Background("down","cavern","arvores"));
     new_viper(1);
@@ -65,5 +58,5 @@ function setup() {
 function draw() {
     background(0, 0, 0);
     fill(255);
-    draw_screen(stage);
+    stage_select(stage);
 }

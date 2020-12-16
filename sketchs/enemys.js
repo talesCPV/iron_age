@@ -3,9 +3,10 @@ class Enemy{
         this.x = width + x ;
         this.y = y;
         this.value = 100;
-        this.hitbox = [0,0];
         this.power = 1;
         this.energy = 1;
+        this.hitbox = [0,0];
+        this.pivot = [1,1];
     }
 }
 
@@ -181,8 +182,9 @@ class Viper extends Enemy{
 Viper.prototype.move = function(N){
     this.count ++;
 
-    if(this.count % 50 == 0){
+    if(this.count  == 100){
         enemy.push(new Viper_shot(this.x,this.y));
+        this.count = 0;
     }
 
     if(this.x < player.x){
@@ -216,14 +218,15 @@ Viper.prototype.move = function(N){
 class Viper_shot extends Enemy{
     constructor(x,y){
         super(x - width,y);
-        this.speed = 3;
-//        this.name = "ring";
+        this.speed = 10;
         this.name = "viper_shoot";
-        this.power = 1;
+        this.power = 3;
         this.energy = 1;
 
-        this.offset_x = (x - player.x)/100;
-        this.offset_y = (y - player.y)/100;
+        let vet = Math.abs(x - player.x) + Math.abs(y - player.y)
+
+        this.offset_x = Math.abs(x - player.x) / vet;
+        this.offset_y = Math.abs(y - player.y) / vet;
         this.hitbox = [pixel,pixel];
 
     }
@@ -231,17 +234,66 @@ class Viper_shot extends Enemy{
 
 Viper_shot.prototype.move =  function(N){
     
-//    this.x -=  this.offset_x;
-    this.y -=  this.offset_y;
-    this.x -= 2;
-
-//    alert([this.x,this.y])
-
+    this.y -=  this.speed * this.offset_y;
+    this.x -= this.speed * this.offset_x;
 
     draw_sprite(this.x,this.y,en_sprites.shoot[this.name]);
 
-    if(this.x < -100 || this.x > 1000 || this.energy <= 0){
+    if(this.x < -10 || this.x > width + 10 ||  this.y > height + 10 || this.y < -10  || this.energy <= 0){
         enemy.splice(N,1);
     }    
 
+}
+
+
+function new_walker(){
+    enemy.push(new Walker(100,height-90));
+}
+
+class Walker extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.name = "walker_01";
+        this.frame = 1;
+        this.energy = 50;
+        this.power = 50;
+        this.count = 0;
+        this.hitbox = [en_sprites.enemys[this.name].x , en_sprites.enemys[this.name].y];               
+    }
+}
+
+Walker.prototype.move = function(N){
+    this.count ++;
+    this.x -= scene_speed;
+
+    if(this.count == 20 || this.count == 60){
+        this.name = "walker_02";
+        this.x -= 5; 
+    }else if(this.count == 40 || this.count == 80){
+        this.name = "walker_01";
+        this.x -= 5;
+        enemy.push(new Walker_shot(this.x,this.y));
+    }else if(this.count == 180){
+        this.count = 0;
+
+    }
+
+    draw_sprite(this.x,this.y,en_sprites.enemys[this.name]);
+
+    if(this.x < -100 || this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+        }
+        enemy.splice(N,1);
+    }    
+}
+
+class Walker_shot extends Viper_shot{
+    constructor(x,y){
+        super(x,y);
+        this.speed = 10;
+        this.power = 10;
+        this.nome = "walker_shoot";
+
+    }
 }

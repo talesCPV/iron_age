@@ -170,7 +170,21 @@ function draw_grid(){ // monta desenho na tela
 }
 
 function new_file(N){ // novo arquivo => apaga tudo
-  if (N==0 || confirm('Deseja apagar todo o desenho?')) {
+  if (N==0 || confirm('Deseja apagar todo o desenho??')) {
+
+    let x = screen[0];
+    let y = screen[1];
+
+    if(sld_X.value() > 33){
+      x += (sld_X.value() - 33) * grid;
+    }
+
+    if(sld_Y.value() > 19){
+      y += (sld_Y.value() - 17) * grid;
+    }
+
+    resizeCanvas(x, y);
+
     undo = [];
     my_draw = [];
     color = [0,0,0];

@@ -28,30 +28,45 @@ Player.prototype.draw = function(){
 }
 
 
-function new_item(N){
-  if(N == 1){
-
-  }else if(N == 2){
-
-  }
+function new_item(x,y,N){
+    itens.push(new Itens(x,y,N));
 }
 
 class Itens{
-  constructor(x,y){
+  constructor(x,y, N){
     this.x = x;
     this.y = y;
     this.speed = 3;
-    this.name = "";
-    this.hitbox = [0,0];
+    this.name = itens_name[N];
+    this.item = N;
+    this.hitbox = [15,15];
     this.pivot = [1,1];
   }
 }
+
+Itens.prototype.move = function(N){
+
+  this.x -= scene_speed + this.speed;
+
+  draw_sprite(this.x,this.y,pl_sprites.itens[this.name]);
+
+  if(this.x < -10){
+      itens.splice(N,1);
+  }
+
+}
+
 
 
 function shot(N){
   if(N == 1){
     shooting.push(new Shot(player.x,player.y));
-  }else if(N == 10){
+  }else if(N == 2){
+    shooting.push(new Shot(player.x,player.y));
+    shooting[shooting.length-1].name = "laser";
+    shooting[shooting.length-1].power = 5;
+    shooting[shooting.length-1].speed = 8;
+  }else if(N == 4){
     bombing.push(new Torp(player.x,player.y));
   }
 
@@ -91,7 +106,7 @@ Shot.prototype.move = function(N){
 class Torp extends Fire{
   constructor(x,y){
     super(x,y);
-    this.name = "bomb";
+    this.name = "torp";
     this.power = 5;
     this.start_fall = x + 9 * pixel;
     this.speed = 1;
@@ -104,7 +119,7 @@ Torp.prototype.move = function(N){
   this.y += this.fall;
 
   if(this.x > this.start_fall){
-      this.name = "falling_bomb";
+      this.name = "falling_torp";
       this.fall = 3;
   }
   draw_sprite(this.x,this.y,pl_sprites.weapons[this.name]);

@@ -1,3 +1,12 @@
+function sort_item(x,y,N){
+    let perc = Math.floor(random(0,100));
+    if( perc < N ){
+        let max =  itens_name.length;
+        let sort = Math.floor(random(1,max));
+        itens.push(new Itens(x,y,sort));
+    }
+}
+
 class Enemy{
     constructor(x,y){
         this.x = width + x ;
@@ -58,6 +67,7 @@ Enemy_ball.prototype.move = function(N){
     if(this.x < -100 || this.energy <= 0){
         if(this.energy <= 0){
             score += this.value;
+            sort_item(this.x,this.y,30);
         }
         enemy.splice(N,1);
     }
@@ -115,7 +125,9 @@ Moais.prototype.move = function(N){
         enemy.splice(N,1);
     }else if(this.energy <= 0){   
         if(this.name != "moais_broken"){
-        score += this.value;            
+            score += this.value;
+            sort_item(this.x,this.y,80);
+
         }
         this.name = "moais_broken";
         this.count = -1000;
@@ -210,6 +222,7 @@ Viper.prototype.move = function(N){
     if(this.x < -100 || this.energy <= 0){
         if(this.energy <= 0){
             score += this.value;
+            sort_item(this.x,this.y,40);
         }
         enemy.splice(N,1);
     }
@@ -255,7 +268,7 @@ class Walker extends Enemy{
         super(x,y);
         this.name = "walker_01";
         this.frame = 1;
-        this.energy = 50;
+        this.energy = 30;
         this.power = 50;
         this.count = 0;
         this.hitbox = [en_sprites.enemys[this.name].x , en_sprites.enemys[this.name].y];               
@@ -273,7 +286,7 @@ Walker.prototype.move = function(N){
         this.name = "walker_01";
         this.x -= 5;
         enemy.push(new Walker_shot(this.x,this.y));
-    }else if(this.count == 180){
+    }else if(this.count == 100){
         this.count = 0;
 
     }
@@ -283,6 +296,8 @@ Walker.prototype.move = function(N){
     if(this.x < -100 || this.energy <= 0){
         if(this.energy <= 0){
             score += this.value;
+            sort_item(this.x,this.y,90);
+
         }
         enemy.splice(N,1);
     }    

@@ -16,21 +16,42 @@ function joystick(){
         player.name = "main";
     }
 
+
 }
 
 function keyPressed() {
-    keyIndex = key.charCodeAt(0);
 
-    if(keyIndex == 32 || keyIndex == 122 ){ // SPACE OR Z
-        if(shooting.length < player.max_shot){
-            shot(player.weapon);
-            sound_efects[1].play();
+    if(stage == 1){
+
+        keyIndex = key.charCodeAt(0);
+
+        if( keyIndex == 69 ){ // ENTER => PAUSE
+
+                if(song.isPlaying()){
+                    song.pause();
+                    noLoop();
+                    sound_efects[2].play();
+
+                }else{
+                    song.play();
+                    loop();
+                }
+
+        }
+
+        if(keyIndex == 32 || keyIndex == 122 ){ // SPACE OR Z
+            if(shooting.length < player.max_shot){
+                shot(player.weapon);
+                sound_efects[1].play();
+            }
+
+        }
+        if( keyIndex == 120 ){ // X
+            if(bombing.length < player.max_bomb){
+                shot(player.bomb);
+            }
         }
 
     }
-    if( keyIndex == 120 ){ // X
-        if(bombing.length < player.max_bomb){
-            shot(player.bomb);
-        }
-    }
+
 }

@@ -74,15 +74,13 @@ function stage_select(sel_stage){
             }else if(time == 39){
                 new_walker();
             }else if(time == 42){                
-                new_moais("top");
-                new_moais("down");
-            }
-            }else if(time == 42){                
-                new_enemy_balls(6);
-                new_walker();
+                new_moais("top");            
             }else if(time == 45){                
+                new_enemy_balls(5);
                 new_walker();
             }else if(time == 48){                
+                new_walker();
+            }else if(time == 49){                
                 new_viper(5);
             }else if(time == 51){                
                 new_moais("top");
@@ -106,7 +104,58 @@ function stage_select(sel_stage){
                 new_walker();
                 new_moais("down");
             }else if(time == 75){                
+                new_moais("top");
+                new_enemy_balls(6);
+                new_moais("down");
+            }else if(time == 76){                
+                new_moais("top");
+                new_viper(5);
+            }else if(time == 78){                
+                new_moais("top");
+                new_moais("down");
+            }else if(time == 80){                
+                new_moais("top");
+                new_moais("down");
+            }else if(time == 82){                
+                new_moais("top");
+                new_moais("down");
+            }else if(time == 84){                
+                new_enemy_balls(6);
+            }else if(time == 86){                
+                new_viper(5);
+            }else if(time == 88){       
                 new_walker();
+                new_moais("top");
+            }else if(time == 90){                
+                new_enemy_balls(6);
+                new_walker();
+            }else if(time == 91){                
+                new_moais("top");
+                new_walker();
+            }else if(time == 92){                
+                new_walker();
+            }else if(time == 93){                
+                new_moais("top");
+                new_moais("down");
+            }else if(time == 95){                
+                new_moais("top");
+                new_moais("down");
+            }else if(time == 97){                
+                new_moais("top");
+                new_enemy_balls(6);
+                new_moais("down");
+            }else if(time == 98){                
+                new_moais("top");
+                new_viper(5);
+                new_moais("down");
+                new_walker();
+            }else if(time == 99){                
+                new_viper(15);
+                new_walker();
+            }else if(time == 100){                
+                new_walker();
+                new_viper(5);
+            }
 
         }
 
@@ -142,6 +191,34 @@ function draw_screen(){
         for(let i=0;i<scene.length;i++){
             scene[i].move(i);         
         }
+
+
+        // show itens    
+        for(let i=0;i<itens.length;i++){
+
+            if(collision(player,itens[i])){
+                if(itens[i].item == 1 && player.max_shot < 9 ){
+                    player.max_shot += 1;
+                }else if(itens[i].item == 2){
+                    player.max_shot = 1;
+                    player.weapon = 2;
+                }else if(itens[i].item == 3){
+                }else if(itens[i].item == 4){
+                }else if(itens[i].item == 5){
+                    player.bomb = 4;
+                    player.max_bomb += 1;
+                }
+
+                itens.splice(i,1);
+
+            }else{
+                itens[i].move(i);
+            }
+
+
+
+        }
+
 
         hit();    
         joystick();

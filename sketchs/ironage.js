@@ -12,7 +12,8 @@ let player = new Player();
 let sprite_name = "main"
 
 
-let weap_names = ["NONE","DEFALT","LASER","RIPPLE",]
+let weap_names = ["NONE","DEFALT","LASER","RIPPLE","SPREAD","TORP"];
+let itens_name = ["none","plus","laser","ripple","spread","torp"];
 
 let enemy = [];
 let shooting = [];
@@ -35,6 +36,8 @@ function preload() {
     font = loadFont('assets/press_start.ttf');
     sound_efects.push(loadSound('assets/efects/start.wav')) // [0]
     sound_efects.push(loadSound('assets/efects/shot.wav')) // [1]    
+    sound_efects.push(loadSound('assets/efects/pause.wav')) // [2]    
+    sound_efects.push(loadSound('assets/efects/destroy.wav')) // [3]    
     song = loadSound('assets/Trooper.mp3');
 
 }

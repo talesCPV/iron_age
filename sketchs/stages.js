@@ -72,6 +72,10 @@ function stage_select(sel_stage){
         text("FEAR OF THE DARK", 550, 550, 200, 150);
 
 
+        draw_sprite(202,120,pl_sprites.splash["eddie_egito"]);
+
+
+
         joystick();
 
         let x = 150;

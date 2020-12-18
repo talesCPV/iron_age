@@ -10,7 +10,7 @@ class Player{
     this.weapon = 1;
     this.bomb = 0;
     this.max_shot = 3;
-    this.max_bomb = 1;
+    this.max_bomb = 0;
     this.shield = 100;
     this.name = "main";
     this.hitbox = [0, 0];

@@ -21,9 +21,61 @@ function joystick(){
 
 function keyPressed() {
 
+    keyIndex = key.charCodeAt(0);
+
+
     if(stage == 1){
 
-        keyIndex = key.charCodeAt(0);
+
+        if(keyIsDown(LEFT_ARROW) ) {
+            sel_opt[0] -= 1;
+            if(sel_opt[0] < 0){
+                sel_opt[0] = 2;
+            }
+        }else if(keyIsDown(RIGHT_ARROW) ) {
+            sel_opt[0] += 1;
+            if(sel_opt[0] > 2){
+                sel_opt[0] = 0;
+            }
+        }else if(keyIsDown(UP_ARROW) ) {
+            sel_opt[1] -= 1;
+            if(sel_opt[1] < 0){
+                sel_opt[1] = 2;
+            }
+        }else if(keyIsDown(DOWN_ARROW) ) {
+            sel_opt[1] += 1;
+            if(sel_opt[1] > 2){
+                sel_opt[1] = 0;
+            }
+        }
+
+        if( keyIndex == 69 ){ // ENTER => Select Stage
+            if( sel_opt[0] == 0 && sel_opt[1] == 0 ){
+                back_color = [0,0,0];
+                song = loadSound('assets/Trooper.mp3');
+                stage = 2;
+                next_stage = 3;
+                player.x = 50;
+            }else if( sel_opt[0] == 1 && sel_opt[1] == 0 ){
+                alert("The Evil that Man Do");
+            }else if( sel_opt[0] == 2 && sel_opt[1] == 0 ){
+                alert("Wastes Years");
+            }else if( sel_opt[0] == 0 && sel_opt[1] == 1 ){
+                alert("Can I Play With Madness");
+            }else if( sel_opt[0] == 2 && sel_opt[1] == 1 ){
+                alert("Run To The Hills");
+            }else if( sel_opt[0] == 0 && sel_opt[1] == 2 ){
+                alert("Aces High");
+            }else if( sel_opt[0] == 1 && sel_opt[1] == 2 ){
+                alert("Hallowed Be Thy Name");
+            }else if( sel_opt[0] == 2 && sel_opt[1] == 2 ){
+                alert("Fear Of The Dark");                
+            }
+        }
+      
+
+    }else if(stage > 2){
+
 
         if( keyIndex == 69 ){ // ENTER => PAUSE
 

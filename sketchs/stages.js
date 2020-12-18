@@ -1,6 +1,9 @@
 
 let button_press = false;
 let time = 0;
+let sel_opt = [1,1];
+let next_stage = 0;
+
 
 function stage_select(sel_stage){
 
@@ -16,24 +19,104 @@ function stage_select(sel_stage){
 
         if(button_press){
             if(!sound_efects[0].isPlaying()){
-                sound_efects[0].play();
+                sound_efects[0].play();                                
             }  
 
             if( Math.floor(sound_efects[0].duration()) <  Math.ceil(sound_efects[0].currentTime()) ){
-                song.playMode('restart');
-                song.play();
-                stage_length = Math.floor(song.duration());
                 stage = 1;
                 button_press = false;
+                sound_efects[4].setLoop(true);
+                sound_efects[4].play();                                
             }
 
         }
 
         if(keyIsDown(ENTER) ) {
             button_press = true;
+
+
         }
         
+        
     }else if(sel_stage == 1){
+
+        back_color = [0,121,248];
+        noStroke();
+        text("SELECT STAGE", 280, 50, width, 150);
+
+        select_strip(100);
+        stage_frame(150,75);
+        stage_frame(350,75);
+        stage_frame(550,75);
+
+        select_strip(275);
+        stage_frame(150,250);
+        stage_frame(350,250);
+        stage_frame(550,250);
+
+        select_strip(450);
+        stage_frame(150,425);
+        stage_frame(350,425);
+        stage_frame(550,425);
+
+        fill(255);
+        text("THE TROOPER", 150, 200, 200, 150);
+        text("THE EVIL THAT MAN", 350, 200, 230, 150);
+        text("WASTED YEARS", 550, 200, 200, 150);
+
+        text("CAN I PLAY", 150, 375, 200, 150);
+        text("RUN TO THE HILLS", 550, 375, 200, 150);
+
+        text("ACES HIGH", 150, 550, 150, 150);
+        text("HALLOWED BE THY", 350, 550, 200, 150);
+        text("FEAR OF THE DARK", 550, 550, 200, 150);
+
+
+        joystick();
+
+        let x = 150;
+        let y = 75;
+        let B = 15
+
+        if(sel_opt[0] == 1){
+            x = 350;
+        }else if(sel_opt[0] == 2){
+            x = 550;
+        }
+
+        if(sel_opt[1] == 1){
+            y = 250;
+        }else if(sel_opt[1] == 2){
+            y = 425;
+        }
+
+        fill(255);
+        rect(x,y,B,B);  
+        rect(x+85,y,B,B);  
+        rect(x,y+85,B,B);  
+        rect(x+85,y+85,B,B);  
+
+
+    }else if(sel_stage == 2){
+
+        player.draw();
+        player.x += 0.5;
+        text("LOADING...", 210, 400, width, 150);
+
+        if(song.isLoaded()){
+//            sound_efects[4].setLoop(false);
+            sound_efects[4].stop();                                
+
+            stage = next_stage;
+            player.x = 100;
+            song.playMode('restart');
+            song.play();
+            stage_length = Math.floor(song.duration());
+        }else{}
+
+
+    }else if(sel_stage == 3){
+
 
         stage_percent = Math.floor(song.currentTime()/stage_length*100) ;
 
@@ -197,14 +280,23 @@ function draw_screen(){
         for(let i=0;i<itens.length;i++){
 
             if(collision(player,itens[i])){
-                if(itens[i].item == 1 && player.max_shot < 9 ){
+                if(itens[i].item == 1 && player.max_shot < 9 ){ // add shot
                     player.max_shot += 1;
-                }else if(itens[i].item == 2){
-                    player.max_shot = 1;
-                    player.weapon = 2;
-                }else if(itens[i].item == 3){
-                }else if(itens[i].item == 4){
-                }else if(itens[i].item == 5){
+
+                }else if(itens[i].item == 2){ // laser
+                    if(player.weapon != 2){
+                        player.max_shot = 1;
+                        player.weapon = 2;                        
+                    }else{
+                        player.max_shot += 1;
+                    }
+
+                }else if(itens[i].item == 3){ // Ripple
+
+                }else if(itens[i].item == 4){ // Increese Speed
+                    player.speed += 1;
+
+                }else if(itens[i].item == 5){ // Torp
                     player.bomb = 4;
                     player.max_bomb += 1;
                 }
@@ -330,4 +422,39 @@ function collision(obj1,obj2){
         }
     }
     return false;
+}
+
+
+function stage_frame(x,y){
+        // rect
+        let B = 15
+        fill(0);
+        rect(x,y,100,100);
+        fill(255);
+        rect(x+B,y+2,100 - 2*B,2);
+        rect(x+B,y+97,100 - 2*B,2);
+        rect(x+2,y+B,2,100 - 2*B);
+        rect(x+97,y+B,2,100 - 2*B);
+        fill(0,236,220);
+        rect(x+B,y+5,100 - 2*B,B-5);
+        rect(x+B,y+86,100 - 2*B,B-5);
+        rect(x+5,y+B,B-5,100 - 2*B);
+        rect(x+86,y+B,B-5,100 - 2*B);
+
+}
+
+
+function select_strip(y){
+
+        fill(0,236,220);
+        rect(0,y,width,pixel); 
+        y += 2*pixel       
+        rect(0,y,width,pixel);        
+        y += 2*pixel       
+        rect(0,y,width,pixel*8);        
+        y += 9*pixel       
+        rect(0,y,width,pixel);        
+        y += 2*pixel       
+        rect(0,y,width,pixel);   
+
 }

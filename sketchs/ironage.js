@@ -5,6 +5,7 @@ let en_sprites;
 let bk_sprites;
 let pixel = 3; // tamanho do pixel
 let score = 0;
+let back_color = [0,0,0];
 
 
 let player = new Player();
@@ -38,7 +39,7 @@ function preload() {
     sound_efects.push(loadSound('assets/efects/shot.wav')) // [1]    
     sound_efects.push(loadSound('assets/efects/pause.wav')) // [2]    
     sound_efects.push(loadSound('assets/efects/destroy.wav')) // [3]    
-    song = loadSound('assets/Trooper.mp3');
+    sound_efects.push(loadSound('assets/Loop.mp3')) // [4]    
 
 }
 
@@ -59,7 +60,7 @@ function setup() {
 }
 
 function draw() {
-    background(0, 0, 0);
+    background(back_color);
     fill(255);
     stage_select(stage);
 }

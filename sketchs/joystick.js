@@ -54,12 +54,16 @@ function keyPressed() {
                 back_color = [0,0,0];
                 song = loadSound('assets/Trooper.mp3');
                 stage = 2;
-                next_stage = 3;
+                next_stage = 4;
                 player.x = 50;
             }else if( sel_opt[0] == 1 && sel_opt[1] == 0 ){
                 alert("The Evil that Man Do");
             }else if( sel_opt[0] == 2 && sel_opt[1] == 0 ){
-                alert("Wastes Years");
+                back_color = [0,0,0];
+                song = loadSound('assets/Wasted.mp3');
+                stage = 2;
+                next_stage = 4;
+                player.x = 50;
             }else if( sel_opt[0] == 0 && sel_opt[1] == 1 ){
                 alert("Can I Play With Madness");
             }else if( sel_opt[0] == 2 && sel_opt[1] == 1 ){
@@ -74,7 +78,7 @@ function keyPressed() {
         }
       
 
-    }else if(stage > 2){
+    }else if(stage > 3){
 
 
         if( keyIndex == 69 ){ // ENTER => PAUSE

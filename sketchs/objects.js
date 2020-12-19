@@ -15,6 +15,7 @@ class Player{
     this.name = "main";
     this.hitbox = [0, 0];
     this.pivot = [1,1];
+    this.delay = 0;
   }
 }
 
@@ -24,7 +25,32 @@ Player.prototype.move = function (x,y) {
 }
 
 Player.prototype.draw = function(){
-  draw_sprite(this.x,this.y,pl_sprites.player[this.name]);
+  if(this.delay > 0){
+    this.delay--;
+  }
+
+  if(this.delay == 0 || (this.delay % 5 == 0 && this.shield > 0)){ // show player or blink it
+    draw_sprite(this.x,this.y,pl_sprites.player[this.name]);
+    if(this.shield <= 0){
+      stage = 3; // game over
+    }
+  }
+  for(let i=0; i<this.shield; i+=5){
+    draw_sprite(30,150-i,pl_sprites.player["energy_bar"]);
+  }
+}
+
+Player.prototype.hit = function(N){
+  if(this.delay == 0){
+    this.shield -= N;
+    this.delay = 30
+  }
+/*
+  if(this.shield <= 0){
+    this.delay = 50;
+  }
+*/
+
 }
 
 

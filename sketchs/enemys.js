@@ -12,7 +12,7 @@ class Enemy{
         this.x = width + x ;
         this.y = y;
         this.value = 100;
-        this.power = 1;
+        this.power = 5;
         this.energy = 1;
         this.hitbox = [0,0];
         this.pivot = [1,1];
@@ -87,6 +87,7 @@ class Moais extends Enemy{
         this.speed = 3;
         this.name =  "moais_close";
         this.energy = 10;
+        this.power = 15;
         this.open = false;
         this.count = 0;
         this.side = side
@@ -184,6 +185,7 @@ class Viper extends Enemy{
         this.speed = 3;
         this.name = "viper";
         this.energy = 3;
+        this.power = 8;
         this.angle = 0;
         this.fall = false;
         this.count = 0;
@@ -233,7 +235,6 @@ class Viper_shot extends Enemy{
         super(x - width,y);
         this.speed = 10;
         this.name = "viper_shoot";
-        this.power = 3;
         this.energy = 1;
 
         let vet = Math.abs(x - player.x) + Math.abs(y - player.y)
@@ -307,7 +308,7 @@ class Walker_shot extends Viper_shot{
     constructor(x,y){
         super(x,y);
         this.speed = 10;
-        this.power = 10;
+        this.power = 15;
         this.nome = "walker_shoot";
 
     }

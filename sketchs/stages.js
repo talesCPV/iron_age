@@ -73,7 +73,10 @@ function stage_select(sel_stage){
 
 
         draw_sprite(202,120,pl_sprites.splash["eddie_trooper"]);
+//        draw_sprite(402,120,pl_sprites.splash["eddie_mind"]);
+        draw_sprite(602,120,pl_sprites.splash["eddie_mind"]);
         draw_sprite(202,298,pl_sprites.splash["eddie_egito"]);
+
 
 
 
@@ -119,8 +122,14 @@ function stage_select(sel_stage){
             stage_length = Math.floor(song.duration());
         }else{}
 
+    }else if(sel_stage == 3){ // Game Over
 
-    }else if(sel_stage == 3){
+        song.stop();
+        text("GAME OVER!!!", 300, 250, width, 150);
+        text("PRESS F5  AND TRY AGAIN ", 180, 550, width, 150);
+
+
+    }else if(sel_stage == 4){
 
 
         stage_percent = Math.floor(song.currentTime()/stage_length*100) ;
@@ -257,9 +266,9 @@ function stage_select(sel_stage){
 function draw_screen(){
 
         // show control screen
-        text("SCORE: "+score, 10, 25, 200, 150);
-        text("SHIELD: "+player.shield+"%", 210, 25, 200, 150);
-        text("WEAPON: "+weap_names[player.weapon]+" x"+player.max_shot, 410, 25, 200, 150);
+        text("SCORE: "+score, 10, 25, 300, 150);
+        text("WEAPON: "+weap_names[player.weapon]+" x"+player.max_shot, 310, 25, 300, 150);
+        text("BOMB: x"+player.max_bomb, 610, 25, 300, 150);
 
         // show all shottings
         for(let i=0;i<shooting.length;i++){
@@ -367,7 +376,7 @@ function hit(){
 
         // defense
         if(collision(player,enemy[i])){
-            player.shield -= enemy[i].power ;
+            player.hit(enemy[i].power);
             enemy[i].energy -= 5;
         }
 

@@ -50,20 +50,26 @@ function keyPressed() {
         }
 
         if( keyIndex == 69 ){ // ENTER => Select Stage
+            player.x = 50;
+            time = 0;
             if( sel_opt[0] == 0 && sel_opt[1] == 0 ){
                 back_color = [0,0,0];
                 song = loadSound('assets/Trooper.mp3');
+                scene.push(new Ground("cavern","montanhas",true));
+                scene.push(new Ground("cavern","arvores"));
+                scene[scene.length-1].fill();
                 stage = 2;
                 next_stage = 4;
-                player.x = 50;
             }else if( sel_opt[0] == 1 && sel_opt[1] == 0 ){
                 alert("The Evil that Man Do");
             }else if( sel_opt[0] == 2 && sel_opt[1] == 0 ){
-                back_color = [0,0,0];
+                back_color = [25,20,158];
+//                back_color = [108,184,225];
                 song = loadSound('assets/Wasted.mp3');
+                scene.push(new Ground("sea","agua",false,true));
+                scene[scene.length-1].fill();
                 stage = 2;
-                next_stage = 4;
-                player.x = 50;
+                next_stage = 5;
             }else if( sel_opt[0] == 0 && sel_opt[1] == 1 ){
                 alert("Can I Play With Madness");
             }else if( sel_opt[0] == 2 && sel_opt[1] == 1 ){

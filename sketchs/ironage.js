@@ -52,11 +52,6 @@ function setup() {
     player.hitbox = [pl_sprites.player.main.x, pl_sprites.player.main.y];
 
 
-
-    scene.push(new Background("up","cavern","montanhas"));
-    scene.push(new Background("down","cavern","arvores"));
-    new_viper(1);
-
 }
 
 function draw() {

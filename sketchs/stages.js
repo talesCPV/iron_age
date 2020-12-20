@@ -257,6 +257,27 @@ function stage_select(sel_stage){
         }
 
         draw_screen();
+    }else if(sel_stage == 5){
+
+        stage_percent = Math.floor(song.currentTime()/stage_length*100) ;
+
+        if(time < stage_percent){
+            time = stage_percent;
+            if(time == 1){
+                new_enemy_balls(6);
+                new_sea_ship();
+                scene.push(new Cloud(150));
+                enemy.push(new Thunder(300,100));
+            }else if(time == 3){
+                new_viper(5);
+                enemy.push(new Thunder(300,100));
+            }else if(time == 5){
+                new_sea_ship();
+            }
+        }        
+
+        draw_screen();
+
 
     }
 

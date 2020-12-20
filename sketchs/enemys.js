@@ -313,3 +313,75 @@ class Walker_shot extends Viper_shot{
 
     }
 }
+
+
+class Thunder extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.x -= width;
+        this.blink = 2;
+        this.count = 0;
+        this.hitbox = [15,70];
+        this.power =  25;
+        this.visible = true;
+
+    }
+
+}
+
+Thunder.prototype.move = function(N){
+    this.x -= scene_speed;
+    this.count++;
+
+    if(this.count % 10 == 0){
+        this.visible = !this.visible;
+    }
+
+    if(this.visible){
+        draw_sprite(this.x,this.y,bk_sprites.sea.thunder);
+    }
+
+
+    if(this.count == 50){
+        enemy.splice(N,1);
+    }
+
+}
+
+
+function new_sea_ship(){
+    enemy.push(new Sea_ship(100,height-90));
+}
+
+class Sea_ship extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.name = "sea_ship";
+        this.frame = 1;
+        this.energy = 30;
+        this.power = 50;
+        this.count = 0;
+        this.hitbox = [en_sprites.enemys[this.name].x , en_sprites.enemys[this.name].y];               
+    }
+}
+
+Sea_ship.prototype.move = function(N){
+    this.count ++;
+    this.x -= scene_speed;
+
+    if(this.count == 40 ){
+        this.count = 0;
+        enemy.push(new Walker_shot(this.x,this.y));
+    }
+
+    draw_sprite(this.x,this.y,en_sprites.enemys[this.name]);
+
+    if(this.x < -100 || this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+
+        enemy.splice(N,1);
+    }    
+}

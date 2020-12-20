@@ -157,43 +157,85 @@ Torp.prototype.move = function(N){
 }
 
 
-class Background{
-  constructor(pos,kind,name){
-    this.pos = pos;
+class Ground{
+  constructor(kind,name,flip = false ,rep = true){
+    this.flip = flip;
     this.name = name;
     this.kind = kind;
     this.width = bk_sprites[kind][name].x;
     this.height = bk_sprites[kind][name].y;
     this.count = 0;
-    this.x =  screen[0]+100;
+    this.x =  width+50 ;
     this.hitbox = [this.width,this.height];
     this.pivot = [bk_sprites[kind][name].pivot_x,bk_sprites[kind][name].pivot_y];
+    this.repeat = rep ;
+    this.hit =  true;
   
-    if(pos == "up"){
+    if(flip){
       this.y = -50;
-      this.flip = -1;
+      this.vertical = -1;
     }else{
       this.y = height - 20;
-      this.flip = 1;
+      this.vertical = 1;
     }  
   }
 }
 
 
-Background.prototype.move = function(N){
+Ground.prototype.move = function(N){
 
   push();
-  scale(1,this.flip);
+  scale(1,this.vertical);
   draw_sprite(this.x,this.y,bk_sprites[this.kind][this.name]);
   pop();
 
   this.x -= scene_speed;
   this.count ++;
 
-  if(this.count ==  Math.floor(this.width / scene_speed * pixel)  ) {
-    scene.push(new Background(this.pos, this.kind,this.name));
+  if(this.count ==  Math.floor(this.width / scene_speed * pixel) && this.repeat ) {
+    scene.push(new Ground(this.kind,this.name,this.flip,true));
   }
-  if(this.x <= -50*pixel){
+  if(this.x <= -this.width*pixel){
+    scene.splice(N,1);
+  }
+
+}
+
+Ground.prototype.fill = function(){
+
+  for(let i=8; i<width+50;i+=this.width*pixel){
+      scene.push(new Ground(this.kind,this.name,this.flip,false));
+      scene[scene.length-1].x = i;
+  }
+
+}
+
+class Cloud extends Ground{
+
+  constructor(y){
+    super("sea","cloud",false,false);
+    this.repeat = false;
+    this.y = y;
+    this.hit = false;
+  }
+
+}
+
+Cloud.prototype.move = function(N){
+
+  draw_sprite(this.x,this.y,bk_sprites[this.kind][this.name]);
+
+  this.x -= scene_speed;
+  this.count ++;
+
+
+
+
+  if(this.count % 150 == 0  ) {
+    enemy.push(new Thunder(this.x,this.y + this.height * pixel));
+
+  }
+  if(this.x <= -this.width*pixel){
     scene.splice(N,1);
   }
 

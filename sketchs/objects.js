@@ -160,6 +160,16 @@ class Energy_Weapon extends Itens{
   }
 }
 
+class Small_Energy_Weapon extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["small_w_ball_01","small_w_ball_02"];
+    this.value = 5;
+    this.hitbox = [pl_sprites.itens.small_w_ball_01.x,pl_sprites.itens.small_w_ball_01.y];    
+  }
+}
+
+
 Energy_Weapon.prototype.move = function(N){
   this.x -= scene_speed + this.speed;
   this.count++;
@@ -187,6 +197,33 @@ class Energy_Ball extends Energy_Weapon{
   }
 }
 
+class Small_Energy_Ball extends Energy_Ball{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["small_e_ball_01","small_e_ball_02"];
+    this.value = 5;
+    this.hitbox = [pl_sprites.itens.small_e_ball_01.x,pl_sprites.itens.small_e_ball_01.y];
+  }
+}
+
+class Speed extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["speed","blank"];
+    this.type = 5;
+    this.hitbox = [pl_sprites.itens.speed.x,pl_sprites.itens.speed.y];  
+  }
+}
+
+class Bomb extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["bomb","blank"];
+    this.type = 4;
+    this.hitbox = [pl_sprites.itens.bomb.x,pl_sprites.itens.bomb.y];  
+  }
+}
+
 
 class Fire{
   constructor(x,y){
@@ -194,7 +231,7 @@ class Fire{
     this.y = y +8 ;
     this.power = 1;
     this.speed = 6;
-    this.name = "main";
+    this.name = "m_buster";
     this.hitbox = [pixel,pixel];
     this.pivot = [1,1];
   }
@@ -204,7 +241,6 @@ class Fire{
 class Shot extends Fire{
   constructor(x,y){
     super(x,y);
-    this.hitbox = [3*pixel,pixel];
     this.x += 10;
   }
 }

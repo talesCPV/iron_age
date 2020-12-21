@@ -73,9 +73,12 @@ function stage_select(sel_stage){
 
 
         draw_sprite(202,120,pl_sprites.splash["eddie_trooper"]);
-//        draw_sprite(402,120,pl_sprites.splash["eddie_mind"]);
+        draw_sprite(402,120,pl_sprites.splash["eddie_evil"]);
         draw_sprite(602,120,pl_sprites.splash["eddie_mind"]);
         draw_sprite(202,298,pl_sprites.splash["eddie_egito"]);
+
+
+
 
 
 
@@ -305,16 +308,6 @@ function draw_screen(){
         text("WEAPON: "+weap_names[player.weapon]+" x"+player.max_shot, 310, 25, 300, 150);
         text("BOMB: x"+player.max_bomb, 610, 25, 300, 150);
 
-          for(let i=0; i<player.shield; i+=5){
-            draw_sprite(30,150-i,pl_sprites.player["energy_bar"]);
-          }
-          if(player.weapon > 0){
-              for(let i=0; i<energy_wep[player.weapon]; i+=5){
-                draw_sprite(60,150-i,pl_sprites.player["energy_bar"]);
-              }            
-          }
-
-
         if(!pause){
 
             // show all shottings
@@ -349,11 +342,25 @@ function draw_screen(){
 
             }
 
+            // show energy bars
+            for(let i=0; i<player.shield; i+=5){
+                draw_sprite(30,150-i,pl_sprites.player["energy_bar"]);
+            }
+            if(player.weapon > 0){
+                for(let i=0; i<energy_wep[player.weapon]; i+=5){
+                    draw_sprite(60,150-i,pl_sprites.player["energy_bar"]);
+                }            
+            }
+
             hit();    
             player.draw();
         }else{
             weapon_menu();
         }
+
+
+
+
 
         joystick();
 

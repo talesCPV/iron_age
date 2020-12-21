@@ -2,13 +2,22 @@
 function sort_item(x,y,N){ // N = % de chance de spawnar um itens
     let perc = Math.floor(random(0,100));
     if( perc < N ){
-        let max = 3 // Quantidade de itens possíveis existentes
-        let sort = Math.floor(random(1,max));
+        let sort = Math.floor(random(1,7));// Quantidade de itens possíveis existentes = 5
 
         if(sort == 1){
             itens.push(new Energy_Weapon(x,y));
         }else if(sort == 2){
             itens.push(new Energy_Ball(x,y));
+        }else if(sort == 3){
+            itens.push(new Small_Energy_Weapon(x,y));
+        }else if(sort == 4){
+            itens.push(new Small_Energy_Ball(x,y));
+        }else if(sort == 5){
+            itens.push(new Speed(x,y));
+        }else if(sort == 6){
+            itens.push(new Bomb(x,y));
+        }else if(sort == 7){
+//            itens.push(new Small_Energy_Ball(x,y));
         }
 
     }

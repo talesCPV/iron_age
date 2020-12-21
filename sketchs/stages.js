@@ -291,67 +291,80 @@ function draw_screen(){
         text("WEAPON: "+weap_names[player.weapon]+" x"+player.max_shot, 310, 25, 300, 150);
         text("BOMB: x"+player.max_bomb, 610, 25, 300, 150);
 
-        // show all shottings
-        for(let i=0;i<shooting.length;i++){
-            shooting[i].move(i);
-        }
-    
-        // show bomb
-        for(let i=0;i<bombing.length;i++){
-            bombing[i].move(i);
-        }
-        // show all enemys
-        for(let i=0;i<enemy.length;i++){
-            enemy[i].move(i);
-        }
-
-        // show background    
-        for(let i=0;i<scene.length;i++){
-            scene[i].move(i);         
-        }
+          for(let i=0; i<player.shield; i+=5){
+            draw_sprite(30,150-i,pl_sprites.player["energy_bar"]);
+          }
+          if(player.weapon > 0){
+              for(let i=0; i<energy_wep[player.weapon]; i+=5){
+                draw_sprite(60,150-i,pl_sprites.player["energy_bar"]);
+              }            
+          }
 
 
-        // show itens    
-        for(let i=0;i<itens.length;i++){
+        if(!pause){
 
-            if(collision(player,itens[i])){
-                if(itens[i].item == 1 && player.max_shot < 9 ){ // add shot
-                    player.max_shot += 1;
+            // show all shottings
+            for(let i=0;i<shooting.length;i++){
+                shooting[i].move(i);
+            }
+        
+            // show bomb
+            for(let i=0;i<bombing.length;i++){
+                bombing[i].move(i);
+            }
+            // show all enemys
+            for(let i=0;i<enemy.length;i++){
+                enemy[i].move(i);
+            }
 
-                }else if(itens[i].item == 2){ // laser
-                    if(player.weapon != 2){
-                        player.max_shot = 1;
-                        player.weapon = 2;                        
-                    }else{
-                        player.max_shot += 1;
-                    }
-
-                }else if(itens[i].item == 3){ // Ripple
-
-                }else if(itens[i].item == 4){ // Increese Speed
-                    player.speed += 1;
-
-                }else if(itens[i].item == 5){ // Torp
-                    player.bomb = 4;
-                    player.max_bomb += 1;
-                }
-
-                itens.splice(i,1);
-
-            }else{
-                itens[i].move(i);
+            // show background    
+            for(let i=0;i<scene.length;i++){
+                scene[i].move(i);         
             }
 
 
+            // show itens    
+            for(let i=0;i<itens.length;i++){
 
+                if(collision(player,itens[i])){
+                    if(itens[i].item == 1 && player.max_shot < 9 ){ // add shot
+                        player.max_shot += 1;
+
+                    }else if(itens[i].item == 2){ // laser
+                        if(player.weapon != 2){
+                            player.max_shot = 1;
+                            player.weapon = 2;                        
+                        }else{
+                            player.max_shot += 1;
+                        }
+
+                    }else if(itens[i].item == 3){ // Ripple
+
+                    }else if(itens[i].item == 4){ // Increese Speed
+                        player.speed += 1;
+
+                    }else if(itens[i].item == 5){ // Torp
+                        player.bomb = 4;
+                        player.max_bomb += 1;
+                    }
+
+                    itens.splice(i,1);
+
+                }else{
+                    itens[i].move(i);
+                }
+
+            }
+
+            hit();    
+            player.draw();
+        }else{
+            weapon_menu();
         }
 
-
-        hit();    
         joystick();
 
         // draw player
-        player.draw();
 }
 
 function draw_pixel(x,y,N){
@@ -493,3 +506,59 @@ function select_strip(y){
         rect(0,y,width,pixel);   
 
 }
+
+function weapon_menu(){
+    background(25,20,158);
+    fill(108,184,225);
+    rect(30,30,width-60,height-260);
+
+    rect(30,height-220, (width-100)/3, 200 );
+    rect(37 + (width-80)/3,height-220, (width-80)/3, 200 );
+    rect(50 + 2*(width-80)/3,height-220, (width-80)/3, 200 );
+
+
+    fill(0)
+    rect(35,35,width-70,height-270);
+
+    rect(35,height-215, (width-130)/3, 190 )
+    rect(52 + (width-110)/3,height-215, (width-110)/3, 190 )
+    rect(75 + 2*(width-110)/3,height-215, (width-110)/3, 190 )
+
+    fill(255)
+    text("WEAPONS ENERGY", 250, 70, width, 150);
+
+// show weapon energy
+    energy_wep[0] = player.shield;
+    let x = 120;
+    let y = 110;
+    for(let i=0; i<9; i++){
+        if(i == 5){
+            x = 450;
+            y = 110;
+        }                
+        if(get_weapons[i]){
+            text(weap_names[i], x, y , 300, 150);
+
+            if(i == player.weapon){
+                draw_sprite(x - 20 ,y  ,pl_sprites.splash["seta"]);                
+            }
+            y += 10;
+
+            for(let j=0; j<energy_wep[i]; j+=3){
+                draw_sprite(x+j*2,y ,pl_sprites.player["energy_bar_v"]);
+            }
+            y += 40;
+        }
+    }
+
+// show lifes
+    text("LIFES", width/2 - 50, height-180, 200, 150);
+    text("x"+ player.lifes, width/2 -20, height-50, 200, 150);
+    draw_sprite(width/2 ,height-130,pl_sprites.player["main"]);
+
+
+    text("SHOT  "+player.max_shot+"x" , 70, height-150, 200, 150);
+    text("BOMB  "+player.max_bomb+"x" , 70, height-120, 200, 150);
+    text("SPEED +"+ (player.speed - 3) , 70, height-90, 200, 150);
+
+} 

@@ -6,15 +6,17 @@ let bk_sprites;
 let pixel = 3; // tamanho do pixel
 let score = 0;
 let back_color = [0,0,0];
+let pause = false;
 
 
 let player = new Player();
-
 let sprite_name = "main"
 
-
-let weap_names = ["NONE","DEFALT","LASER","RIPPLE","SPREAD","TORP"];
+let get_weapons = [1,1,1,1,1,1,1,1,1];
+let energy_wep =  [1,100,100,100,100,100,100,100,100];
+let weap_names = ["M.BUSTER","FIRE BALL","ICE BALL","LASER","RIPPLE","SPREAD","NEPAL BOMB", "NUCLER BOMB","TORP"];
 let itens_name = ["none","plus","laser","ripple","spread","torp"];
+
 
 let enemy = [];
 let shooting = [];
@@ -51,11 +53,25 @@ function setup() {
 
     player.hitbox = [pl_sprites.player.main.x, pl_sprites.player.main.y];
 
+// JOYSTICK
+  window.addEventListener("gamepadconnected", function(e) {
+  gamepadHandler(e, true);
+  console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+    e.gamepad.index, e.gamepad.id,
+    e.gamepad.buttons.length, e.gamepad.axes.length);      
+  });
+    window.addEventListener("gamepaddisconnected", function(e) {
+  console.log("Gamepad disconnected from index %d: %s",
+    e.gamepad.index, e.gamepad.id);      
+    gamepadHandler(e, false);
+  }); 
+
 
 }
 
 function draw() {
     background(back_color);
-    fill(255);
+    fill(255);   
     stage_select(stage);
+    
 }

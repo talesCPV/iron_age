@@ -7,21 +7,42 @@ class Player{
     this.y = screen[1] / 2;
     this.power = 5;
     this.speed = 3;
-    this.weapon = 1;
-    this.bomb = 0;
+    this.weapon = 0;
     this.max_shot = 3;
-    this.max_bomb = 0;
+    this.max_bomb = 1;
     this.shield = 100;
     this.name = "main";
     this.hitbox = [0, 0];
     this.pivot = [1,1];
     this.delay = 0;
+    this.lifes = 3;
   }
 }
 
 Player.prototype.move = function (x,y) {
-  this.x += x * this.speed;
-  this.y += y * this.speed;  
+
+  if(!pause){
+    this.x += x * this.speed;
+
+    if(this.x < 20){ // borda esquerda
+      this.x = 20;
+    }
+
+    if(this.x > width - 50){ // borda direita
+      this.x = width - 50;
+    }
+
+    this.y += y * this.speed;  
+
+    if(this.y < 50){ // borda superior
+      this.y = 50;
+    }
+    if(this.y > height - 100){ // borda inferior
+      this.y = height - 100;
+    }
+
+  }
+
 }
 
 Player.prototype.draw = function(){
@@ -35,9 +56,6 @@ Player.prototype.draw = function(){
       stage = 3; // game over
     }
   }
-  for(let i=0; i<this.shield; i+=5){
-    draw_sprite(30,150-i,pl_sprites.player["energy_bar"]);
-  }
 }
 
 Player.prototype.hit = function(N){
@@ -45,11 +63,54 @@ Player.prototype.hit = function(N){
     this.shield -= N;
     this.delay = 30
   }
-/*
-  if(this.shield <= 0){
-    this.delay = 50;
+
+}
+
+// WEAPONS FUNCTIONS
+function m_buster(){
+  if(shooting.length < player.max_shot){
+      shooting.push(new Shot(player.x,player.y));
+      sound_efects[1].play();
+  }  
+}
+
+function laser(){
+  if(shooting.length < player.max_shot){
+    shooting.push(new Shot(player.x,player.y));
+    shooting[shooting.length-1].name = "laser";
+    shooting[shooting.length-1].power = 5;
+    shooting[shooting.length-1].speed = 8;
+    energy_wep[player.weapon] -= 3;
+    sound_efects[1].play();  
   }
-*/
+}
+
+function torp(){
+    if(bombing.length < player.max_bomb){
+      bombing.push(new Torp(player.x,player.y));
+      energy_wep[this.weapon] -= 5;
+    }  
+}
+
+function ripple(){
+  if(shooting.length < player.max_shot){
+      shooting.push(new Ripple(player.x,player.y,3));      
+      energy_wep[player.weapon] -= 3;
+      sound_efects[1].play();
+  }  
+}
+
+Player.prototype.shot = function(N){
+
+  if((this.weapon == 0 || this.weapon > 5) && N == 1){
+    m_buster();    
+  }else if(this.weapon == 3 && N == 1 && energy_wep[this.weapon] > 2){
+    laser();
+  }else if(this.weapon == 4 && N == 1 && energy_wep[this.weapon] > 2){
+    ripple();
+  }else if(this.weapon == 8 && N == 2 && energy_wep[this.weapon] > 2 ){
+    torp();
+  }
 
 }
 
@@ -82,21 +143,6 @@ Itens.prototype.move = function(N){
 
 }
 
-
-
-function shot(N){
-  if(N == 1){
-    shooting.push(new Shot(player.x,player.y));
-  }else if(N == 2){
-    shooting.push(new Shot(player.x,player.y));
-    shooting[shooting.length-1].name = "laser";
-    shooting[shooting.length-1].power = 5;
-    shooting[shooting.length-1].speed = 8;
-  }else if(N == 4){
-    bombing.push(new Torp(player.x,player.y));
-  }
-
-}
 
 class Fire{
   constructor(x,y){
@@ -155,6 +201,41 @@ Torp.prototype.move = function(N){
   }
 
 }
+
+class Ripple extends Fire{
+  constructor(x,y,n){
+    super(x,y);
+    this.name = ["ripple_01","ripple_02","ripple_03"];
+    this.power = 3;
+    this.start = x;
+    this.count = 0;
+    this.i = 0;
+    this.repeat = n-1;
+  }
+}
+
+Ripple.prototype.move = function(N){
+  this.x += this.speed;
+  this.count++;
+
+  if(this.count == 8){
+    this.i = 1;
+    if(this.repeat > 0){
+      shooting.push(new Ripple(player.x,player.y,this.repeat));
+    }
+  }else if( this.count == 16){
+    this.i = 2;
+
+  }
+
+  draw_sprite(this.x,this.y,pl_sprites.weapons[this.name[this.i]]);
+
+  if(this.x > width + 10){
+      shooting.splice(N,1);
+  }
+
+}
+
 
 
 class Ground{

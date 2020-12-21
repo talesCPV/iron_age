@@ -119,27 +119,72 @@ function new_item(x,y,N){
 }
 
 class Itens{
-  constructor(x,y, N){
+  constructor(x,y){
     this.x = x;
     this.y = y;
     this.speed = 3;
-    this.name = itens_name[N];
-    this.item = N;
-    this.hitbox = [15,15];
+    this.name = "";
+    this.hitbox = [0,0];
     this.pivot = [1,1];
+    this.value = 0;
+    this.type = 0;
   }
 }
 
-Itens.prototype.move = function(N){
+Itens.prototype.hit = function(N){
+  if(this.type == 1 && energy_wep[player.weapon] < 100){ // + energy weapon
+      energy_wep[player.weapon] += this.value;
+  }else if(this.type == 2 && player.shield < 100){ // + energy player
+      player.shield += this.value;
+  }else if(this.type == 3 && player.max_shot < 10){ // + max shots
+      player.max_shot += 1;
+  }else if(this.type == 4 && player.max_bomb < 6){ // + max bombs
+      player.max_bomb += 1;
+  }else if(this.type == 5 && player.speed < 10){ // + player speed
+      player.speed += 1;
+  }
 
+  itens.splice(N,1); // kill item
+
+}
+
+class Energy_Weapon extends Itens{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["energy_weapon_01","energy_weapon_02"];
+    this.index = 0;
+    this.count = 0;
+    this.hitbox = [pl_sprites.itens.energy_weapon_01.x,pl_sprites.itens.energy_weapon_01.y];
+    this.value = 20;
+    this.type = 1;
+  }
+}
+
+Energy_Weapon.prototype.move = function(N){
   this.x -= scene_speed + this.speed;
+  this.count++;
+  if(this.count == 10){
+    this.index = 1;
+  }else if(this.count == 20){
+    this.count = 0
+    this.index = 0;
+  }
 
-  draw_sprite(this.x,this.y,pl_sprites.itens[this.name]);
+  draw_sprite(this.x,this.y,pl_sprites.itens[this.name[this.index]]);
 
   if(this.x < -10){
       itens.splice(N,1);
   }
 
+}
+
+class Energy_Ball extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["energy_ball_01","energy_ball_02"];
+    this.type = 2;
+    this.hitbox = [pl_sprites.itens.energy_ball_01.x,pl_sprites.itens.energy_ball_01.y];
+  }
 }
 
 

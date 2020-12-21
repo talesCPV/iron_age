@@ -1,9 +1,16 @@
-function sort_item(x,y,N){
+
+function sort_item(x,y,N){ // N = % de chance de spawnar um itens
     let perc = Math.floor(random(0,100));
     if( perc < N ){
-        let max =  itens_name.length;
+        let max = 3 // Quantidade de itens possíveis existentes
         let sort = Math.floor(random(1,max));
-        itens.push(new Itens(x,y,sort));
+
+        if(sort == 1){
+            itens.push(new Energy_Weapon(x,y));
+        }else if(sort == 2){
+            itens.push(new Energy_Ball(x,y));
+        }
+
     }
 }
 

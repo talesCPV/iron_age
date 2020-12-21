@@ -15,8 +15,6 @@ let sprite_name = "main"
 let get_weapons = [1,1,1,1,1,1,1,1,1];
 let energy_wep =  [1,100,100,100,100,100,100,100,100];
 let weap_names = ["M.BUSTER","FIRE BALL","ICE BALL","LASER","RIPPLE","SPREAD","NEPAL BOMB", "NUCLER BOMB","TORP"];
-let itens_name = ["none","plus","laser","ripple","spread","torp"];
-
 
 let enemy = [];
 let shooting = [];

@@ -341,28 +341,7 @@ function draw_screen(){
             for(let i=0;i<itens.length;i++){
 
                 if(collision(player,itens[i])){
-                    if(itens[i].item == 1 && player.max_shot < 9 ){ // add shot
-                        player.max_shot += 1;
-
-                    }else if(itens[i].item == 2){ // laser
-                        if(player.weapon != 2){
-                            player.max_shot = 1;
-                            player.weapon = 2;                        
-                        }else{
-                            player.max_shot += 1;
-                        }
-
-                    }else if(itens[i].item == 3){ // Ripple
-
-                    }else if(itens[i].item == 4){ // Increese Speed
-                        player.speed += 1;
-
-                    }else if(itens[i].item == 5){ // Torp
-                        player.bomb = 4;
-                        player.max_bomb += 1;
-                    }
-
-                    itens.splice(i,1);
+                    itens[i].hit();  
 
                 }else{
                     itens[i].move(i);

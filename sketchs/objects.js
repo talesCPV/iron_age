@@ -1,6 +1,5 @@
 
 
-
 class Player{
   constructor(){
     this.x = screen[0] / 2;

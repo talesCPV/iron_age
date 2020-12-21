@@ -65,7 +65,7 @@ function joystick(){
 
 function keyPressed() {
 
-    keyIndex = key.charCodeAt(0);
+    let keyIndex = key.charCodeAt(0);
 
 
     if(pause){
@@ -139,7 +139,13 @@ function keyPressed() {
                 stage = 2;
                 next_stage = 5;
             }else if( sel_opt[0] == 0 && sel_opt[1] == 1 ){
-                alert("Can I Play With Madness");
+                back_color = [25,20,158];
+                song = loadSound('assets/Madness.mp3');
+                scene.push(new Ground("cavern","arvores"));
+                scene[scene.length-1].fill();
+
+                stage = 2;
+                next_stage = 6;                
             }else if( sel_opt[0] == 2 && sel_opt[1] == 1 ){
                 alert("Run To The Hills");
             }else if( sel_opt[0] == 0 && sel_opt[1] == 2 ){
@@ -174,12 +180,6 @@ function keyPressed() {
 }
 
 function make_control(){
-
-
-
-
-
-
 
     if(map_buttons[1] == -1){
         player.name = "up";
@@ -236,8 +236,6 @@ function make_control(){
     }else{
         pressed[3] = false;
     }
-
-
 
 
 }

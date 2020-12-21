@@ -277,8 +277,22 @@ function stage_select(sel_stage){
         }        
 
         draw_screen();
+    }else if(sel_stage == 6){
 
+        stage_percent = Math.floor(song.currentTime()/stage_length*100) ;
+                if(time < stage_percent){
+            time = stage_percent;
+            if(time == 1){
+                new_sea_ship();
+            }else if(time == 3){
+                new_viper(5);
+            }else if(time == 4){
 
+            }else if(time == 5){
+
+            }
+        }   
+        draw_screen();
     }
 
 }

@@ -84,13 +84,6 @@ function laser(){
   }
 }
 
-function torp(){
-    if(bombing.length < player.max_bomb){
-      bombing.push(new Torp(player.x,player.y));
-      energy_wep[this.weapon] -= 5;
-    }  
-}
-
 function ripple(){
   if(shooting.length < player.max_shot){
       shooting.push(new Ripple(player.x,player.y,3));      
@@ -99,20 +92,79 @@ function ripple(){
   }  
 }
 
+function fireball(){
+  if(shooting.length < player.max_shot){
+    shooting.push(new Shot(player.x,player.y));
+    shooting[shooting.length-1].name = "fireball";
+    shooting[shooting.length-1].power = 25;
+    shooting[shooting.length-1].speed = 12;
+    energy_wep[player.weapon] -= 10;
+    sound_efects[1].play();  
+  }
+}
+
+function iceball(){
+  if(shooting.length < player.max_shot){
+    shooting.push(new Shot(player.x,player.y));
+    shooting[shooting.length-1].name = "iceball";
+    shooting[shooting.length-1].power = 7;
+    shooting[shooting.length-1].speed = 12;
+    energy_wep[player.weapon] -= 3;
+    sound_efects[1].play();  
+  }
+}
+
+function spread(){
+    if(shooting.length < player.max_shot){
+      for(let i=-3; i<4; i++){
+        shooting.push(new Spread(player.x,player.y,i));
+        sound_efects[1].play();  
+      }
+        energy_wep[player.weapon] -= 1;
+    }
+}
+
+function atomic(){
+    if(bombing.length < player.max_bomb){
+      bombing.push(new Atomic(player.x,player.y));
+      energy_wep[player.weapon] -= 50;
+    }  
+}
+
+function torp(){
+    if(bombing.length < player.max_bomb){
+      bombing.push(new Torp(player.x,player.y));
+      energy_wep[player.weapon] -= 5;
+    }  
+}
+
 Player.prototype.shot = function(N){
 
   if((this.weapon == 0 || this.weapon > 5) && N == 1){
     m_buster();    
-  }else if(this.weapon == 3 && N == 1 && energy_wep[this.weapon] > 2){
+  }else if(this.weapon == 1 && N == 1 && energy_wep[this.weapon] > 0){
+    fireball();
+  }else if(this.weapon == 2 && N == 1 && energy_wep[this.weapon] > 0){
+    iceball();
+  }else if(this.weapon == 3 && N == 1 && energy_wep[this.weapon] > 0){
     laser();
-  }else if(this.weapon == 4 && N == 1 && energy_wep[this.weapon] > 2){
+  }else if(this.weapon == 4 && N == 1 && energy_wep[this.weapon] > 0){
     ripple();
-  }else if(this.weapon == 8 && N == 2 && energy_wep[this.weapon] > 2 ){
+  }else if(this.weapon == 5 && N == 1 && energy_wep[this.weapon] > 0){
+    spread();
+  }else if(this.weapon == 6 && N == 1 && energy_wep[this.weapon] > 0){
+
+  }else if(this.weapon == 7 && N == 2 && energy_wep[this.weapon] > 0){
+    atomic();
+  }else if(this.weapon == 8 && N == 2 && energy_wep[this.weapon] > 0 ){
     torp();
   }
 
-}
+  if(energy_wep[this.weapon] < 0){
+    energy_wep[this.weapon] = 0;
+  }
 
+}
 
 function new_item(x,y,N){
     itens.push(new Itens(x,y,N));
@@ -245,6 +297,28 @@ class Shot extends Fire{
   }
 }
 
+class Spread extends Fire{
+  constructor(x,y,d){
+    super(x,y);
+    this.name = "spread";
+    this.direction = d;
+    this.speed = 12;
+  }
+}
+
+Spread.prototype.move = function(N){
+
+  this.x += this.speed;
+  if(this.direction != 0){
+    this.y += this.speed  *  this.direction * 0.2;
+  }
+  draw_sprite(this.x,this.y,pl_sprites.weapons[this.name]);
+
+  if(this.x > width + 10 || this.y > height + 10 || this.y < -10){
+      shooting.splice(N,1);
+  }
+
+}
 
 Shot.prototype.move = function(N){
   this.x += this.speed;
@@ -281,6 +355,51 @@ Torp.prototype.move = function(N){
   }
 
 }
+
+
+class Atomic extends Fire{
+  constructor(x,y){
+    super(x,y);
+    this.name = "atomic";
+    this.power = 50;
+    this.count = 0;
+    this.fall = 0;
+    this.scale = [1,1];
+    this.speed = 2;
+    this.hitbox = [0,0];
+  }
+}
+
+Atomic.prototype.move = function(N){
+
+  this.count++;
+
+  if(this.count == 20){
+    this.fall = this.speed
+  } else if(this.count >= 80){
+    this.speed = 0;
+    this.fall = 0;
+    this.scale[0] += 0.2;
+    this.scale[1] += 0.2;
+    this.hitbox[0] += 2.5;
+    this.hitbox[1] += 2.5;
+  }
+  if(this.count >= 180){
+    bombing.splice(N,1);
+  }
+
+  this.x += this.speed;
+  this.y += this.fall;
+
+  push();
+  translate(this.x,this.y);
+  scale(this.scale);
+  draw_sprite(0,0,pl_sprites.weapons[this.name]);
+  pop();
+
+}
+
+
 
 class Ripple extends Fire{
   constructor(x,y,n){

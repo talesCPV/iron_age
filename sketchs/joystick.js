@@ -53,14 +53,6 @@ function joystick(){
     }
 
 
-
-
-
-
-
-//    alert(map_buttons)
-
-
 }
 
 function keyPressed() {

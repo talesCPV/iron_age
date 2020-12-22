@@ -399,28 +399,28 @@ function hit(){
 
     for(let i=0; i<enemy.length;i++){
 
-        // atack
+        // hit enemys
         for(let j=0; j<shooting.length;j++){
-
-            if(collision(shooting[j],enemy[i])){
+            if(collision(shooting[j],enemy[i])){          
                 enemy[i].energy -= shooting[j].power;
-                shooting.splice(j,1);
+                shooting.splice(j,1);                
             }            
         }
 
-        // defense
+        for(let j=0; j<bombing.length;j++){
+            if(collision(bombing[j],enemy[i])){          
+                enemy[i].energy -= bombing[j].power;
+                if(bombing[j].name != "atomic"){
+                    bombing.splice(j,1);
+                }
+            }            
+        }
+
+        // hit player
         if(collision(player,enemy[i])){
             player.hit(enemy[i].power);
             enemy[i].energy -= 5;
         }
-
-        if(bombing.length > 0){
-            if(collision(bombing[0],enemy[i])){
-                enemy[i].energy -= bombing[0].power;
-                bombing.splice(0,1);
-            }               
-        }
-
     }
 }
 

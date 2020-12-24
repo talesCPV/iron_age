@@ -8,11 +8,10 @@ let score = 0;
 let back_color = [0,0,0];
 let pause = false;
 
-
 let player = new Player();
 let sprite_name = "main"
 
-let get_weapons = [1,1,1,1,1,1,1,1,1];
+let get_weapons = [1,0,0,0,0,0,0,0,0];
 let energy_wep =  [1,100,100,100,100,100,100,100,100];
 let weap_names = ["M.BUSTER","FIRE BALL","ICE BALL","LASER","RIPPLE","SPREAD","NEPAL BOMB", "NUCLER BOMB","TORP"];
 
@@ -21,12 +20,12 @@ let shooting = [];
 let bombing = [];
 let itens = [];
 let scene = [];
+let boss = [];
 
 let scene_speed = 1;
 let stage = 0;
 let song;
-let stage_length;
-let stage_percent = 0;
+
 let sound_efects = [];
 
 function preload() {
@@ -35,11 +34,11 @@ function preload() {
     en_sprites = loadJSON('assets/enemys.json');
     bk_sprites = loadJSON('assets/background.json');
     font = loadFont('assets/press_start.ttf');
-    sound_efects.push(loadSound('assets/efects/start.wav')) // [0]
-    sound_efects.push(loadSound('assets/efects/shot.wav')) // [1]    
-    sound_efects.push(loadSound('assets/efects/pause.wav')) // [2]    
-    sound_efects.push(loadSound('assets/efects/destroy.wav')) // [3]    
-    sound_efects.push(loadSound('assets/Loop.mp3')) // [4]    
+    sound_efects.push(loadSound('assets/efects/start.wav'));   // [0]
+    sound_efects.push(loadSound('assets/efects/shot.wav'));    // [1]    
+    sound_efects.push(loadSound('assets/efects/pause.wav'));   // [2]    
+    sound_efects.push(loadSound('assets/efects/destroy.wav')); // [3]    
+    sound_efects.push(loadSound('assets/music/loop.mp3'));     // [4]    
 
 }
 
@@ -48,6 +47,11 @@ function setup() {
     textSize(20);
     textAlign(10, 10);
     textFont(font);
+    sound_efects.push(loadSound('assets/efects/energy.wav'));  // [5]    
+    sound_efects.push(loadSound('assets/efects/laser.wav'));   // [6]    
+    sound_efects.push(loadSound('assets/music/boss.mp3'));     // [7]    
+    sound_efects.push(loadSound('assets/efects/boss_defeat.wav'));     // [8]    
+    sound_efects.push(loadSound('assets/efects/get_item.wav'));     // [9]    
 
     player.hitbox = [pl_sprites.player.main.x, pl_sprites.player.main.y];
 

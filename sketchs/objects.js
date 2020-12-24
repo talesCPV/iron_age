@@ -1,5 +1,4 @@
 
-
 class Player{
   constructor(){
     this.x = screen[0] / 2;
@@ -57,6 +56,34 @@ Player.prototype.draw = function(){
   }
 }
 
+Player.prototype.shot = function(N){
+
+  if((this.weapon == 0 || this.weapon > 5) && N == 1){
+    m_buster();    
+  }else if(this.weapon == 1 && N == 1 && energy_wep[this.weapon] > 0){
+    fireball();
+  }else if(this.weapon == 2 && N == 1 && energy_wep[this.weapon] > 0){
+    iceball();
+  }else if(this.weapon == 3 && N == 1 && energy_wep[this.weapon] > 0){
+    laser();
+  }else if(this.weapon == 4 && N == 1 && energy_wep[this.weapon] > 0){
+    ripple();
+  }else if(this.weapon == 5 && N == 1 && energy_wep[this.weapon] > 0){
+    spread();
+  }else if(this.weapon == 6 && N == 1 && energy_wep[this.weapon] > 0){
+
+  }else if(this.weapon == 7 && N == 2 && energy_wep[this.weapon] > 0){
+    atomic();
+  }else if(this.weapon == 8 && N == 2 && energy_wep[this.weapon] > 0 ){
+    torp();
+  }
+
+  if(energy_wep[this.weapon] < 0){
+    energy_wep[this.weapon] = 0;
+  }
+
+}
+
 Player.prototype.hit = function(N){
   if(this.delay == 0){
     this.shield -= N;
@@ -80,7 +107,7 @@ function laser(){
     shooting[shooting.length-1].power = 5;
     shooting[shooting.length-1].speed = 8;
     energy_wep[player.weapon] -= 3;
-    sound_efects[1].play();  
+    sound_efects[6].play();  
   }
 }
 
@@ -88,7 +115,7 @@ function ripple(){
   if(shooting.length < player.max_shot){
       shooting.push(new Ripple(player.x,player.y,3));      
       energy_wep[player.weapon] -= 3;
-      sound_efects[1].play();
+      sound_efects[6].play();
   }  
 }
 
@@ -138,33 +165,7 @@ function torp(){
     }  
 }
 
-Player.prototype.shot = function(N){
 
-  if((this.weapon == 0 || this.weapon > 5) && N == 1){
-    m_buster();    
-  }else if(this.weapon == 1 && N == 1 && energy_wep[this.weapon] > 0){
-    fireball();
-  }else if(this.weapon == 2 && N == 1 && energy_wep[this.weapon] > 0){
-    iceball();
-  }else if(this.weapon == 3 && N == 1 && energy_wep[this.weapon] > 0){
-    laser();
-  }else if(this.weapon == 4 && N == 1 && energy_wep[this.weapon] > 0){
-    ripple();
-  }else if(this.weapon == 5 && N == 1 && energy_wep[this.weapon] > 0){
-    spread();
-  }else if(this.weapon == 6 && N == 1 && energy_wep[this.weapon] > 0){
-
-  }else if(this.weapon == 7 && N == 2 && energy_wep[this.weapon] > 0){
-    atomic();
-  }else if(this.weapon == 8 && N == 2 && energy_wep[this.weapon] > 0 ){
-    torp();
-  }
-
-  if(energy_wep[this.weapon] < 0){
-    energy_wep[this.weapon] = 0;
-  }
-
-}
 
 function new_item(x,y,N){
     itens.push(new Itens(x,y,N));
@@ -183,11 +184,22 @@ class Itens{
   }
 }
 
+
+
+
 Itens.prototype.hit = function(N){
   if(this.type == 1 && energy_wep[player.weapon] < 100){ // + energy weapon
+
+      sound_efects[5].playMode('restart');
+      sound_efects[5].play();
       energy_wep[player.weapon] += this.value;
+
   }else if(this.type == 2 && player.shield < 100){ // + energy player
+
+      sound_efects[5].playMode('restart');
+      sound_efects[5].play();
       player.shield += this.value;
+
   }else if(this.type == 3 && player.max_shot < 10){ // + max shots
       player.max_shot += 1;
   }else if(this.type == 4 && player.max_bomb < 6){ // + max bombs
@@ -216,7 +228,7 @@ class Small_Energy_Weapon extends Energy_Weapon{
   constructor(x,y){
     super(x,y);
     this.name = ["small_w_ball_01","small_w_ball_02"];
-    this.value = 5;
+    this.value = 4;
     this.hitbox = [pl_sprites.itens.small_w_ball_01.x,pl_sprites.itens.small_w_ball_01.y];    
   }
 }
@@ -276,7 +288,6 @@ class Bomb extends Energy_Weapon{
   }
 }
 
-
 class Fire{
   constructor(x,y){
     this.x = x  ;
@@ -288,7 +299,6 @@ class Fire{
     this.pivot = [1,1];
   }
 }
-
 
 class Shot extends Fire{
   constructor(x,y){
@@ -356,7 +366,6 @@ Torp.prototype.move = function(N){
 
 }
 
-
 class Atomic extends Fire{
   constructor(x,y){
     super(x,y);
@@ -399,8 +408,6 @@ Atomic.prototype.move = function(N){
 
 }
 
-
-
 class Ripple extends Fire{
   constructor(x,y,n){
     super(x,y);
@@ -434,7 +441,6 @@ Ripple.prototype.move = function(N){
   }
 
 }
-
 
 
 class Ground{

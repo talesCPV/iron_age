@@ -1,8 +1,22 @@
 
 let button_press = false;
-let time = 0;
+
 let sel_opt = [1,1];
 let next_stage = 0;
+let boss_defeat = false;
+
+let stage_length;
+let stage_percent = 0;
+let timer = [0,0]; // [ % stage, total sec, current sec]
+let time = 0;
+
+function clock(){
+        let sec = second();
+        if( sec != timer[1]){
+            timer[1] = sec;
+            timer[0]++;
+        }
+}
 
 
 function stage_select(sel_stage){
@@ -60,17 +74,37 @@ function stage_select(sel_stage){
         stage_frame(550,425);
 
         fill(255);
-        text("THE TROOPER", 150, 200, 200, 150);
-        text("THE EVIL THAT MAN", 350, 200, 230, 150);
-        text("WASTED YEARS", 550, 200, 200, 150);
 
-        text("CAN I PLAY", 150, 375, 200, 150);
-        text("RUN TO THE HILLS", 550, 375, 200, 150);
+// if(!get_weapons[x]){  } só mostrar as fases que ainda não passamos
+        text("THE", 150, 200, 100, 150);
+        text("TROOPER", 150, 225, 150, 150);
 
-        text("ACES HIGH", 150, 550, 150, 150);
-        text("HALLOWED BE THY", 350, 550, 200, 150);
-        text("FEAR OF THE DARK", 550, 550, 200, 150);
+        text("THE EVIL ", 350, 200, 200, 150);
+        text("THAT MAN", 350, 225, 200, 150);
+        text("DO", 350, 250, 200, 150);
 
+
+
+        text("WASTED", 550, 200, 200, 150);
+        text("YEARS", 550, 225, 200, 150);
+
+        text("CAN I", 150, 375, 200, 150);
+        text("PLAY WITH", 150, 400, 200, 150);
+        text("MADNESS", 150, 425, 150, 150);
+
+        text("RUN TO", 550, 375, 200, 150);
+        text("THE HILLS", 550, 400, 200, 150);
+
+        text("ACES", 150, 550, 200, 150);
+        text("HIGH", 150, 575, 200, 150);
+
+        text("HALLOWED", 350, 550, 200, 150);
+        text("BE THY", 350, 575, 200, 150);
+        text("NAME", 350, 600, 200, 150);
+
+
+        text("FEAR OF", 550, 550, 200, 150);
+        text("THE DARK", 550, 575, 200, 150);
 
         draw_sprite(202,120,pl_sprites.splash["eddie_trooper"]);
         draw_sprite(402,120,pl_sprites.splash["eddie_evil"]);
@@ -112,7 +146,7 @@ function stage_select(sel_stage){
 
         player.draw();
         player.x += 0.5;
-        text("LOADING...", 210, 400, width, 150);
+        text("LOADING...", 310, 400, width, 150);
 
         if(song.isLoaded()){
 //            sound_efects[4].setLoop(false);
@@ -132,10 +166,10 @@ function stage_select(sel_stage){
         text("PRESS F5  AND TRY AGAIN ", 180, 550, width, 150);
 
 
-    }else if(sel_stage == 4){
+    }else if(sel_stage == 4){ // The Trooper
 
 
-        stage_percent = Math.floor(song.currentTime()/stage_length*100) ;
+        stage_percent = Math.floor(timer[0]/stage_length*100) ;
 
         //enemys span
         if(time < stage_percent){
@@ -229,40 +263,23 @@ function stage_select(sel_stage){
             }else if(time == 90){                
                 new_enemy_balls(6);
                 new_walker();
-            }else if(time == 91){                
-                new_moais("top");
+            }else if(time == 91){                               
                 new_walker();
             }else if(time == 92){                
-                new_walker();
+
             }else if(time == 93){                
-                new_moais("top");
-                new_moais("down");
-            }else if(time == 95){                
-                new_moais("top");
-                new_moais("down");
-            }else if(time == 97){                
-                new_moais("top");
-                new_enemy_balls(6);
-                new_moais("down");
+
             }else if(time == 98){                
-                new_moais("top");
-                new_viper(5);
-                new_moais("down");
-                new_walker();
-            }else if(time == 99){                
-                new_viper(15);
-                new_walker();
-            }else if(time == 100){                
-                new_walker();
-                new_viper(5);
+
+                big_moais();
             }
 
         }
 
         draw_screen();
-    }else if(sel_stage == 5){
+    }else if(sel_stage == 5){ //Wasted Years
 
-        stage_percent = Math.floor(song.currentTime()/stage_length*100) ;
+        stage_percent = Math.floor(timer[0]/stage_length*100) ;
 
         if(time < stage_percent){
             time = stage_percent;
@@ -275,20 +292,135 @@ function stage_select(sel_stage){
                 new_viper(5);
                 enemy.push(new Thunder(300,100));
             }else if(time == 5){
+                new_viper(5);
+            }else if(time == 8){
                 new_sea_ship();
+            }else if(time == 10){
+                scene.push(new Cloud(150));
+                new_viper(5);
+            }else if(time == 12){
+                new_sea_ship();
+                enemy.push(new Thunder(300,100));
+                new_viper(5);
+            }else if(time == 13){
+                new_viper(5);
+            }else if(time == 15){
+                new_enemy_balls(6);                
+            }else if(time == 18){
+                scene.push(new Cloud(150));
+                new_sea_ship();
+            }else if(time == 20){
+                new_sea_ship();
+            }else if(time == 21){
+                scene.push(new Cloud(150));
+                new_viper(5);
+            }else if(time == 23){
+                new_enemy_balls(6);                
+            }else if(time == 25){
+                scene.push(new Cloud(150));
+                new_sea_ship();
+            }else if(time == 27){
+                scene.push(new Cloud(150));
+                new_sea_ship();
+            }else if(time == 30){
+                new_enemy_balls(6);                
+            }else if(time == 32){
+                scene.push(new Cloud(150));
+                new_viper(5);
+            }else if(time == 33){
+                enemy.push(new Thunder(300,100));
+                new_enemy_balls(6);                
+            }else if(time == 35){
+                scene.push(new Cloud(150));
+            }else if(time == 37){
+                new_sea_ship();
+            }else if(time == 39){
+                scene.push(new Cloud(150));
+                new_sea_ship();
+            }else if(time == 40){
+                new_enemy_balls(6);                
+            }else if(time == 42){
+                enemy.push(new Thunder(300,100));
+            }else if(time == 45){
+                scene.push(new Cloud(150));
+                new_enemy_balls(6);                
+            }else if(time == 47){
+                new_sea_ship();
+            }else if(time == 50){
+                new_sea_ship();
+            }else if(time == 52){
+                scene.push(new Cloud(150));
+                new_viper(5);
+            }else if(time == 53){
+                scene.push(new Cloud(150));
+            }else if(time == 55){
+                new_sea_ship();
+            }else if(time == 56){
+                new_sea_ship();
+                scene.push(new Cloud(150));
+            }else if(time == 59){
+                new_enemy_balls(6);                
+            }else if(time == 61){
+                enemy.push(new Thunder(300,100));
+                new_enemy_balls(6);                
+            }else if(time == 63){
+                scene.push(new Cloud(150));
+            }else if(time == 65){
+                new_sea_ship();
+            }else if(time == 69){
+                new_viper(5);
+                scene.push(new Cloud(150));
+            }else if(time == 70){
+                new_enemy_balls(6);                
+                new_sea_ship();
+            }else if(time == 72){
+                scene.push(new Cloud(150));
+            }else if(time == 74){
+                new_sea_ship();
+            }else if(time == 77){
+                scene.push(new Cloud(150));
+                new_sea_ship();
+            }else if(time == 79){
+                enemy.push(new Thunder(300,100));
+                new_viper(5);
+            }else if(time == 80){
+                scene.push(new Cloud(150));
+            }else if(time == 83){
+                new_sea_ship();
+            }else if(time == 84){
+                enemy.push(new Thunder(300,100));
+                scene.push(new Cloud(150));
+            }else if(time == 85){
+                new_sea_ship();
+            }else if(time == 87){
+                scene.push(new Cloud(150));
+            }else if(time == 89){
+                new_sea_ship();
+            }else if(time == 90){
+                scene.push(new Cloud(150));
+                new_sea_ship();
+            }else if(time == 92){
+                enemy.push(new Thunder(300,100));
+                new_viper(5);
+                new_sea_ship();
+            }else if(time == 94){
+                new_sea_ship();
+            }else if(time == 96){
+                scene.push(new Cloud(150));
+                kraken();
             }
         }        
 
         draw_screen();
-    }else if(sel_stage == 6){
+    }else if(sel_stage == 6){ // Can I play with madness
 
-        stage_percent = Math.floor(song.currentTime()/stage_length*100) ;
+        stage_percent = Math.floor(timer[0]/stage_length*100) ;
                 if(time < stage_percent){
             time = stage_percent;
             if(time == 1){
-                new_sea_ship();
+                big_moais();
             }else if(time == 3){
-                new_viper(5);
+//                new_viper(5);
             }else if(time == 4){
 
             }else if(time == 5){
@@ -309,6 +441,8 @@ function draw_screen(){
         text("BOMB: x"+player.max_bomb, 610, 25, 300, 150);
 
         if(!pause){
+
+            clock();
 
             // show all shottings
             for(let i=0;i<shooting.length;i++){
@@ -341,6 +475,17 @@ function draw_screen(){
                 }
 
             }
+
+            // show boss
+            if(boss.length > 0){
+                boss[0].atack(0);
+                for(let i=0; i<boss[0].energy; i+=5){
+                    draw_sprite(width-60,150-i,pl_sprites.player["energy_bar"]);
+                }                  
+            }
+
+
+
 
             // show energy bars
             for(let i=0; i<player.shield; i+=5){
@@ -404,13 +549,26 @@ function hit(){
             if(collision(shooting[j],enemy[i])){          
                 enemy[i].energy -= shooting[j].power;
                 shooting.splice(j,1);                
-            }            
+            }else if(boss.length > 0){
+
+                if(collision(shooting[j],boss[0])){
+                    boss[0].hit(shooting[j].power);
+                    shooting.splice(j,1);                
+                }
+                
+            }
         }
 
         for(let j=0; j<bombing.length;j++){
             if(collision(bombing[j],enemy[i])){          
                 enemy[i].energy -= bombing[j].power;
                 if(bombing[j].name != "atomic"){
+                    bombing.splice(j,1);
+                }
+            }
+            if(boss.length > 0){
+                if(collision(bombing[j],boss[0])){
+                    boss[0].hit(bombing[j].power);
                     bombing.splice(j,1);
                 }
             }            
@@ -420,8 +578,43 @@ function hit(){
         if(collision(player,enemy[i])){
             player.hit(enemy[i].power);
             enemy[i].energy -= 5;
-        }
+        }        
     }
+
+    
+    if(boss.length > 0){
+        // boss hiting player
+        if(collision(player,boss[0])){
+            player.hit(boss[0].power);
+        }
+
+        // Boss defeat
+        if(boss[0].energy <= 0){
+
+            sound_efects[7].stop(); // stop the boss music
+            sound_efects[8].play(); 
+            boss = [];
+            boss_defeat = true;
+        }
+
+    }
+
+
+    if(boss_defeat){
+        player.x += 5;
+
+        if(player.x >= width + 200){
+            get_weapons[stage-3] = 1;
+            stage = 1;
+            sound_efects[4].setLoop(true);
+            sound_efects[4].play(); 
+            boss_defeat = false;
+        }
+
+
+    }
+
+
 }
 
 function collision(obj1,obj2){

@@ -160,6 +160,7 @@ class Enemy_ring extends Enemy{
         this.fall = false;
         this.value = 50;
         this.hitbox = [en_sprites.shoot[this.name].x * pixel, en_sprites.shoot[this.name].y * pixel];
+        this.power = 2;
     }
 }
 
@@ -255,8 +256,8 @@ class Viper_shot extends Enemy{
 
         let vet = Math.abs(x - player.x) + Math.abs(y - player.y)
 
-        this.offset_x = Math.abs(x - player.x) / vet;
-        this.offset_y = Math.abs(y - player.y) / vet;
+        this.offset_x = (x - player.x) / vet;
+        this.offset_y = (y - player.y) / vet;
         this.hitbox = [pixel,pixel];
 
     }

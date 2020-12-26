@@ -276,7 +276,6 @@ Viper_shot.prototype.move =  function(N){
 
 }
 
-
 function new_walker(){
     enemy.push(new Walker(100,height-90));
 }
@@ -327,7 +326,6 @@ class Walker_shot extends Viper_shot{
         this.speed = 10;
         this.power = 15;
         this.nome = "walker_shoot";
-
     }
 }
 
@@ -341,7 +339,6 @@ class Thunder extends Enemy{
         this.hitbox = [15,70];
         this.power =  25;
         this.visible = true;
-
     }
 
 }
@@ -357,7 +354,6 @@ Thunder.prototype.move = function(N){
     if(this.visible){
         draw_sprite(this.x,this.y,bk_sprites.sea.thunder);
     }
-
 
     if(this.count == 50){
         enemy.splice(N,1);

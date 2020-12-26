@@ -43,20 +43,15 @@ function joystick(){
         map_buttons[5] = controllers[0].buttons[1].value;
     }
 
-
    if(stage > 3){
- 
         make_control(map_buttons);
-
     }
-
 
 }
 
 function keyPressed() {
 
     let keyIndex = key.charCodeAt(0);
-
 
     if(stage == 0){ // KONAMI CODE
         let cheat = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
@@ -67,11 +62,11 @@ function keyPressed() {
         }
         if(score == 10){
             get_weapons = [1,1,1,1,1,1,1,1,1];
+            player.max_shot = 12;
+            player.max_special = 9;
             sound_efects[9].play();
         }
     }
-
-
 
     if(pause){
 
@@ -91,7 +86,6 @@ function keyPressed() {
                 player.weapon = 8;
             }
         }
-
 
         if( keyIndex == 69 ){ // ENTER => PAUSE
             map_buttons[3] = 1                
@@ -122,37 +116,15 @@ function keyPressed() {
             }
 
             if( keyIndex == 69 ){ // ENTER => Select Stage
-                player.x = 50;
-                timer = [0,0];
-                time = 0;
-                player.shield = 100;
      
                 if( sel_opt[0] == 0 && sel_opt[1] == 0 ){
-                    back_color = [0,0,0];
-                    song = loadSound('assets/music/Trooper.mp3');
-                    scene.push(new Ground("cavern","montanhas",true));
-                    scene.push(new Ground("cavern","arvores"));
-                    scene[scene.length-1].fill();
-                    stage = 2;
-                    next_stage = 4;
+                    start_stage(4);
                 }else if( sel_opt[0] == 1 && sel_opt[1] == 0 ){
                     alert("The Evil that Man Do");
                 }else if( sel_opt[0] == 2 && sel_opt[1] == 0 ){
-                    back_color = [25,20,158];
-    //                back_color = [108,184,225];
-                    song = loadSound('assets/music/Wasted.mp3');
-                    scene.push(new Ground("sea","agua",false,true));
-                    scene[scene.length-1].fill();
-                    stage = 2;
-                    next_stage = 5;
+                    start_stage(5);
                 }else if( sel_opt[0] == 0 && sel_opt[1] == 1 ){
-                    back_color = [25,20,158];
-                    song = loadSound('assets/music/Madness.mp3');
-                    scene.push(new Ground("sea","agua"));
-                    scene[scene.length-1].fill();
-
-                    stage = 2;
-                    next_stage = 6;                
+                    start_stage(6);             
                 }else if( sel_opt[0] == 2 && sel_opt[1] == 1 ){
                     alert("Run To The Hills");
                 }else if( sel_opt[0] == 0 && sel_opt[1] == 2 ){
@@ -246,6 +218,5 @@ function make_control(){
     }else{
         pressed[3] = false;
     }
-
 
 }

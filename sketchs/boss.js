@@ -225,6 +225,7 @@ class Boss_Spread{
 		this.y = y;
 		this.direction = d;
 		this.sprite = en_sprites.shoot.ring;
+		this.energy = 10;
 		this.speed = 12;
 		this.value = 50;
 		this.power = 15;

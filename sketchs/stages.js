@@ -47,8 +47,6 @@ function stage_select(sel_stage){
 
         if(keyIsDown(ENTER) ) {
             button_press = true;
-
-
         }
         
         
@@ -83,8 +81,6 @@ function stage_select(sel_stage){
         text("THAT MAN", 350, 225, 200, 150);
         text("DO", 350, 250, 200, 150);
 
-
-
         text("WASTED", 550, 200, 200, 150);
         text("YEARS", 550, 225, 200, 150);
 
@@ -102,20 +98,19 @@ function stage_select(sel_stage){
         text("BE THY", 350, 575, 200, 150);
         text("NAME", 350, 600, 200, 150);
 
-
         text("FEAR OF", 550, 550, 200, 150);
         text("THE DARK", 550, 575, 200, 150);
 
         draw_sprite(202,120,pl_sprites.splash["eddie_trooper"]);
-        draw_sprite(402,120,pl_sprites.splash["eddie_evil"]);
+//        draw_sprite(402,120,pl_sprites.splash["eddie_evil"]);
         draw_sprite(602,120,pl_sprites.splash["eddie_mind"]);
+
         draw_sprite(202,298,pl_sprites.splash["eddie_egito"]);
+        draw_sprite(602,298,pl_sprites.splash["eddie_hammer"]);
 
-
-
-
-
-
+        draw_sprite(202,476,pl_sprites.splash["eddie_aces"]);
+        draw_sprite(402,476,pl_sprites.splash["eddie_hallowed"]);
+        draw_sprite(602,476,pl_sprites.splash["eddie_fear"]);
 
         joystick();
 
@@ -141,7 +136,6 @@ function stage_select(sel_stage){
         rect(x,y+85,B,B);  
         rect(x+85,y+85,B,B);  
 
-
     }else if(sel_stage == 2){
 
         player.draw();
@@ -149,25 +143,27 @@ function stage_select(sel_stage){
         text("LOADING...", 310, 400, width, 150);
 
         if(song.isLoaded()){
-//            sound_efects[4].setLoop(false);
             sound_efects[4].stop();                                
-
             stage = next_stage;
             player.x = 100;
+            ready = 100;
+            timer = [0,0];
+            player.delay = 100;
             song.playMode('restart');
             song.play();
+            song.jump(timer[0])
             stage_length = Math.floor(song.duration());
-        }else{}
+        }
 
     }else if(sel_stage == 3){ // Game Over
 
         song.stop();
+        sound_efects[7].stop();
+
         text("GAME OVER!!!", 300, 250, width, 150);
         text("PRESS F5  AND TRY AGAIN ", 180, 550, width, 150);
 
-
     }else if(sel_stage == 4){ // The Trooper
-
 
         stage_percent = Math.floor(timer[0]/stage_length*100) ;
 
@@ -450,8 +446,8 @@ function draw_screen(){
             }
         
             // show bomb
-            for(let i=0;i<bombing.length;i++){
-                bombing[i].move(i);
+            for(let i=0;i<special.length;i++){
+                special[i].move(i);
             }
             // show all enemys
             for(let i=0;i<enemy.length;i++){
@@ -462,7 +458,6 @@ function draw_screen(){
             for(let i=0;i<scene.length;i++){
                 scene[i].move(i);         
             }
-
 
             // show itens    
             for(let i=0;i<itens.length;i++){
@@ -477,15 +472,12 @@ function draw_screen(){
             }
 
             // show boss
-            if(boss.length > 0){
+            if(boss.length > 0 && !boss_defeat){
                 boss[0].atack(0);
                 for(let i=0; i<boss[0].energy; i+=5){
                     draw_sprite(width-60,150-i,pl_sprites.player["energy_bar"]);
                 }                  
             }
-
-
-
 
             // show energy bars
             for(let i=0; i<player.shield; i+=5){
@@ -503,13 +495,7 @@ function draw_screen(){
             weapon_menu();
         }
 
-
-
-
-
         joystick();
-
-        // draw player
 }
 
 function draw_pixel(x,y,N){
@@ -555,21 +541,19 @@ function hit(){
                     boss[0].hit(shooting[j].power);
                     shooting.splice(j,1);                
                 }
-                
             }
         }
 
-        for(let j=0; j<bombing.length;j++){
-            if(collision(bombing[j],enemy[i])){          
-                enemy[i].energy -= bombing[j].power;
-                if(bombing[j].name != "atomic"){
-                    bombing.splice(j,1);
+        for(let j=0; j<special.length;j++){
+            if(collision(special[j],enemy[i])){          
+                enemy[i].energy -= special[j].power;
+                if(special[j].name != "atomic"){
+                    special.splice(j,1);
                 }
-            }
-            if(boss.length > 0){
-                if(collision(bombing[j],boss[0])){
-                    boss[0].hit(bombing[j].power);
-                    bombing.splice(j,1);
+            }else  if(boss.length > 0){
+                if(collision(special[j],boss[0])){
+                    boss[0].hit(special[j].power);
+                    special.splice(j,1);
                 }
             }            
         }
@@ -580,7 +564,6 @@ function hit(){
             enemy[i].energy -= 5;
         }        
     }
-
     
     if(boss.length > 0){
         // boss hiting player
@@ -589,14 +572,11 @@ function hit(){
         }
 
         // Boss defeat
-        if(boss[0].energy <= 0){
-
+        if(boss[0].energy <= 0 && !boss_defeat){
             sound_efects[7].stop(); // stop the boss music
             sound_efects[8].play(); 
-            boss = [];
             boss_defeat = true;
         }
-
     }
 
 
@@ -609,12 +589,10 @@ function hit(){
             sound_efects[4].setLoop(true);
             sound_efects[4].play(); 
             boss_defeat = false;
+
+            energy_wep =  [1,100,100,100,100,100,100,100,100];            
         }
-
-
     }
-
-
 }
 
 function collision(obj1,obj2){
@@ -637,7 +615,6 @@ function collision(obj1,obj2){
     }else if(obj2.pivot[0] == 2){
         x2 -= hx2;
     }
-
 
     if( Math.abs(x1-x2) < hx1+hx2){
         // axis Y
@@ -681,12 +658,10 @@ function stage_frame(x,y){
         rect(x+B,y+86,100 - 2*B,B-5);
         rect(x+5,y+B,B-5,100 - 2*B);
         rect(x+86,y+B,B-5,100 - 2*B);
-
 }
 
 
 function select_strip(y){
-
         fill(0,236,220);
         rect(0,y,width,pixel); 
         y += 2*pixel       
@@ -697,7 +672,6 @@ function select_strip(y){
         rect(0,y,width,pixel);        
         y += 2*pixel       
         rect(0,y,width,pixel);   
-
 }
 
 function weapon_menu(){
@@ -708,7 +682,6 @@ function weapon_menu(){
     rect(30,height-220, (width-100)/3, 200 );
     rect(37 + (width-80)/3,height-220, (width-80)/3, 200 );
     rect(50 + 2*(width-80)/3,height-220, (width-80)/3, 200 );
-
 
     fill(0)
     rect(35,35,width-70,height-270);
@@ -746,12 +719,83 @@ function weapon_menu(){
 
 // show lifes
     text("LIFES", width/2 - 50, height-180, 200, 150);
-    text("x"+ player.lifes, width/2 -20, height-50, 200, 150);
+    text("x"+ player.life, width/2 -20, height-50, 200, 150);
     draw_sprite(width/2 ,height-130,pl_sprites.player["main"]);
 
-
-    text("SHOT  "+player.max_shot+"x" , 70, height-150, 200, 150);
-    text("BOMB  "+player.max_bomb+"x" , 70, height-120, 200, 150);
-    text("SPEED +"+ (player.speed - 3) , 70, height-90, 200, 150);
+    text("SHOT    "+player.max_shot+"x" , 50, height-150, 200, 150);
+    text("SPECIAL "+player.max_special+"x" , 50, height-120, 200, 150);
+    text("SPEED   +"+ (player.speed - 3) , 50, height-90, 200, 150);
 
 } 
+
+
+function start_stage(N){
+
+    enemy = [];
+    shooting = [];
+    special = [];
+    itens = [];
+    scene = [];
+    boss_defeat = false;
+    boss = [];
+    next_stage = N;
+    pause = false;
+    player.shield = 100;
+    player.x = 50;
+    player.y = 200;
+
+                            
+    if(song != undefined){
+        song.stop();
+    }
+
+    sound_efects[7].stop();
+
+    if(boss.length == 0){
+
+        timer[0] = Math.floor(timer[0] / 2);
+        time = 0;        
+        stage = 2;      
+
+        if(N == 4){
+            back_color = [0,0,0];
+            song = loadSound('assets/music/Trooper.mp3');
+            scene.push(new Ground("cavern","montanhas",true));
+            scene.push(new Ground("cavern","arvores"));
+            scene[scene.length-1].fill();
+        }else if(N == 5){
+            back_color = [25,20,158];
+            song = loadSound('assets/music/Wasted.mp3');
+            scene.push(new Ground("sea","agua",false,true));
+            scene[scene.length-1].fill();
+
+        }else if(N == 6){
+            back_color = [25,20,158];
+            song = loadSound('assets/music/Madness.mp3');
+            scene.push(new Ground("sea","agua"));
+            scene[scene.length-1].fill();
+        }
+
+
+    }else{
+
+        ready = 100;
+        player.delay = 100;
+
+        if(N == 4){
+            big_moais();
+        }else if(N == 5){
+            kraken();
+        }else if(N == 6){
+            big_moais();
+        }
+
+    }
+
+
+
+
+
+
+
+}

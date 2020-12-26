@@ -7,17 +7,18 @@ let pixel = 3; // tamanho do pixel
 let score = 0;
 let back_color = [0,0,0];
 let pause = false;
+let ready = 0;
 
 let player = new Player();
 let sprite_name = "main"
 
 let get_weapons = [1,0,0,0,0,0,0,0,0];
 let energy_wep =  [1,100,100,100,100,100,100,100,100];
-let weap_names = ["M.BUSTER","FIRE BALL","ICE BALL","LASER","RIPPLE","SPREAD","NEPAL BOMB", "NUCLER BOMB","TORP"];
+let weap_names = ["M.BUSTER","FIRE BALL","ICE BALL","LASER","RIPPLE","SPREAD","FORCE FIELD", "NUCLER BOMB","TORP"];
 
 let enemy = [];
 let shooting = [];
-let bombing = [];
+let special = [];
 let itens = [];
 let scene = [];
 let boss = [];

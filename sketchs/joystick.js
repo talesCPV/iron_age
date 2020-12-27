@@ -120,7 +120,7 @@ function keyPressed() {
                 if( sel_opt[0] == 0 && sel_opt[1] == 0 ){
                     start_stage(4);
                 }else if( sel_opt[0] == 1 && sel_opt[1] == 0 ){
-                    alert("The Evil that Man Do");
+                    start_stage(7);
                 }else if( sel_opt[0] == 2 && sel_opt[1] == 0 ){
                     start_stage(5);
                 }else if( sel_opt[0] == 0 && sel_opt[1] == 1 ){

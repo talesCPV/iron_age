@@ -2,24 +2,27 @@
 function sort_item(x,y,N){ // N = % de chance de spawnar um itens
     let perc = Math.floor(random(0,100));
     if( perc < N ){
-        let sort = Math.floor(random(1,7));// Quantidade de itens possíveis existentes = 5
+        let sort = Math.floor(random(1,100)); // probabilidade de cada item
 
-        if(sort == 1){
-            itens.push(new Energy_Weapon(x,y));
-        }else if(sort == 2){
-            itens.push(new Energy_Ball(x,y));
-        }else if(sort == 3){
-            itens.push(new Small_Energy_Weapon(x,y));
-        }else if(sort == 4){
-            itens.push(new Small_Energy_Ball(x,y));
-        }else if(sort == 5){
-            itens.push(new Speed(x,y));
-        }else if(sort == 6){
-            itens.push(new Bomb(x,y));
-        }else if(sort == 7){
-//            itens.push(new Small_Energy_Ball(x,y));
+        if(sort <= 10){
+            itens.push(new Energy_Weapon(x,y)); // energia grande da arma
+        }else if(sort <= 20){
+            itens.push(new Energy_Ball(x,y)); // energia grande do player
+        }else if(sort <= 35){
+            itens.push(new Small_Energy_Weapon(x,y));  // energia pequena da arma
+        }else if(sort <= 45){
+            itens.push(new Small_Energy_Ball(x,y)); // energia pequena do player
+        }else if(sort <= 60){
+            itens.push(new Speed_up(x,y)); // + velocidade do player
+        }else if(sort <= 75){
+            itens.push(new Speed_down(x,y)); // - velocidade do player
+        }else if(sort <= 83){
+            itens.push(new Plus_shot(x,y)); // + tiros simultaneos
+        }else if(sort <= 88){
+            itens.push(new Plus_special(x,y)); // + tiros especiaos simultaneos
+        }else if(sort <= 98){
+            itens.push(new Life(x,y)); // + vidas
         }
-
     }
 }
 
@@ -397,4 +400,115 @@ Sea_ship.prototype.move = function(N){
 
         enemy.splice(N,1);
     }    
+}
+
+function new_panzer(){
+    enemy.push(new Panzer(100,height-90));
+}
+
+class Panzer extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.name = ["panzer_01","panzer_02","panzer_03"];
+        this.index = 0;
+        this.energy = 50;
+        this.count = 0;
+        this.speed = 0.5;
+        this.hitbox = [en_sprites.enemys[this.name[0]].x , en_sprites.enemys[this.name[0]].y];
+        this.size = [1,1];
+    }
+}
+
+Panzer.prototype.move = function(N){
+    this.count ++;
+
+    if(this.count <= 100){
+        this.index = 0;
+        this.x -= scene_speed + this.speed;
+        if(this.count % 40 == 0){
+            this.y += 5;
+        }else if(this.count % 20 == 0) {
+            this.y -= 5;
+        }
+    }else if(this.count <= 130){
+        this.index = 1;
+    }else if(this.count <= 160){
+        this.index = 2;
+    }else if(this.count <= 200){
+        if(this.count % 20 == 0){
+            enemy.push(new Boss_Fire(this.x,this.y));           
+        }
+    }else if(this.count <= 250){
+        this.count = 0;
+    }
+
+
+
+    push();
+    translate(this.x, this.y + 20);
+    scale(this.size);
+    draw_sprite(0,0,en_sprites.enemys[this.name[this.index]]);
+    pop();
+
+}
+
+
+function new_tank(){
+    enemy.push(new Tank(100,height-60));
+}
+
+class Tank extends Panzer{
+    constructor(x,y){
+        super(x,y);
+        this.name = ["L_tank","L_canyon","L_canyon_fire"];
+        this.energy = 20;
+        this.angle = 0;
+        this.index = 1;
+        this.start_y = y;
+    }
+}
+
+
+Tank.prototype.move = function(N){
+
+    this.count ++;
+        this.x -= scene_speed;
+
+    if(this.count <= 100){
+        this.x -= this.speed;
+        if(this.count % 40 == 0){
+            this.y += 5;
+        }else if(this.count % 20 == 0) {
+            this.y -= 5;
+        }
+    }else if(this.count <= 130){
+
+    }else if(this.count <= 160){
+
+    }else if(this.count <= 200){
+
+
+        this.angle = Math.atan2 ( (this.y - player.y), (this.x - player.x) );
+
+        if(this.count % 19 == 0){
+            enemy.push(new Boss_Fire(this.x,this.y));
+            this.index = 2;
+        } else  {
+            this.index = 1;
+        }
+
+    }else if(this.count <= 250){
+        this.count = 0;
+        this.y = this.start_y;
+    }
+
+    push();
+    translate(this.x+20, this.y);
+    rotate(this.angle);
+    draw_sprite(0,0,en_sprites.enemys[this.name[this.index]]);
+    pop();
+
+    draw_sprite(this.x,this.y,en_sprites.enemys[this.name[0]]);
+
+
 }

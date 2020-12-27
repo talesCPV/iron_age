@@ -14,6 +14,7 @@ class Player{
     this.pivot = [1,1];
     this.delay = 0;
     this.life = 3;
+    this.tank = 0;
   }
 }
 
@@ -185,126 +186,7 @@ function force_field(){
     }
 }
 
-// ITENS
-
-function new_item(x,y,N){
-    itens.push(new Itens(x,y,N));
-}
-
-class Itens{
-  constructor(x,y){
-    this.x = x;
-    this.y = y;
-    this.speed = 3;
-    this.name = "";
-    this.hitbox = [0,0];
-    this.pivot = [1,1];
-    this.value = 0;
-    this.type = 0;
-  }
-}
-
-Itens.prototype.hit = function(N){
-  if(this.type == 1 && energy_wep[player.weapon] < 100){ // + energy weapon
-
-      sound_efects[5].playMode('restart');
-      sound_efects[5].play();
-      energy_wep[player.weapon] += this.value;
-
-  }else if(this.type == 2 && player.shield < 100){ // + energy player
-
-      sound_efects[5].playMode('restart');
-      sound_efects[5].play();
-      player.shield += this.value;
-
-  }else if(this.type == 3 && player.max_shot < 13){ // + max shots
-      player.max_shot += 1;
-  }else if(this.type == 4 && player.max_special < 6){ // + max bombs
-      player.max_special += 1;
-  }else if(this.type == 5 && player.speed < 10){ // + player speed
-      player.speed += 1;
-  }
-
-  itens.splice(N,1); // kill item
-
-}
-
-class Energy_Weapon extends Itens{
-  constructor(x,y){
-    super(x,y);
-    this.name = ["energy_weapon_01","energy_weapon_02"];
-    this.index = 0;
-    this.count = 0;
-    this.hitbox = [pl_sprites.itens.energy_weapon_01.x,pl_sprites.itens.energy_weapon_01.y];
-    this.value = 20;
-    this.type = 1;
-  }
-}
-
-Energy_Weapon.prototype.move = function(N){
-  this.x -= scene_speed + this.speed;
-  this.count++;
-  if(this.count == 10){
-    this.index = 1;
-  }else if(this.count == 20){
-    this.count = 0
-    this.index = 0;
-  }
-
-  draw_sprite(this.x,this.y,pl_sprites.itens[this.name[this.index]]);
-
-  if(this.x < -10){
-      itens.splice(N,1);
-  }
-
-}
-
-class Small_Energy_Weapon extends Energy_Weapon{
-  constructor(x,y){
-    super(x,y);
-    this.name = ["small_w_ball_01","small_w_ball_02"];
-    this.value = 4;
-    this.hitbox = [pl_sprites.itens.small_w_ball_01.x,pl_sprites.itens.small_w_ball_01.y];    
-  }
-}
-
-class Energy_Ball extends Energy_Weapon{
-  constructor(x,y){
-    super(x,y);
-    this.name = ["energy_ball_01","energy_ball_02"];
-    this.type = 2;
-    this.hitbox = [pl_sprites.itens.energy_ball_01.x,pl_sprites.itens.energy_ball_01.y];
-  }
-}
-
-class Small_Energy_Ball extends Energy_Ball{
-  constructor(x,y){
-    super(x,y);
-    this.name = ["small_e_ball_01","small_e_ball_02"];
-    this.value = 5;
-    this.hitbox = [pl_sprites.itens.small_e_ball_01.x,pl_sprites.itens.small_e_ball_01.y];
-  }
-}
-
-class Speed extends Energy_Weapon{
-  constructor(x,y){
-    super(x,y);
-    this.name = ["speed","blank"];
-    this.type = 5;
-    this.hitbox = [pl_sprites.itens.speed.x,pl_sprites.itens.speed.y];  
-  }
-}
-
-class Bomb extends Energy_Weapon{
-  constructor(x,y){
-    super(x,y);
-    this.name = ["bomb","blank"];
-    this.type = 4;
-    this.hitbox = [pl_sprites.itens.bomb.x,pl_sprites.itens.bomb.y];  
-  }
-}
-
-// TIROS
+//WEAPONS CLASS
 
 class Fire{
   constructor(x,y){
@@ -508,6 +390,157 @@ Shield.prototype.move = function(N){
 
 }
 
+
+// ITENS
+
+function new_item(x,y,N){
+    itens.push(new Itens(x,y,N));
+}
+
+class Itens{
+  constructor(x,y){
+    this.x = x;
+    this.y = y;
+    this.speed = 3;
+    this.name = "";
+    this.hitbox = [0,0];
+    this.pivot = [1,1];
+    this.value = 0;
+    this.type = 0;
+  }
+}
+
+Itens.prototype.hit = function(N){
+  if(this.type == 1 && energy_wep[player.weapon] < 100){ // + energy weapon
+
+      sound_efects[5].playMode('restart');
+      sound_efects[5].play();
+      energy_wep[player.weapon] += this.value;
+
+  }else if(this.type == 2 && player.shield < 100){ // + energy player
+
+      sound_efects[5].playMode('restart');
+      sound_efects[5].play();
+      player.shield += this.value;
+
+  }else if(this.type == 3 && player.max_shot < 13){ // + max shots
+      player.max_shot += 1;
+  }else if(this.type == 4 && player.max_special < 6){ // + max bombs
+      player.max_special += 1;
+  }else if(this.type == 5 && player.speed < 10){ // + player speed
+      player.speed += 1;
+  }else if(this.type == 6 && player.speed > 3){ // - player speed
+      player.speed -= 1;
+  }else if(this.type == 10 && player.life < 9){ // + player life
+      player.life += 1;         
+  }
+
+  itens.splice(N,1); // kill item
+
+}
+
+class Energy_Weapon extends Itens{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["energy_weapon_01","energy_weapon_02"];
+    this.index = 0;
+    this.count = 0;
+    this.hitbox = [pl_sprites.itens.energy_weapon_01.x,pl_sprites.itens.energy_weapon_01.y];
+    this.value = 25;
+    this.type = 1;
+  }
+}
+
+Energy_Weapon.prototype.move = function(N){
+  this.x -= scene_speed + this.speed;
+  this.count++;
+  if(this.count == 10){
+    this.index = 1;
+  }else if(this.count == 20){
+    this.count = 0
+    this.index = 0;
+  }
+
+  draw_sprite(this.x,this.y,pl_sprites.itens[this.name[this.index]]);
+
+  if(this.x < -10){
+      itens.splice(N,1);
+  }
+
+}
+
+class Small_Energy_Weapon extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["small_w_ball_01","small_w_ball_02"];
+    this.value = 5;
+    this.hitbox = [pl_sprites.itens.small_w_ball_01.x,pl_sprites.itens.small_w_ball_01.y];    
+  }
+}
+
+class Energy_Ball extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["energy_ball_01","energy_ball_02"];
+    this.type = 2;
+    this.hitbox = [pl_sprites.itens.energy_ball_01.x,pl_sprites.itens.energy_ball_01.y];
+  }
+}
+
+class Small_Energy_Ball extends Energy_Ball{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["small_e_ball_01","small_e_ball_02"];
+    this.value = 5;
+    this.hitbox = [pl_sprites.itens.small_e_ball_01.x,pl_sprites.itens.small_e_ball_01.y];
+  }
+}
+
+class Plus_shot extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["plus_shot","blank"];
+    this.type = 3;
+    this.hitbox = [pl_sprites.itens.blank.x,pl_sprites.itens.blank.y];  
+  }
+}
+
+class Plus_special extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["plus_bomb","blank"];
+    this.type = 4;
+    this.hitbox = [pl_sprites.itens.blank.x,pl_sprites.itens.blank.y];  
+  }
+}
+
+class Speed_up extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["plus_speed","blank"];
+    this.type = 5;
+    this.hitbox = [pl_sprites.itens.blank.x,pl_sprites.itens.blank.y];  
+  }
+}
+
+class Speed_down extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["less_speed","blank"];
+    this.type = 6;
+    this.hitbox = [pl_sprites.itens.blank.x,pl_sprites.itens.blank.y];  
+  }
+}
+
+class Life extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["life","blank"];
+    this.type = 10;
+    this.hitbox = [pl_sprites.itens.blank.x,pl_sprites.itens.blank.y];  
+  }
+}
+
 // BACKGROUNDS
 
 class Ground{
@@ -587,5 +620,61 @@ Cloud.prototype.move = function(N){
   if(this.x <= -this.width*pixel){
     scene.splice(N,1);
   }
+}
+
+class Second_plan{
+  constructor(x){
+    this.x = x;
+    this.spaw = x;
+    this.index = 0;
+    this.name = ["degrade_01","degrade_02","degrade_03","degrade_04"];
+    this.pivot = [bk_sprites.fundos[this.name[this.index]].pivot_x,bk_sprites.fundos[this.name[this.index]].pivot_y];
+    this.width = bk_sprites.fundos[this.name[this.index]].x * pixel;
+    this.height = bk_sprites.fundos[this.name[this.index]].y * pixel;
+    this.bk_color = bk_sprites.fundos[this.name[this.index]].dots[0].color;
+    this.speed = scene_speed / 2;
+    this.count = 0;
+  }
+}
+
+Second_plan.prototype.move = function(N){
+  this.x -= this.speed;
+  this.count ++;
+  let y = 0 + (this.height/2);
+
+  for(let i=0; i<this.name.length; i++){
+    draw_sprite(this.x,y,bk_sprites.fundos[this.name[i]]);
+    y += bk_sprites.fundos[this.name[i]].y * pixel;
+  }
+
+  if(y < height){
+    fill(this.bk_color)
+    rect(this.x,y,this.width,height)
+  }
+
+  if(this.count ==  Math.floor(this.width / this.speed) ) {
+    scene_bk.push(new Second_plan(this.spaw));
+  }
+  if(this.x <= -this.width * 1.5){
+    scene_bk.splice(N,1);
+  }
+
+}
+
+function fill_second_plan(){
+
+  let w = bk_sprites.fundos.degrade_01.x * pixel;
+  let i;
+  scene_bk = [];
+
+  for(i=0; i<width+w; i+= w-1 ){      
+    scene_bk.push(new Second_plan(i));
+    if( i < width ){
+      scene_bk[scene_bk.length-1].count = 10000;
+    }
+  }
+
+  
+    
 
 }

@@ -21,8 +21,6 @@ function clock(){
 
 function stage_select(sel_stage){
 
-
-
     if(sel_stage == 0){
 
         draw_sprite(width/2 - 85 * pixel / 2,250,pl_sprites.splash["logo"]);
@@ -102,7 +100,7 @@ function stage_select(sel_stage){
         text("THE DARK", 550, 575, 200, 150);
 
         draw_sprite(202,120,pl_sprites.splash["eddie_trooper"]);
-//        draw_sprite(402,120,pl_sprites.splash["eddie_evil"]);
+        draw_sprite(402,120,pl_sprites.splash["eddie_beast"]);
         draw_sprite(602,120,pl_sprites.splash["eddie_mind"]);
 
         draw_sprite(202,298,pl_sprites.splash["eddie_egito"]);
@@ -424,6 +422,98 @@ function stage_select(sel_stage){
             }
         }   
         draw_screen();
+
+    }else if(sel_stage == 7){ // The Evil That Man Do
+
+        stage_percent = Math.floor(timer[0]/stage_length*100) ;
+                if(time < stage_percent){
+            time = stage_percent;
+            if(time == 1){
+                new_tank();
+            }else if(time == 3){
+                new_viper(5);
+            }else if(time == 4){
+                new_tank();
+            }else if(time == 5){
+                new_viper(5);
+                scene.push(new Cloud(150));
+            }else if(time == 8){
+                new_moais("down");
+            }else if(time == 10){
+                new_tank();
+            }else if(time == 12){
+                new_viper(5);
+            }else if(time == 15){
+                new_viper(5);
+                new_moais("down");
+            }else if(time == 18){
+                scene.push(new Cloud(150));
+            }else if(time == 20){
+                new_tank();
+            }else if(time == 23){
+                new_viper(5);
+            }else if(time == 24){
+            }else if(time == 27){
+                new_viper(5);
+            }else if(time == 30){
+                new_moais("down");
+            }else if(time == 32){
+                new_tank();
+            }else if(time == 33){
+                new_viper(5);
+            }else if(time == 35){
+                new_moais("down");
+            }else if(time == 38){
+            }else if(time == 41){
+                new_tank();
+            }else if(time == 44){
+                new_viper(5);
+            }else if(time == 47){
+                scene.push(new Cloud(150));
+            }else if(time == 49){
+            }else if(time == 51){
+                new_tank();
+            }else if(time == 53){
+                scene.push(new Cloud(150));
+            }else if(time == 56){
+            }else if(time == 59){
+                new_viper(5);
+            }else if(time == 61){
+                new_tank();
+            }else if(time == 63){
+                new_tank();
+            }else if(time == 66){
+                new_viper(5);
+            }else if(time == 69){
+                new_viper(5);
+            }else if(time == 72){
+                scene.push(new Cloud(150));
+            }else if(time == 75){
+                scene.push(new Cloud(150));
+            }else if(time == 77){
+                new_tank();
+            }else if(time == 80){
+                new_viper(5);
+            }else if(time == 82){
+                scene.push(new Cloud(150));
+            }else if(time == 85){
+                new_tank();
+                new_viper(5);
+            }else if(time == 87){
+                scene.push(new Cloud(150));
+            }else if(time == 90){
+                new_viper(5);
+            }else if(time == 92){
+                new_tank();
+            }else if(time == 94){
+                scene.push(new Cloud(150));
+            }else if(time == 96){
+                new_tank();
+            }
+        } 
+
+        draw_screen();
+
     }
 
 }
@@ -431,14 +521,22 @@ function stage_select(sel_stage){
 
 function draw_screen(){
 
-        // show control screen
-        text("SCORE: "+score, 10, 25, 300, 150);
-        text("WEAPON: "+weap_names[player.weapon]+" x"+player.max_shot, 310, 25, 300, 150);
-        text("BOMB: x"+player.max_bomb, 610, 25, 300, 150);
-
         if(!pause){
 
             clock();
+
+            // show background    
+            for(let i=0;i<scene_bk.length;i++){
+                scene_bk[i].move(i);         
+            }
+
+
+            // show control screen
+            text("SCORE: "+score, 10, 25, 300, 150);
+            text("HI-SCORE", 310, 25, 300, 150);
+            text(weap_names[player.weapon], 610, 25, 300, 150);
+
+
 
             // show all shottings
             for(let i=0;i<shooting.length;i++){
@@ -726,6 +824,16 @@ function weapon_menu(){
     text("SPECIAL "+player.max_special+"x" , 50, height-120, 200, 150);
     text("SPEED   +"+ (player.speed - 3) , 50, height-90, 200, 150);
 
+    if(have_joy){
+        text("USE SELECT", width/2 + 150, height-180, 300, 150);
+    }else{
+        text("PRESS SHIFT", width/2 + 140, height-180, 300, 150);
+    }
+    draw_sprite(width/2 + 250,height-130,pl_sprites.itens.energy_tank);
+    text("x"+ player.tank, width/2 + 230, height-50, 200, 150);
+
+
+
 } 
 
 
@@ -773,6 +881,13 @@ function start_stage(N){
             back_color = [25,20,158];
             song = loadSound('assets/music/Madness.mp3');
             scene.push(new Ground("sea","agua"));
+            scene[scene.length-1].fill();
+
+        }else if(N == 7){
+            back_color = [25,20,158];
+            song = loadSound('assets/music/Evil.mp3');
+            fill_second_plan();
+            scene.push(new Ground("cavern","arvores"));
             scene[scene.length-1].fill();
         }
 

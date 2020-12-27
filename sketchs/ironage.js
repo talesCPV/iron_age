@@ -21,6 +21,7 @@ let shooting = [];
 let special = [];
 let itens = [];
 let scene = [];
+let scene_bk = [];
 let boss = [];
 
 let scene_speed = 1;

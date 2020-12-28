@@ -5,7 +5,7 @@ let sel_opt = [1,1];
 let next_stage = 0;
 let boss_defeat = false;
 
-let stage_length;
+let stage_length = 0;
 let stage_percent = 0;
 let timer = [0,0]; // [ % stage, total sec, current sec]
 let time = 0;
@@ -15,6 +15,10 @@ function clock(){
         if( sec != timer[1]){
             timer[1] = sec;
             timer[0]++;
+        }
+        stage_percent = Math.floor(timer[0]/stage_length*100) ;
+        if(stage_percent == 100){
+            timer[0]--;
         }
 }
 
@@ -48,9 +52,11 @@ function stage_select(sel_stage){
         }
         
         
-    }else if(sel_stage == 1){
+    }else if(sel_stage == 1){ // SELECY STAGE
 
         back_color = [0,121,248];
+        timer = [0,0];
+
         noStroke();
         text("SELECT STAGE", 280, 50, width, 150);
 
@@ -134,18 +140,19 @@ function stage_select(sel_stage){
         rect(x,y+85,B,B);  
         rect(x+85,y+85,B,B);  
 
-    }else if(sel_stage == 2){
+    }else if(sel_stage == 2){ // LOADING STAGE
 
         player.draw();
         player.x += 0.5;
         text("LOADING...", 310, 400, width, 150);
+        time = 0;
+        stage_percent = 0;
 
         if(song.isLoaded()){
             sound_efects[4].stop();                                
             stage = next_stage;
             player.x = 100;
             ready = 100;
-            timer = [0,0];
             player.delay = 100;
             song.playMode('restart');
             song.play();
@@ -153,7 +160,7 @@ function stage_select(sel_stage){
             stage_length = Math.floor(song.duration());
         }
 
-    }else if(sel_stage == 3){ // Game Over
+    }else if(sel_stage == 3){ // GAME OVER
 
         song.stop();
         sound_efects[7].stop();
@@ -162,8 +169,7 @@ function stage_select(sel_stage){
         text("PRESS F5  AND TRY AGAIN ", 180, 550, width, 150);
 
     }else if(sel_stage == 4){ // The Trooper
-
-        stage_percent = Math.floor(timer[0]/stage_length*100) ;
+        
 
         //enemys span
         if(time < stage_percent){
@@ -412,7 +418,7 @@ function stage_select(sel_stage){
                 if(time < stage_percent){
             time = stage_percent;
             if(time == 1){
-                big_moais();
+                kraken();
             }else if(time == 3){
 //                new_viper(5);
             }else if(time == 4){
@@ -508,7 +514,7 @@ function stage_select(sel_stage){
             }else if(time == 94){
                 scene.push(new Cloud(150));
             }else if(time == 96){
-                new_tank();
+                panzer();
             }
         } 
 
@@ -571,7 +577,19 @@ function draw_screen(){
 
             // show boss
             if(boss.length > 0 && !boss_defeat){
-                boss[0].atack(0);
+                if(boss[0].begin == 0){
+                    boss[0].atack(0);
+                    if(sound_efects[5].isPlaying()){
+                        sound_efects[5].stop();
+                    }
+                }else{
+                    boss[0].come_here();
+                    if(boss[0].begin % 50){
+                        sound_efects[5].playMode("restart");
+                        sound_efects[5].play();    
+                    }
+                }
+
                 for(let i=0; i<boss[0].energy; i+=5){
                     draw_sprite(width-60,150-i,pl_sprites.player["energy_bar"]);
                 }                  
@@ -663,17 +681,18 @@ function hit(){
         }        
     }
     
-    if(boss.length > 0){
+    if(boss.length > 0 && !boss_defeat){
         // boss hiting player
         if(collision(player,boss[0])){
             player.hit(boss[0].power);
         }
 
         // Boss defeat
-        if(boss[0].energy <= 0 && !boss_defeat){
+        if(boss[0].energy <= 0 ){
             sound_efects[7].stop(); // stop the boss music
             sound_efects[8].play(); 
             boss_defeat = true;
+            timer = [0,0];
         }
     }
 
@@ -845,7 +864,6 @@ function start_stage(N){
     itens = [];
     scene = [];
     boss_defeat = false;
-    boss = [];
     next_stage = N;
     pause = false;
     player.shield = 100;
@@ -853,47 +871,52 @@ function start_stage(N){
     player.y = 200;
 
                             
-    if(song != undefined){
+    if(song != undefined){ // stop the music, if is playing
         song.stop();
     }
 
     sound_efects[7].stop();
 
-    if(boss.length == 0){
+    if(boss.length == 0){ // ainda não chegou no boss
 
-        timer[0] = Math.floor(timer[0] / 2);
-        time = 0;        
+        timer[0] =  Math.floor( (stage_length/100) * time / 2  );     
         stage = 2;      
 
-        if(N == 4){
+        if(N == 4){ // THE TROOPER
             back_color = [0,0,0];
             song = loadSound('assets/music/Trooper.mp3');
+            fill_second_plan(["cave_01","cave_02","cave_01","cave_02"]);
             scene.push(new Ground("cavern","montanhas",true));
             scene.push(new Ground("cavern","arvores"));
             scene[scene.length-1].fill();
-        }else if(N == 5){
+        }else if(N == 5){ // WASTED YEARS
             back_color = [25,20,158];
             song = loadSound('assets/music/Wasted.mp3');
             scene.push(new Ground("sea","agua",false,true));
             scene[scene.length-1].fill();
 
         }else if(N == 6){
-            back_color = [25,20,158];
+            back_color = [0,0,0];
             song = loadSound('assets/music/Madness.mp3');
-            scene.push(new Ground("sea","agua"));
+
+//            scene_bk.push(new Cave(500));
+//            fill_second_plan(["degrade_01","degrade_02","degrade_03","degrade_04"]);
+            fill_second_plan(["cave_01","cave_02","cave_01","cave_02"]);
+            scene.push(new Ground("cavern","arvores"));
             scene[scene.length-1].fill();
 
         }else if(N == 7){
             back_color = [25,20,158];
             song = loadSound('assets/music/Evil.mp3');
-            fill_second_plan();
+            fill_second_plan(Second_plan);
             scene.push(new Ground("cavern","arvores"));
             scene[scene.length-1].fill();
         }
 
 
-    }else{
-
+    }else{ // ja chegou no boss... reinicia ele
+        boss = [];
+        stage_percent = 99;
         ready = 100;
         player.delay = 100;
 
@@ -906,11 +929,5 @@ function start_stage(N){
         }
 
     }
-
-
-
-
-
-
 
 }

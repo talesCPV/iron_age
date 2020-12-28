@@ -35,6 +35,7 @@ class Enemy{
         this.energy = 1;
         this.hitbox = [0,0];
         this.pivot = [1,1];
+        this.count = 0;
     }
 }
 
@@ -402,69 +403,22 @@ Sea_ship.prototype.move = function(N){
     }    
 }
 
-function new_panzer(){
-    enemy.push(new Panzer(100,height-90));
-}
-
-class Panzer extends Enemy{
-    constructor(x,y){
-        super(x,y);
-        this.name = ["panzer_01","panzer_02","panzer_03"];
-        this.index = 0;
-        this.energy = 50;
-        this.count = 0;
-        this.speed = 0.5;
-        this.hitbox = [en_sprites.enemys[this.name[0]].x , en_sprites.enemys[this.name[0]].y];
-        this.size = [1,1];
-    }
-}
-
-Panzer.prototype.move = function(N){
-    this.count ++;
-
-    if(this.count <= 100){
-        this.index = 0;
-        this.x -= scene_speed + this.speed;
-        if(this.count % 40 == 0){
-            this.y += 5;
-        }else if(this.count % 20 == 0) {
-            this.y -= 5;
-        }
-    }else if(this.count <= 130){
-        this.index = 1;
-    }else if(this.count <= 160){
-        this.index = 2;
-    }else if(this.count <= 200){
-        if(this.count % 20 == 0){
-            enemy.push(new Boss_Fire(this.x,this.y));           
-        }
-    }else if(this.count <= 250){
-        this.count = 0;
-    }
-
-
-
-    push();
-    translate(this.x, this.y + 20);
-    scale(this.size);
-    draw_sprite(0,0,en_sprites.enemys[this.name[this.index]]);
-    pop();
-
-}
-
 
 function new_tank(){
     enemy.push(new Tank(100,height-60));
 }
 
-class Tank extends Panzer{
+class Tank extends Enemy{
     constructor(x,y){
         super(x,y);
+
         this.name = ["L_tank","L_canyon","L_canyon_fire"];
         this.energy = 20;
         this.angle = 0;
         this.index = 1;
         this.start_y = y;
+        this.speed = 1;
+        this.hitbox = [en_sprites.enemys[this.name[0]].x * pixel , en_sprites.enemys[this.name[0]].y * pixel *2];
     }
 }
 
@@ -486,7 +440,6 @@ Tank.prototype.move = function(N){
     }else if(this.count <= 160){
 
     }else if(this.count <= 200){
-
 
         this.angle = Math.atan2 ( (this.y - player.y), (this.x - player.x) );
 

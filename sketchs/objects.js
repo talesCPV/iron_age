@@ -58,8 +58,6 @@ Player.prototype.draw = function(){
 
       draw_sprite(this.x,this.y,pl_sprites.player[this.name]);    
 
-
-
     if(this.shield <= 0){ // energy is over
       this.life --;
 
@@ -174,7 +172,7 @@ function atomic(){
 function torp(){
     if(special.length < player.max_special){
       special.push(new Torp(player.x,player.y));
-      energy_wep[player.weapon] -= 5;
+      energy_wep[player.weapon] -= 2;
     }  
 }
 
@@ -260,7 +258,7 @@ class Torp extends Fire{
   constructor(x,y){
     super(x,y);
     this.name = "torp";
-    this.power = 5;
+    this.power = 10;
     this.start_fall = x + 9 * pixel;
     this.speed = 1;
     this.fall = 0;
@@ -622,16 +620,39 @@ Cloud.prototype.move = function(N){
   }
 }
 
+
+function fill_second_plan(sprites){
+
+  scene_bk = [];
+  scene_bk.push(new Second_plan(0,sprites));
+  scene_bk[0].count = 10000;
+  let w = scene_bk[0].width;
+
+  for(i=w; i<width+w; i+= w-1 ){      
+    scene_bk.push(new Second_plan(i, sprites));
+    if( i < width ){
+      scene_bk[scene_bk.length-1].count = 10000;
+    }
+  }
+
+}
+
+function clear_second_plan(){
+    if(scene_bk.length > 0){
+      scene_bk[scene_bk.length-1].count = 1000;
+    }  
+}
+
 class Second_plan{
-  constructor(x){
+  constructor(x, sprites){
+    this.name = sprites;
     this.x = x;
     this.spaw = x;
     this.index = 0;
-    this.name = ["degrade_01","degrade_02","degrade_03","degrade_04"];
-    this.pivot = [bk_sprites.fundos[this.name[this.index]].pivot_x,bk_sprites.fundos[this.name[this.index]].pivot_y];
-    this.width = bk_sprites.fundos[this.name[this.index]].x * pixel;
-    this.height = bk_sprites.fundos[this.name[this.index]].y * pixel;
-    this.bk_color = bk_sprites.fundos[this.name[this.index]].dots[0].color;
+    this.pivot = [bk_sprites.fundos[this.name[0]].pivot_x,bk_sprites.fundos[this.name[0]].pivot_y];
+    this.width = bk_sprites.fundos[this.name[0]].x * pixel;
+    this.height = bk_sprites.fundos[this.name[0]].y * pixel;
+    this.bk_color = bk_sprites.fundos[this.name[0]].dots[0].color;
     this.speed = scene_speed / 2;
     this.count = 0;
   }
@@ -640,41 +661,25 @@ class Second_plan{
 Second_plan.prototype.move = function(N){
   this.x -= this.speed;
   this.count ++;
-  let y = 0 + (this.height/2);
+  let y = this.height/2 ;
 
-  for(let i=0; i<this.name.length; i++){
-    draw_sprite(this.x,y,bk_sprites.fundos[this.name[i]]);
-    y += bk_sprites.fundos[this.name[i]].y * pixel;
-  }
 
-  if(y < height){
-    fill(this.bk_color)
-    rect(this.x,y,this.width,height)
-  }
+    for(let i=0; i<this.name.length; i++){
+      draw_sprite(this.x,y,bk_sprites.fundos[this.name[i]]);
+      y += bk_sprites.fundos[this.name[i]].y * pixel;
+    }
+
+    if(y < height){
+      fill(this.bk_color)
+      rect(this.x,y,this.width,height-y)
+    }
+
 
   if(this.count ==  Math.floor(this.width / this.speed) ) {
-    scene_bk.push(new Second_plan(this.spaw));
+    scene_bk.push(new Second_plan(this.spaw, this.name));
   }
   if(this.x <= -this.width * 1.5){
     scene_bk.splice(N,1);
   }
-
-}
-
-function fill_second_plan(){
-
-  let w = bk_sprites.fundos.degrade_01.x * pixel;
-  let i;
-  scene_bk = [];
-
-  for(i=0; i<width+w; i+= w-1 ){      
-    scene_bk.push(new Second_plan(i));
-    if( i < width ){
-      scene_bk[scene_bk.length-1].count = 10000;
-    }
-  }
-
-  
-    
 
 }

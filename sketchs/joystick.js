@@ -64,6 +64,7 @@ function keyPressed() {
             get_weapons = [1,1,1,1,1,1,1,1,1];
             player.max_shot = 12;
             player.max_special = 9;
+            player.tank = 5;
             sound_efects[9].play();
         }
     }
@@ -89,7 +90,26 @@ function keyPressed() {
 
         if( keyIndex == 69 ){ // ENTER => PAUSE
             map_buttons[3] = 1                
-        }              
+        }
+
+        if( keyIndex == 83 ){ // SHIFT
+            if(player.tank > 0){
+                let energy = 100 - player.shield;
+                    while(energy >= 0){
+                        if(energy % 2 == 0){
+                            sound_efects[5].playMode("restart");
+                            sound_efects[5].play();
+                        }
+                        energy -= 1;
+                        player.shield += 1;
+                    }
+                player.tank -=1;
+            }
+                          
+        }
+
+        
+
 
     }else if(stage == 1){
 
@@ -117,22 +137,38 @@ function keyPressed() {
 
             if( keyIndex == 69 ){ // ENTER => Select Stage
      
-                if( sel_opt[0] == 0 && sel_opt[1] == 0 ){
-                    start_stage(4);
-                }else if( sel_opt[0] == 1 && sel_opt[1] == 0 ){
-                    start_stage(7);
-                }else if( sel_opt[0] == 2 && sel_opt[1] == 0 ){
-                    start_stage(5);
-                }else if( sel_opt[0] == 0 && sel_opt[1] == 1 ){
-                    start_stage(6);             
-                }else if( sel_opt[0] == 2 && sel_opt[1] == 1 ){
-                    alert("Run To The Hills");
-                }else if( sel_opt[0] == 0 && sel_opt[1] == 2 ){
-                    alert("Aces High");
-                }else if( sel_opt[0] == 1 && sel_opt[1] == 2 ){
-                    alert("Hallowed Be Thy Name");
-                }else if( sel_opt[0] == 2 && sel_opt[1] == 2 ){
-                    alert("Fear Of The Dark");                
+                if( sel_opt[0] == 0 && sel_opt[1] == 0 ){ // THE TROOPER
+                    if(!defeat[0]){ 
+                        start_stage(4);
+                    }
+                }else if( sel_opt[0] == 1 && sel_opt[1] == 0 ){ // THE EVIL THAT MAN DO
+                    if(!defeat[1]){ 
+                        start_stage(5);
+                    }
+                }else if( sel_opt[0] == 2 && sel_opt[1] == 0 ){ // WASTED YEARS
+                    if(!defeat[2]){ 
+                        start_stage(6);
+                    }
+                }else if( sel_opt[0] == 0 && sel_opt[1] == 1 ){ // CAN I PLAY WITH MADNESS
+                    if(!defeat[3]){ 
+                        start_stage(7);             
+                    }
+                }else if( sel_opt[0] == 2 && sel_opt[1] == 1 ){ // RUN TO THE HILLS
+                    if(!defeat[4]){ 
+                        alert("Run To The Hills");
+                    }
+                }else if( sel_opt[0] == 0 && sel_opt[1] == 2 ){ // ACES HIGH
+                    if(!defeat[5]){ 
+                        alert("Aces High");
+                    }
+                }else if( sel_opt[0] == 1 && sel_opt[1] == 2 ){ // HALLOWED BE THY NAME
+                    if(!defeat[6]){ 
+                        alert("Hallowed Be Thy Name");
+                    }
+                }else if( sel_opt[0] == 2 && sel_opt[1] == 2 ){ // FEAR OF THE DARL
+                    if(!defeat[7]){ 
+                        start_stage(11);            
+                    }
                 }
             }
           

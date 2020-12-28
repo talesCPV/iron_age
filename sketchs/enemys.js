@@ -20,7 +20,9 @@ function sort_item(x,y,N){ // N = % de chance de spawnar um itens
             itens.push(new Plus_shot(x,y)); // + tiros simultaneos
         }else if(sort <= 88){
             itens.push(new Plus_special(x,y)); // + tiros especiaos simultaneos
-        }else if(sort <= 98){
+        }else if(sort <= 98){ 
+            itens.push(new Energy_tank(x,y)); // + energy tank
+        }else{
             itens.push(new Life(x,y)); // + vidas
         }
     }
@@ -99,7 +101,7 @@ function new_moais(N){
 
 class Moais extends Enemy{    
     constructor(side){
-        let y = height - 110 ;
+        let y = height - 90 ;
         if(side == "top"){
             y = 140;
         }
@@ -280,8 +282,8 @@ Viper_shot.prototype.move =  function(N){
 
 }
 
-function new_walker(){
-    enemy.push(new Walker(100,height-90));
+function new_walker(n=70){
+    enemy.push(new Walker(100,height-n));
 }
 
 class Walker extends Enemy{
@@ -292,7 +294,7 @@ class Walker extends Enemy{
         this.energy = 30;
         this.power = 50;
         this.count = 0;
-        this.hitbox = [en_sprites.enemys[this.name].x , en_sprites.enemys[this.name].y];               
+        this.hitbox = [en_sprites.enemys[this.name].x , en_sprites.enemys[this.name].y + 20];               
     }
 }
 
@@ -366,8 +368,8 @@ Thunder.prototype.move = function(N){
 }
 
 
-function new_sea_ship(){
-    enemy.push(new Sea_ship(100,height-90));
+function new_sea_ship(n=70){
+    enemy.push(new Sea_ship(100,height-n));
 }
 
 class Sea_ship extends Enemy{
@@ -404,8 +406,8 @@ Sea_ship.prototype.move = function(N){
 }
 
 
-function new_tank(){
-    enemy.push(new Tank(100,height-60));
+function new_tank(n=50){
+    enemy.push(new Tank(100,height-n));
 }
 
 class Tank extends Enemy{
@@ -413,7 +415,7 @@ class Tank extends Enemy{
         super(x,y);
 
         this.name = ["L_tank","L_canyon","L_canyon_fire"];
-        this.energy = 20;
+        this.energy = 15;
         this.angle = 0;
         this.index = 1;
         this.start_y = y;
@@ -426,7 +428,7 @@ class Tank extends Enemy{
 Tank.prototype.move = function(N){
 
     this.count ++;
-        this.x -= scene_speed;
+    this.x -= scene_speed;
 
     if(this.count <= 100){
         this.x -= this.speed;
@@ -462,6 +464,74 @@ Tank.prototype.move = function(N){
     pop();
 
     draw_sprite(this.x,this.y,en_sprites.enemys[this.name[0]]);
+}
 
+function new_bomber(){
+    enemy.push(new Bomber(100,60));
+}
+
+class Bomber extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.energy = 50;
+        this.name = "air_bomber";
+        this.fan = "fan";
+        this.speed = 1;
+        this.hitbox = [en_sprites.enemys[this.name].x * pixel , en_sprites.enemys[this.name].y * pixel *2];
+
+    }
+}
+
+Bomber.prototype.move = function(N){
+    this.count ++;
+    this.x -= scene_speed+this.speed;
+
+    if(this.count % 50 == 0){
+        n_bomb(this.x, this.y + 20);
+    }
+
+    if(this.count % 2 == 0){
+        draw_sprite(this.x-120,this.y,en_sprites.enemys[this.fan]); 
+    }
+
+    draw_sprite(this.x,this.y,en_sprites.enemys[this.name]);
+
+
+    if(this.x < -100 || this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+
+        enemy.splice(N,1);
+    } 
+
+}
+
+function n_bomb(x,y){
+    enemy.push(new N_bomb(x,y));
+}
+
+class N_bomb extends Enemy{
+    constructor(x,y){
+        super(x-width, y);
+        this.energy = 10;
+        this.name = "n_bomb";
+        this.power = 15;
+        this.speed = 10;
+        this.hitbox = [en_sprites.shoot[this.name].x * pixel , en_sprites.shoot[this.name].y * pixel *2];
+    }
+}
+
+
+N_bomb.prototype.move =  function(N){
+    
+    this.y +=  this.speed ;
+
+    draw_sprite(this.x,this.y,en_sprites.shoot[this.name]);
+
+    if( this.y > height + 10 || this.energy <= 0){
+        enemy.splice(N,1);
+    }    
 
 }

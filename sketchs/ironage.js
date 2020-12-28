@@ -6,12 +6,14 @@ let bk_sprites;
 let pixel = 3; // tamanho do pixel
 let score = 0;
 let back_color = [0,0,0];
+let letter_color = [255];
 let pause = false;
 let ready = 0;
 
 let player = new Player();
 let sprite_name = "main"
 
+let defeat = [false,false,false,false,false,false,false,false];
 let get_weapons = [1,0,0,0,0,0,0,0,0];
 let energy_wep =  [1,100,100,100,100,100,100,100,100];
 let weap_names = ["M.BUSTER","FIRE BALL","ICE BALL","LASER","RIPPLE","SPREAD","FORCE FIELD", "NUCLER BOMB","TORP"];
@@ -25,6 +27,7 @@ let scene_bk = [];
 let boss = [];
 
 let scene_speed = 1;
+let scene_move = true;
 let stage = 0;
 let song;
 

@@ -56,6 +56,8 @@ function stage_select(sel_stage){
 
         back_color = [0,121,248];
         timer = [0,0];
+        stage_percent = 0;
+        time = 0;        
 
         noStroke();
         text("SELECT STAGE", 280, 50, width, 150);
@@ -105,16 +107,32 @@ function stage_select(sel_stage){
         text("FEAR OF", 550, 550, 200, 150);
         text("THE DARK", 550, 575, 200, 150);
 
-        draw_sprite(202,120,pl_sprites.splash["eddie_trooper"]);
-        draw_sprite(402,120,pl_sprites.splash["eddie_beast"]);
-        draw_sprite(602,120,pl_sprites.splash["eddie_mind"]);
 
-        draw_sprite(202,298,pl_sprites.splash["eddie_egito"]);
-        draw_sprite(602,298,pl_sprites.splash["eddie_hammer"]);
+        if(!defeat[0]){
+            draw_sprite(202,120,pl_sprites.splash["eddie_trooper"]); // THE TROOPER
+        }
+        if(!defeat[1]){
+            draw_sprite(402,120,pl_sprites.splash["eddie_beast"]); // THE EVIL THAT MAN DO
+        }
+        if(!defeat[2]){
+            draw_sprite(602,120,pl_sprites.splash["eddie_mind"]); // WASTED YEARS
+        }
+        if(!defeat[3]){
+            draw_sprite(202,298,pl_sprites.splash["eddie_egito"]); //CAN I PLAY WITH MADNESS
+        }
+        if(!defeat[4]){
+            draw_sprite(602,298,pl_sprites.splash["eddie_hammer"]); // RUN TO THE HILLS
+        }
+        if(!defeat[5]){
+            draw_sprite(202,476,pl_sprites.splash["eddie_aces"]); //ACES HIGH
+        }
+        if(!defeat[6]){
+            draw_sprite(402,476,pl_sprites.splash["eddie_hallowed"]); //HALLOWED BY THY NAME
+        }
+        if(!defeat[7]){
+            draw_sprite(602,476,pl_sprites.splash["eddie_fear"]); // FEAR OF THE DARK
+        }
 
-        draw_sprite(202,476,pl_sprites.splash["eddie_aces"]);
-        draw_sprite(402,476,pl_sprites.splash["eddie_hallowed"]);
-        draw_sprite(602,476,pl_sprites.splash["eddie_fear"]);
 
         joystick();
 
@@ -147,6 +165,7 @@ function stage_select(sel_stage){
         text("LOADING...", 310, 400, width, 150);
         time = 0;
         stage_percent = 0;
+        scene_move = true;
 
         if(song.isLoaded()){
             sound_efects[4].stop();                                
@@ -277,7 +296,7 @@ function stage_select(sel_stage){
         }
 
         draw_screen();
-    }else if(sel_stage == 5){ //Wasted Years
+    }else if(sel_stage == 6){ //Wasted Years
 
         stage_percent = Math.floor(timer[0]/stage_length*100) ;
 
@@ -292,6 +311,7 @@ function stage_select(sel_stage){
                 new_viper(5);
                 enemy.push(new Thunder(300,100));
             }else if(time == 5){
+                new_bomber();
                 new_viper(5);
             }else if(time == 8){
                 new_sea_ship();
@@ -308,6 +328,7 @@ function stage_select(sel_stage){
                 new_enemy_balls(6);                
             }else if(time == 18){
                 scene.push(new Cloud(150));
+                new_bomber();
                 new_sea_ship();
             }else if(time == 20){
                 new_sea_ship();
@@ -315,6 +336,7 @@ function stage_select(sel_stage){
                 scene.push(new Cloud(150));
                 new_viper(5);
             }else if(time == 23){
+                new_bomber();
                 new_enemy_balls(6);                
             }else if(time == 25){
                 scene.push(new Cloud(150));
@@ -322,6 +344,7 @@ function stage_select(sel_stage){
             }else if(time == 27){
                 scene.push(new Cloud(150));
                 new_sea_ship();
+                new_bomber();
             }else if(time == 30){
                 new_enemy_balls(6);                
             }else if(time == 32){
@@ -329,6 +352,7 @@ function stage_select(sel_stage){
                 new_viper(5);
             }else if(time == 33){
                 enemy.push(new Thunder(300,100));
+                new_bomber();
                 new_enemy_balls(6);                
             }else if(time == 35){
                 scene.push(new Cloud(150));
@@ -339,6 +363,7 @@ function stage_select(sel_stage){
                 new_sea_ship();
             }else if(time == 40){
                 new_enemy_balls(6);                
+                new_bomber();
             }else if(time == 42){
                 enemy.push(new Thunder(300,100));
             }else if(time == 45){
@@ -354,6 +379,7 @@ function stage_select(sel_stage){
             }else if(time == 53){
                 scene.push(new Cloud(150));
             }else if(time == 55){
+                new_bomber();
                 new_sea_ship();
             }else if(time == 56){
                 new_sea_ship();
@@ -362,6 +388,7 @@ function stage_select(sel_stage){
                 new_enemy_balls(6);                
             }else if(time == 61){
                 enemy.push(new Thunder(300,100));
+                new_bomber();
                 new_enemy_balls(6);                
             }else if(time == 63){
                 scene.push(new Cloud(150));
@@ -375,6 +402,7 @@ function stage_select(sel_stage){
                 new_sea_ship();
             }else if(time == 72){
                 scene.push(new Cloud(150));
+                new_bomber();
             }else if(time == 74){
                 new_sea_ship();
             }else if(time == 77){
@@ -392,6 +420,7 @@ function stage_select(sel_stage){
                 scene.push(new Cloud(150));
             }else if(time == 85){
                 new_sea_ship();
+                new_bomber();
             }else if(time == 87){
                 scene.push(new Cloud(150));
             }else if(time == 89){
@@ -412,7 +441,7 @@ function stage_select(sel_stage){
         }        
 
         draw_screen();
-    }else if(sel_stage == 6){ // Can I play with madness
+    }else if(sel_stage == 7){ // Can I play with madness
 
         stage_percent = Math.floor(timer[0]/stage_length*100) ;
                 if(time < stage_percent){
@@ -429,7 +458,7 @@ function stage_select(sel_stage){
         }   
         draw_screen();
 
-    }else if(sel_stage == 7){ // The Evil That Man Do
+    }else if(sel_stage == 5){ // The Evil That Man Do
 
         stage_percent = Math.floor(timer[0]/stage_length*100) ;
                 if(time < stage_percent){
@@ -447,6 +476,7 @@ function stage_select(sel_stage){
                 new_moais("down");
             }else if(time == 10){
                 new_tank();
+                new_bomber();
             }else if(time == 12){
                 new_viper(5);
             }else if(time == 15){
@@ -459,6 +489,7 @@ function stage_select(sel_stage){
             }else if(time == 23){
                 new_viper(5);
             }else if(time == 24){
+                new_bomber();
             }else if(time == 27){
                 new_viper(5);
             }else if(time == 30){
@@ -477,6 +508,7 @@ function stage_select(sel_stage){
             }else if(time == 47){
                 scene.push(new Cloud(150));
             }else if(time == 49){
+                new_bomber();
             }else if(time == 51){
                 new_tank();
             }else if(time == 53){
@@ -520,6 +552,23 @@ function stage_select(sel_stage){
 
         draw_screen();
 
+    }else if(sel_stage == 11){ // FEAR OF THE DARK
+
+        stage_percent = Math.floor(timer[0]/stage_length*100) ;
+        if(time < stage_percent){
+            time = stage_percent;
+            if(time == 1){
+                tower();                
+            }else if(time == 3){
+//                new_tank(80);
+            }else if(time == 5){
+//               new_moais("down");
+            }else if(time == 7){
+            }else if(time == 9){
+            }
+        }
+
+        draw_screen();
     }
 
 }
@@ -538,6 +587,7 @@ function draw_screen(){
 
 
             // show control screen
+            fill(letter_color);
             text("SCORE: "+score, 10, 25, 300, 150);
             text("HI-SCORE", 310, 25, 300, 150);
             text(weap_names[player.weapon], 610, 25, 300, 150);
@@ -692,6 +742,8 @@ function hit(){
             sound_efects[7].stop(); // stop the boss music
             sound_efects[8].play(); 
             boss_defeat = true;
+            scene_move = true;
+            boss = [];
             timer = [0,0];
         }
     }
@@ -702,12 +754,12 @@ function hit(){
 
         if(player.x >= width + 200){
             get_weapons[stage-3] = 1;
+            defeat[stage-4] = true;
             stage = 1;
             sound_efects[4].setLoop(true);
             sound_efects[4].play(); 
             boss_defeat = false;
-
-            energy_wep =  [1,100,100,100,100,100,100,100,100];            
+            energy_wep =  [1,100,100,100,100,100,100,100,100];                       
         }
     }
 }
@@ -864,12 +916,12 @@ function start_stage(N){
     itens = [];
     scene = [];
     boss_defeat = false;
-    next_stage = N;
+    next_stage = 0;
     pause = false;
     player.shield = 100;
     player.x = 50;
     player.y = 200;
-
+    next_stage = N;
                             
     if(song != undefined){ // stop the music, if is playing
         song.stop();
@@ -889,28 +941,34 @@ function start_stage(N){
             scene.push(new Ground("cavern","montanhas",true));
             scene.push(new Ground("cavern","arvores"));
             scene[scene.length-1].fill();
-        }else if(N == 5){ // WASTED YEARS
+
+        }else if(N == 5){ // THE EVIL THAT MAN DO
+            back_color = [25,20,158];
+            song = loadSound('assets/music/Evil.mp3');
+            fill_second_plan(["degrade_01","degrade_02","degrade_03","degrade_04"]);
+            scene.push(new Ground("cavern","arvores"));
+            scene[scene.length-1].fill();
+
+        }else if(N == 6){ // WASTED YEARS
             back_color = [25,20,158];
             song = loadSound('assets/music/Wasted.mp3');
             scene.push(new Ground("sea","agua",false,true));
             scene[scene.length-1].fill();
 
-        }else if(N == 6){
+        }else if(N == 7){ // CAN I PLAY WITH MADNESS
             back_color = [0,0,0];
             song = loadSound('assets/music/Madness.mp3');
-
-//            scene_bk.push(new Cave(500));
-//            fill_second_plan(["degrade_01","degrade_02","degrade_03","degrade_04"]);
             fill_second_plan(["cave_01","cave_02","cave_01","cave_02"]);
             scene.push(new Ground("cavern","arvores"));
             scene[scene.length-1].fill();
 
-        }else if(N == 7){
-            back_color = [25,20,158];
-            song = loadSound('assets/music/Evil.mp3');
-            fill_second_plan(Second_plan);
-            scene.push(new Ground("cavern","arvores"));
+        }else if(N == 11){ // FEAR OF THE DARK
+            back_color = [0,0,0];
+            song = loadSound('assets/music/Fear.mp3');
+            fill_second_plan(["trees_00","trees_01","trees_02","trees_02"]);
+            scene.push(new Ground("cavern","grass"));
             scene[scene.length-1].fill();
+
         }
 
 
@@ -920,12 +978,19 @@ function start_stage(N){
         ready = 100;
         player.delay = 100;
 
-        if(N == 4){
+        if(N == 4){ // THE TROOPER
             big_moais();
-        }else if(N == 5){
+        }else if(N == 5){ // THE EVIL THA MAN DO
+            panzer();
+        }else if(N == 6){ // WASTED YEARS
             kraken();
-        }else if(N == 6){
+        }else if(N == 7){ // CAN I PLAY WITH MADNESS
             big_moais();
+        }else if(N == 8){ // RUN TO THE HILLS
+        }else if(N == 9){ // ACES HIGH
+        }else if(N == 10){ // HALLOWED BE THY NAME
+        }else if(N == 11){ // FEAR OF THE DARK
+            tower();        
         }
 
     }

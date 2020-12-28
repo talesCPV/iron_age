@@ -58,8 +58,12 @@ Player.prototype.draw = function(){
 
       draw_sprite(this.x,this.y,pl_sprites.player[this.name]);    
 
-    if(this.shield <= 0){ // energy is over
+    if(this.shield <= 0){ // energy is over => you died
       this.life --;
+      this.speed = 3;
+      this.weapon = 0;
+      this.max_shot = 3;
+      this.max_special = 1;
 
       if(this.life == 0){ // game over
         stage = 3; 
@@ -206,7 +210,7 @@ class Shot extends Fire{
 }
 
 Shot.prototype.move = function(N){
-  this.x += this.speed;
+  this.x += this.speed + (player.speed - 3);
   draw_sprite(this.x,this.y,pl_sprites.weapons[this.name]);
   if(this.x > width + 10){
       shooting.splice(N,1);
@@ -429,6 +433,8 @@ Itens.prototype.hit = function(N){
       player.speed += 1;
   }else if(this.type == 6 && player.speed > 3){ // - player speed
       player.speed -= 1;
+  }else if(this.type == 7 && player.tank < 4){ // + energy tank
+      player.tank += 1;
   }else if(this.type == 10 && player.life < 9){ // + player life
       player.life += 1;         
   }
@@ -530,6 +536,15 @@ class Speed_down extends Energy_Weapon{
   }
 }
 
+class Energy_tank extends Energy_Weapon{
+  constructor(x,y){
+    super(x,y);
+    this.name = ["energy_tank","energy_tank"];
+    this.type = 7;
+    this.hitbox = [pl_sprites.itens.energy_tank.x,pl_sprites.itens.energy_tank.y];  
+  }
+}
+
 class Life extends Energy_Weapon{
   constructor(x,y){
     super(x,y);
@@ -538,6 +553,7 @@ class Life extends Energy_Weapon{
     this.hitbox = [pl_sprites.itens.blank.x,pl_sprites.itens.blank.y];  
   }
 }
+
 
 // BACKGROUNDS
 
@@ -559,7 +575,7 @@ class Ground{
       this.y = -50;
       this.vertical = -1;
     }else{
-      this.y = height - 20;
+      this.y = height;
       this.vertical = 1;
     }  
   }
@@ -659,7 +675,10 @@ class Second_plan{
 }
 
 Second_plan.prototype.move = function(N){
-  this.x -= this.speed;
+  if(scene_move){
+    this.x -= this.speed;
+  }
+
   this.count ++;
   let y = this.height/2 ;
 

@@ -3,22 +3,22 @@ class Boss{
 	constructor(x,y){
 		this.x = x;
 		this.y = y;
-		this.energy = 0;
-		this.weak = []; // numero do indice do array de armas
-		this.power = 10;
-		this.not_effect = [];
-		this.hitbox = [0,0];
-		this.name = "";
 		this.count = 0;
-		this.pivot = [1,1];
-		this.begin = 100;
-		this.size = [2,2];
 		this.index = 0;
+		this.energy = 0;
+		this.begin = 100;
+		this.power = 10;
+		this.weak = []; // numero do indice do array de armas
+		this.not_effect = [];
+		this.name = "";
 		this.background = bk_sprites.sea.agua;
+		this.hitbox = [0,0];
+		this.pivot = [1,1];
+		this.size = [2,2];
 		song.fade(0,5);
 		sound_efects[7].loop();
 		enemy = [];
-
+		scene_move = false;
 	}
 }
 
@@ -30,14 +30,13 @@ Boss.prototype.come_here = function(){
     pop();
     this.begin -= 2;
     this.energy += 2;
-
 }
 
 Boss.prototype.draw_background = function(){
 	scene = [];
 		// show background (don't move anymore)
 	for(let i= -this.background.x; i< width + this.background.x; i += this.background.x * pixel){
-		draw_sprite(i,height - 20,this.background);
+		draw_sprite(i,height,this.background);
 	}
 }
 
@@ -99,7 +98,6 @@ Kraken.prototype.atack = function(N){
 		this.size = [3,3];
 
 		if(this.count == 1){
-//			this.hitbox[0] *= 2;
 			this.hitbox[1] *= 4;
 		}else if(this.count < 40){
 			this.y -= 2;
@@ -113,7 +111,6 @@ Kraken.prototype.atack = function(N){
 				enemy.push(new Boss_Fire(this.x,this.y));
 			}
 
-
 		}else if(this.count < 299){
 			this.y += 3;
 		}else if(this.count == 300){
@@ -121,7 +118,6 @@ Kraken.prototype.atack = function(N){
 			this.y = height - 40;
 			this.index = 0;
 		}
-
 
 	}
 
@@ -154,14 +150,12 @@ class Big_Moais extends Boss{
 		this.hitbox = [this.width * this.size[0] * pixel, this.height * this.size[1] * pixel];
 	}
 
-
 }
 
 Big_Moais.prototype.atack = function(N){
 	this.count++;
 
 	if(this.index == 0){ // moai de boca fechada
-
 
 		if(this.count == 1){
 			this.weak = [];
@@ -217,7 +211,6 @@ class Boss_Fire extends Viper_shot{ // Viper_shot esta em enemys.js
         this.power = 25;
         this.hitbox = [3*pixel,3*pixel];
 	}
-
 }
 
 
@@ -327,5 +320,44 @@ Panzer.prototype.atack = function(N){
     pop();
 
     this.draw_background();
+
+}
+
+
+function tower(){
+    boss.push(new Tower(width - 200,height - 200));
+}
+
+class Tower extends Boss{
+    constructor(x,y){
+        super(x,y);
+        this.name = ["tower"];
+        this.background = bk_sprites.cavern.grass;
+        this.weak = [0,8];
+		this.not_effect = [2,3,4,5,6];
+        this.hitbox = [en_sprites.boss[this.name[0]].x * pixel * 2, en_sprites.boss[this.name[0]].y * pixel * 2];
+        this.direction = true;        
+    }
+}
+
+
+Tower.prototype.atack = function(N){
+	this.count ++;
+
+	if(this.count > 200){
+		new_tank(80);
+		enemy[enemy.length - 1].x -= 200;
+		this.count = 0;
+	}
+
+
+	this.draw_background();
+
+    push();
+    translate(this.x, this.y);
+    scale(this.size);
+    draw_sprite(0,0,en_sprites.boss[this.name[0]]);
+    pop();
+
 
 }

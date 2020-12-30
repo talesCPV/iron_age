@@ -50,6 +50,7 @@ function preload() {
 function setup() {
     createCanvas(screen[0], screen[1]);
     textSize(20);
+    frameRate(30)
     textAlign(10, 10);
     textFont(font);
     sound_efects.push(loadSound('assets/efects/energy.wav'));  // [5]    

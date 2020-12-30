@@ -687,12 +687,12 @@ Second_plan.prototype.move = function(N){
       draw_sprite(this.x,y,bk_sprites.fundos[this.name[i]]);
       y += bk_sprites.fundos[this.name[i]].y * pixel;
     }
-
+/*
     if(y < height){
       fill(this.bk_color)
       rect(this.x,y,this.width,height-y)
     }
-
+*/
 
   if(this.count ==  Math.floor(this.width / this.speed) ) {
     scene_bk.push(new Second_plan(this.spaw, this.name));
@@ -702,3 +702,17 @@ Second_plan.prototype.move = function(N){
   }
 
 }
+
+/*
+function draw_bg(BG){
+  let w = bk_sprites.fundos[BG[0]].x;
+  let y = 0;
+  for(let x=-10; x<width+10; x += w){
+    for(let i=0; i<BG.length; i++){
+      draw_sprite(x,y,bk_sprites.fundos[BG[i]]);
+      y += bk_sprites.fundos[BG[i]].x * pixel;
+      
+    }  
+  }
+}
+*/

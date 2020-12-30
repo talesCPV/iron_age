@@ -464,6 +464,16 @@ Tank.prototype.move = function(N){
     pop();
 
     draw_sprite(this.x,this.y,en_sprites.enemys[this.name[0]]);
+
+    if(this.x < -100 || this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+
+        enemy.splice(N,1);
+    } 
+
 }
 
 function new_bomber(){
@@ -533,5 +543,116 @@ N_bomb.prototype.move =  function(N){
     if( this.y > height + 10 || this.energy <= 0){
         enemy.splice(N,1);
     }    
+}
+
+function catapult(n=50){
+    enemy.push(new Catapult(100,height-n));
+}
+
+class Catapult extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.name = ["catapult_00","catapult_01","catapult_02"];
+        this.energy = 15;
+        this.value = 50;
+        this.index = 0;
+        this.hitbox = [en_sprites.enemys[this.name[0]].x * pixel , en_sprites.enemys[this.name[0]].y * pixel *2];
+    }
+}
+
+Catapult.prototype.move = function(N){
+
+    this.count ++;
+    if(scene_move){
+        this.x -= scene_speed;
+    }
+
+    if(this.count <= 130){
+        this.index=0
+    }else if(this.count <= 135){
+        this.index=1
+    }else if(this.count <= 140){        
+        this.index=2
+        enemy.push(new Boss_Fire(this.x+40,this.y - 10));
+    }else if(this.count <= 136){
+
+    }else if(this.count <= 250){
+        this.count = 0;
+        
+    }
+
+    draw_sprite(this.x,this.y,en_sprites.enemys[this.name[this.index]]);
+
+    if(this.x < -100 || this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+
+        enemy.splice(N,1);
+    }     
+
+}
+
+
+
+function rocket(n=50){
+    enemy.push(new Rocket(100,height-n));
+}
+
+class Rocket extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.name = ["rocket_00","rocket_01"];
+        this.power = 30;
+        this.value = 180;
+        this.energy = 15;
+        this.index = 0;
+        this.angle = 0.03;
+        this.speed = 0;
+        this.shoot = false;
+        this.hitbox = [en_sprites.enemys[this.name[0]].x * pixel , en_sprites.enemys[this.name[0]].y * pixel *2];
+    }
+}
+
+Rocket.prototype.move = function(N){
+
+    this.count ++;
+    this.x -= scene_speed;
+    this.y -= this.speed;
+
+    if(this.count % 2 == 0){
+        this.angle *= -1;
+    }
+
+    if (this.speed > 0) {
+        this.angle = 0;
+    }
+
+    if(player.x >= this.x - 50 && player.x <= this.x + 50 && !this.shoot){
+        this.speed = (player.speed * Math.abs(player.y-this.y)) / Math.abs(player.x-this.x);
+        this.shoot = true;
+        this.index = 1;
+    }
+
+    if(this.count >= 250){
+        this.count = 0;    
+    }
+
+
+    push();
+    translate(this.x, this.y);
+    rotate(this.angle);
+    draw_sprite(0,0,en_sprites.enemys[this.name[this.index]]);
+    pop();
+
+    if(this.y <= -100 || this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+
+        enemy.splice(N,1);
+    }     
 
 }

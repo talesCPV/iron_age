@@ -312,6 +312,7 @@ function stage_select(sel_stage){
                 enemy.push(new Thunder(300,100));
             }else if(time == 5){
                 new_bomber();
+                rocket(-10);
                 new_viper(5);
             }else if(time == 8){
                 new_sea_ship();
@@ -324,7 +325,9 @@ function stage_select(sel_stage){
                 new_viper(5);
             }else if(time == 13){
                 new_viper(5);
+                rocket(-10);
             }else if(time == 15){
+                rocket(-10);
                 new_enemy_balls(6);                
             }else if(time == 18){
                 scene.push(new Cloud(150));
@@ -337,6 +340,7 @@ function stage_select(sel_stage){
                 new_viper(5);
             }else if(time == 23){
                 new_bomber();
+                rocket(-10);
                 new_enemy_balls(6);                
             }else if(time == 25){
                 scene.push(new Cloud(150));
@@ -346,12 +350,14 @@ function stage_select(sel_stage){
                 new_sea_ship();
                 new_bomber();
             }else if(time == 30){
+                rocket(-10);
                 new_enemy_balls(6);                
             }else if(time == 32){
                 scene.push(new Cloud(150));
                 new_viper(5);
             }else if(time == 33){
                 enemy.push(new Thunder(300,100));
+                rocket(-10);
                 new_bomber();
                 new_enemy_balls(6);                
             }else if(time == 35){
@@ -363,10 +369,13 @@ function stage_select(sel_stage){
                 new_sea_ship();
             }else if(time == 40){
                 new_enemy_balls(6);                
+                rocket(-10);
                 new_bomber();
             }else if(time == 42){
+                rocket(-10);
                 enemy.push(new Thunder(300,100));
             }else if(time == 45){
+                rocket(-10);
                 scene.push(new Cloud(150));
                 new_enemy_balls(6);                
             }else if(time == 47){
@@ -410,18 +419,22 @@ function stage_select(sel_stage){
                 new_sea_ship();
             }else if(time == 79){
                 enemy.push(new Thunder(300,100));
+                rocket(-10);
                 new_viper(5);
             }else if(time == 80){
+                rocket(-10);
                 scene.push(new Cloud(150));
             }else if(time == 83){
                 new_sea_ship();
             }else if(time == 84){
+                rocket(-10);
                 enemy.push(new Thunder(300,100));
                 scene.push(new Cloud(150));
             }else if(time == 85){
                 new_sea_ship();
                 new_bomber();
             }else if(time == 87){
+                rocket(-10);
                 scene.push(new Cloud(150));
             }else if(time == 89){
                 new_sea_ship();
@@ -447,12 +460,13 @@ function stage_select(sel_stage){
                 if(time < stage_percent){
             time = stage_percent;
             if(time == 1){
-                kraken();
+                tower();
             }else if(time == 3){
-//                new_viper(5);
+                rocket();
             }else if(time == 4){
-
+                rocket();
             }else if(time == 5){
+//                tower();
 
             }
         }   
@@ -464,16 +478,19 @@ function stage_select(sel_stage){
                 if(time < stage_percent){
             time = stage_percent;
             if(time == 1){
+                rocket();
                 new_tank();
             }else if(time == 3){
                 new_viper(5);
+                rocket();
             }else if(time == 4){
                 new_tank();
             }else if(time == 5){
                 new_viper(5);
+                rocket();
                 scene.push(new Cloud(150));
             }else if(time == 8){
-                new_moais("down");
+                rocket();
             }else if(time == 10){
                 new_tank();
                 new_bomber();
@@ -481,7 +498,7 @@ function stage_select(sel_stage){
                 new_viper(5);
             }else if(time == 15){
                 new_viper(5);
-                new_moais("down");
+                rocket();
             }else if(time == 18){
                 scene.push(new Cloud(150));
             }else if(time == 20){
@@ -489,18 +506,21 @@ function stage_select(sel_stage){
             }else if(time == 23){
                 new_viper(5);
             }else if(time == 24){
+                rocket();
                 new_bomber();
             }else if(time == 27){
                 new_viper(5);
             }else if(time == 30){
-                new_moais("down");
+                rocket();
             }else if(time == 32){
+                rocket();
                 new_tank();
             }else if(time == 33){
                 new_viper(5);
             }else if(time == 35){
-                new_moais("down");
+                rocket();
             }else if(time == 38){
+                rocket();
             }else if(time == 41){
                 new_tank();
             }else if(time == 44){
@@ -514,20 +534,24 @@ function stage_select(sel_stage){
             }else if(time == 53){
                 scene.push(new Cloud(150));
             }else if(time == 56){
+                rocket();
             }else if(time == 59){
                 new_viper(5);
             }else if(time == 61){
                 new_tank();
             }else if(time == 63){
                 new_tank();
+                rocket();
             }else if(time == 66){
                 new_viper(5);
             }else if(time == 69){
                 new_viper(5);
             }else if(time == 72){
+                rocket();
                 scene.push(new Cloud(150));
             }else if(time == 75){
                 scene.push(new Cloud(150));
+                rocket();
             }else if(time == 77){
                 new_tank();
             }else if(time == 80){
@@ -539,9 +563,11 @@ function stage_select(sel_stage){
                 new_viper(5);
             }else if(time == 87){
                 scene.push(new Cloud(150));
+                rocket();
             }else if(time == 90){
                 new_viper(5);
             }else if(time == 92){
+                rocket();
                 new_tank();
             }else if(time == 94){
                 scene.push(new Cloud(150));
@@ -558,13 +584,129 @@ function stage_select(sel_stage){
         if(time < stage_percent){
             time = stage_percent;
             if(time == 1){
-                tower();                
+                new_enemy_balls(6);
+                catapult(90);
             }else if(time == 3){
-//                new_tank(80);
+                scene.push(new Cloud(150));
+                rocket();
             }else if(time == 5){
-//               new_moais("down");
+               new_moais("down");
             }else if(time == 7){
+                new_viper(9);
+                new_moais("down");
             }else if(time == 9){
+                catapult(90);
+                new_enemy_balls(6);
+            }else if(time == 11){
+                new_bomber();
+                catapult(90);
+                new_tank(80);
+            }else if(time == 13){
+                new_viper(9);
+                rocket();
+            }else if(time == 15){
+                new_enemy_balls(6);
+                new_moais("down");
+            }else if(time == 17){
+                new_tank(80);
+            }else if(time == 19){
+                new_viper(9);
+                new_moais("down");
+            }else if(time == 21){
+                new_enemy_balls(6);
+                catapult(90);
+            }else if(time == 23){
+                new_viper(9);
+                new_moais("down");
+            }else if(time == 25){
+                new_tank(80);
+                catapult(90);
+            }else if(time == 27){
+                new_moais("down");
+                new_tank(80);
+            }else if(time == 29){
+                new_walker();
+                catapult(90);
+            }else if(time == 32){
+                new_enemy_balls(6);
+                new_moais("down");
+                new_walker();
+            }else if(time == 34){
+                new_bomber();
+                new_walker();
+            }else if(time == 36){
+                new_moais("down");
+                new_viper(9);
+            }else if(time == 38){
+                new_tank(80);
+                new_walker();
+            }else if(time == 41){
+                new_enemy_balls(6);
+                new_moais("down");
+            }else if(time == 44){
+                new_viper(9);
+                new_moais("down");
+            }else if(time == 46){
+                new_walker();
+                catapult(90);
+            }else if(time == 48){
+                new_tank(80);
+            }else if(time == 51){
+                new_walker();
+            }else if(time == 53){
+                new_enemy_balls(6);
+                new_moais("down");
+                new_tank(80);
+            }else if(time == 55){
+                new_walker();
+            }else if(time == 57){
+                new_viper(9);
+                new_moais("down");
+            }else if(time == 59){
+                new_viper(9);
+                new_moais("down");
+            }else if(time == 62){
+                new_enemy_balls(6);
+                new_moais("down");
+            }else if(time == 64){
+                new_tank(80);
+            }else if(time == 67){
+                new_walker();
+            }else if(time == 70){
+                new_viper(9);
+                new_moais("down");
+            }else if(time == 72){
+                new_walker();
+            }else if(time == 74){
+                new_tank(80);
+            }else if(time == 76){
+                new_viper(9);
+                new_moais("down");
+            }else if(time == 78){
+                new_walker();
+            }else if(time == 80){
+                new_viper(9);
+                new_moais("down");
+            }else if(time == 81){
+                new_enemy_balls(6);
+            }else if(time == 83){
+                new_walker();
+            }else if(time == 85){
+                new_tank(80);
+            }else if(time == 87){
+                new_walker();
+            }else if(time == 89){
+                new_tank(80);
+            }else if(time == 92){
+                new_viper(9);
+                new_moais("down");
+            }else if(time == 93){
+                new_walker();
+                new_enemy_balls(6);
+            }else if(time == 95){
+                new_moais("down");
+            }else if(time == 96){
+                tower();
             }
         }
 
@@ -585,6 +727,8 @@ function draw_screen(){
                 scene_bk[i].move(i);         
             }
 
+
+//            draw_bg(["trees_03","trees_04","trees_03"]);
 
             // show control screen
             fill(letter_color);
@@ -965,7 +1109,7 @@ function start_stage(N){
         }else if(N == 11){ // FEAR OF THE DARK
             back_color = [0,0,0];
             song = loadSound('assets/music/Fear.mp3');
-            fill_second_plan(["trees_00","trees_01","trees_02","trees_02"]);
+            fill_second_plan(["trees_00","trees_01","trees_02","trees_03"]);
             scene.push(new Ground("cavern","grass"));
             scene[scene.length-1].fill();
 

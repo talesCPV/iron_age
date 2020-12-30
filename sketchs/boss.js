@@ -290,17 +290,14 @@ Panzer.prototype.move = function(){
 
 Panzer.prototype.atack = function(N){
     this.count ++;
-
-    if((this.count >= 300 && this.count <= 400) || (this.count >= 700 && this.count <= 800) ){
-
-    }else{
-    	this.move();
         if(this.count % 50 == 0){
-            enemy.push(new Boss_Fire(this.x-15,this.y-18));           
-        }    	
+            enemy.push(new Boss_Fire(this.x-15,this.y-18));
+        }
+    if( !((this.count >= 300 && this.count <= 400) || (this.count >= 700 && this.count <= 800)) ){
+    	this.move();    	
     }
 
-     if((this.x < 0 || this.x > width) && this.count > 800){
+     if((this.x < 0 || this.x > width) && this.count > 800){ // turn the tank
         this.count = 0;
         this.direction = !this.direction;
     }
@@ -333,13 +330,16 @@ class Tower extends Boss{
         super(x,y);
         this.name = ["tower"];
         this.background = bk_sprites.cavern.grass;
-        this.weak = [0,8];
-		this.not_effect = [2,3,4,5,6];
+        this.weak = [8];
+		this.not_effect = [2,3,4,5,6,7];
         this.hitbox = [en_sprites.boss[this.name[0]].x * pixel * 2, en_sprites.boss[this.name[0]].y * pixel * 2];
-        this.direction = true;        
+        this.direction = true;
+        catapult(150);
+        enemy[0].x = 700;
+        catapult(430);
+        enemy[1].x = 500;
     }
 }
-
 
 Tower.prototype.atack = function(N){
 	this.count ++;
@@ -350,7 +350,13 @@ Tower.prototype.atack = function(N){
 		this.count = 0;
 	}
 
+	if(this.count % 200 == 0){
+	    new_bomber();
+	}
 
+	if(this.count % 80 == 0){
+	    boss_spread(this.x  - 200,this.y);
+	}
 	this.draw_background();
 
     push();

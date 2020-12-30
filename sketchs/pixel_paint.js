@@ -9,9 +9,14 @@ let json_output;
 let tool = "BRUSH";
 let undo = [];
 let pivot = [1,1];
+let copy = [[0,0],[0,0]];
+let copy_mem = [];
+let cp_click = false;
+let count = 0;
 
 function setup() {
     createCanvas(screen[0], screen[1]);
+    frameRate(6)
     textSize(15);
     stroke(255);
 
@@ -27,7 +32,10 @@ function setup() {
     cmbTool = createSelect();
     cmbTool.position(110, 90);
     cmbTool.option('BRUSH');
+    cmbTool.option('POINT');
     cmbTool.option('FILL');
+    cmbTool.option('COPY');
+    cmbTool.option('PASTE');
 
     sld_R = createSlider(0, 255, 50);
     sld_R.position(270, 10);
@@ -79,21 +87,20 @@ function setup() {
 function draw() {
     background(0, 0, 0);
     draw_header();
-    if (mouseIsPressed) {
+    count ++;
+    if(count > 1000){
+      count = 0;
+    }
+    if (mouseIsPressed) { // every frame in click
       if(mouseY > header && mouseX < grid * grid_size[0] + grid && mouseX > grid ){
         let x = Math.floor( (mouseX - grid) / grid);
         let y = grid_size[1] - 1 - (Math.floor((mouseY - header) / grid));
         if(mouseButton === LEFT){
-//          add_undo();
           if(tool == "BRUSH"){
             my_draw[x][y] = color;
-          }else{
-            let old_col = [ my_draw[x][y][0],my_draw[x][y][1],my_draw[x][y][2] ];
-            fill_color(x,y,color, old_col);
-
+            cp_click = false;
           }
-        }
-        if(mouseButton === CENTER && y >= 0){
+        }else if(mouseButton === CENTER && y >= 0){
           sld_R.elt.value = my_draw[x][y][0];
           sld_G.elt.value = my_draw[x][y][1];
           sld_B.elt.value = my_draw[x][y][2];
@@ -101,16 +108,71 @@ function draw() {
       }else if(mouseX  >= 175 && mouseX <= 230 && mouseY >= 10 && mouseY <= 55){
         bg_color = color;
       }
-
     }
     draw_grid();
 
 
 }
 
-function mousePressed() {
+function mousePressed() { // only once on click
   if(mouseY > header && mouseX < grid * grid_size[0] + grid && mouseX > grid && mouseButton === LEFT){
-      add_undo();
+    add_undo();      
+    let x = Math.floor( (mouseX - grid) / grid);
+    let y = grid_size[1] - 1 - (Math.floor((mouseY - header) / grid));
+
+    if(mouseButton === LEFT){
+      if(tool == "POINT"){
+        my_draw[x][y] = color;
+        cp_click = false;
+      }else if(tool == "FILL"){
+        let old_col = [ my_draw[x][y][0],my_draw[x][y][1],my_draw[x][y][2] ];
+        fill_color(x,y,color, old_col);
+        cp_click = false;
+      }else if(tool == "COPY"){
+        if(!cp_click){
+          copy[0] = [x,y];
+          cp_click = true;
+        }else{
+          copy[1] = [x,y];
+          cp_click = false;
+          alert("copy square: "+copy);
+          cmbTool.selected("PASTE");
+          let x1 = copy[0][0];
+          let x2 = copy[1][0];
+          if(copy[0][0] > copy[1][0]){
+            x1 = copy[1][0];
+            x2 = copy[0][0];
+          }
+          let y1 = copy[0][1];
+          let y2 = copy[1][1];
+          if(copy[0][1] > copy[1][1]){
+            y1 = copy[1][1];
+            y2 = copy[0][1];
+          }
+          copy_mem = [];
+          for(let x=x1; x<=x2; x++){
+            let copy_line = my_draw[x].slice();
+            copy_mem.push([]);
+            for(let y=y1; y<=y2; y++){
+              copy_mem[copy_mem.length-1].push(copy_line[y])
+            }
+          }
+        }
+      }else if(tool == "PASTE"){    
+        cp_click = false;
+        if(x>=0 && x< grid_size[0] && y>=0 && y< grid_size[1])
+          for(let y1=0; y1<copy_mem.length; y1++){
+            let copy_line = copy_mem[y1].slice();
+            for(let x1=0; x1<copy_line.length; x1++){
+              let offset_y = y+x1 - copy_line.length +1;
+              let offset_x =  x+y1;
+              if(offset_x >= 0 && offset_x < grid_size[0] && offset_y >= 0 && offset_y < grid_size[1] && !comp_colors(bg_color,copy_line[x1])){                              
+                my_draw[offset_x][offset_y] = copy_line[x1] 
+              }
+            }
+          }
+      }
+    }    
   }
 }
 
@@ -163,6 +225,15 @@ function draw_grid(){ // monta desenho na tela
         fill(my_draw[i][grid_size[1]- 1 - j]); // inverte o eixo Y
         rect((i + 1) * grid,j * grid + header , grid, grid);
     }
+  }
+
+  if(cp_click){
+    if(count % 4 == 0){
+      fill(255);
+    }else{
+      fill(0);
+    }
+    rect((copy[0][0] + 1) * grid, (grid_size[1]-copy[0][1]-1) * grid + header , grid, grid);
   }
 
   textSize(15);

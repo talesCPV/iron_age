@@ -656,3 +656,90 @@ Rocket.prototype.move = function(N){
     }     
 
 }
+
+function tree(n=100){
+    enemy.push(new Tree(100,height-n));
+}
+
+class Tree extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.name = ["arvore_01","arvore_02","arvore_03"];
+        this.power = 15;
+        this.value = 180;
+        this.energy = 15;
+        this.value = 50;
+        this.index = Math.floor(random(0,2.99)) ;
+        this.scale = [1,1];
+        this.hitbox = [en_sprites.enemys[this.name[0]].x * pixel , en_sprites.enemys[this.name[0]].y * pixel *2];
+    }
+}
+Tree.prototype.move = function(N){
+    this.x -= scene_speed;
+/*    
+    this.count ++;
+    if(this.count == 4){
+        this.count = 0;
+    }
+*/
+    push();
+    translate(this.x, this.y);
+    scale(this.scale);
+    draw_sprite(0,0,en_sprites.enemys[this.name[this.index]]);
+    pop();
+
+
+    if(this.x <= -100 || this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+        enemy.splice(N,1);
+    } 
+
+}
+
+function hell_fire(n=80){
+    enemy.push(new Hell_fire(100,height-n));
+}
+
+class Hell_fire extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.name = ["fire_01","fire_02","fire_03"];
+        this.power = 20;
+        this.value = 500;
+        this.energy = 15;
+        this.value = 50;
+        this.index = 0;
+        this.scale = [2,2];
+        this.hitbox = [en_sprites.enemys[this.name[0]].x * pixel , en_sprites.enemys[this.name[0]].y * pixel *2];
+    }
+}
+
+Hell_fire.prototype.move = function(N){
+    this.x -= scene_speed;
+
+    this.count ++;
+    if(this.count == 5){
+        this.index = 1;
+    }else if(this.count == 10){
+        this.index = 2;
+    }else if(this.count == 15){
+        this.index = 0;
+        this.count = 0;
+    }
+
+    push();
+    translate(this.x, this.y);
+    scale(this.scale);
+    draw_sprite(0,0,en_sprites.enemys[this.name[this.index]]);
+    pop();
+
+
+    if(this.x <= -100 ){
+
+        enemy.splice(N,1);
+    } 
+
+}

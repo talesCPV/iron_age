@@ -33,6 +33,7 @@ function setup() {
     cmbTool.position(110, 90);
     cmbTool.option('BRUSH');
     cmbTool.option('POINT');
+    cmbTool.option('LINE');
     cmbTool.option('FILL');
     cmbTool.option('COPY');
     cmbTool.option('PASTE');
@@ -171,6 +172,16 @@ function mousePressed() { // only once on click
               }
             }
           }
+      }else if(tool == "LINE"){
+        if(!cp_click){
+          copy[0] = [x,y];
+          cp_click = true;
+        }else{
+          cp_click = false;
+          copy[1] = [x,y];
+          draw_line();
+        }
+
       }
     }    
   }
@@ -545,4 +556,55 @@ function restore_pivot(){
 
   cmbPivot.selected(opt[pivot[0]][pivot[1]]);
 
+}
+
+function draw_line(){
+  let line = [];
+
+  let x1 = copy[0][0];
+  let x2 = copy[1][0];
+  let y1 = copy[0][1];
+  let y2 = copy[1][1];
+
+  if(x1 > x2){ // x1 sempre menor q x2
+    x1 = copy[1][0];
+    x2 = copy[0][0];
+    y1 = copy[1][1];
+    y2 = copy[0][1];
+  }
+
+  let sy = 1; // y sobe ou desce
+  if(y2 < y1){
+    sy = -1;
+  }  
+
+  let offset_x = 0;
+  if(y2 == y1){
+    offset_x = x2-x1;
+  }else if(x2 == x1){
+    offset_x = 0;
+  }else{
+    offset_x = (x2 - x1) / Math.abs(y2-y1) ;
+  }
+
+  let in_x = offset_x;
+  my_draw[x1][y1] = color;
+
+  while( x1 != x2 || y1 != y2) {
+
+    my_draw[x1][y1] = color;
+//    alert([x1,y1]);
+
+    if(x1 < Math.floor(x1+in_x)){
+      x1++;
+      in_x--;
+    }else{
+      y1 += sy;
+      in_x += offset_x
+    }
+
+  }
+
+  my_draw[x2][y2] = color;
+  
 }

@@ -155,7 +155,7 @@ function keyPressed() {
                     }
                 }else if( sel_opt[0] == 2 && sel_opt[1] == 1 ){ // RUN TO THE HILLS
                     if(!defeat[4]){ 
-                        alert("Run To The Hills");
+                        start_stage(8);
                     }
                 }else if( sel_opt[0] == 0 && sel_opt[1] == 2 ){ // ACES HIGH
                     if(!defeat[5]){ 
@@ -163,7 +163,7 @@ function keyPressed() {
                     }
                 }else if( sel_opt[0] == 1 && sel_opt[1] == 2 ){ // HALLOWED BE THY NAME
                     if(!defeat[6]){ 
-                        alert("Hallowed Be Thy Name");
+                        start_stage(10);
                     }
                 }else if( sel_opt[0] == 2 && sel_opt[1] == 2 ){ // FEAR OF THE DARL
                     if(!defeat[7]){ 

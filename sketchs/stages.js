@@ -460,7 +460,7 @@ function stage_select(sel_stage){
                 if(time < stage_percent){
             time = stage_percent;
             if(time == 1){
-                tower();
+                worm();
             }else if(time == 3){
                 rocket();
             }else if(time == 4){
@@ -576,6 +576,219 @@ function stage_select(sel_stage){
             }
         } 
 
+        draw_screen();
+
+    }else if(sel_stage == 8){ // RUNTO THE HILLS
+
+        stage_percent = Math.floor(timer[0]/stage_length*100) ;
+        if(time < stage_percent){
+            time = stage_percent;
+            if(time == 1){
+                new_enemy_balls(10);
+                hell_fire();
+            }
+        }
+
+        draw_screen();
+
+    }else if(sel_stage == 10){ // HALLOWED BE THY NAME
+
+        stage_percent = Math.floor(timer[0]/stage_length*100) ;
+        if(time < stage_percent){
+            time = stage_percent;
+            if(time == 1){
+                new_enemy_balls(10);
+                tree();
+            }else if(time == 2){
+                catapult(90);
+                scene.push(new Cloud(150));
+                enemy.push(new Thunder(300,100));
+            }else if(time == 3){
+                tree();
+                new_viper(9);
+            }else if(time == 4){
+                scene.push(new Cloud(150));
+                tree();
+            }else if(time == 5){
+                enemy.push(new Thunder(300,100));
+                catapult(90);
+            }else if(time == 6){
+                tree();
+            }else if(time == 7){
+                new_viper(9);
+                catapult(90);
+                enemy.push(new Thunder(300,100));
+            }else if(time == 8){
+                tree();
+            }else if(time == 10){
+                scene.push(new Cloud(150));
+            }else if(time == 11){
+                enemy.push(new Thunder(300,100));
+                catapult(90);
+                new_viper(9);
+            }else if(time == 13){
+                tree();
+            }else if(time == 14){
+                catapult(90);
+            }else if(time == 16){
+                enemy.push(new Thunder(300,100));
+                new_viper(9);
+                tree();
+            }else if(time == 18){
+                catapult(90);
+                enemy.push(new Thunder(300,100));
+            }else if(time == 19){
+                tree();
+            }else if(time == 20){
+                new_viper(9);
+                tree();
+            }else if(time == 22){
+                scene.push(new Cloud(150));
+            }else if(time == 23){
+                new_viper(9);
+                tree();
+            }else if(time == 24){
+                enemy.push(new Thunder(300,100));
+                catapult(90);
+            }else if(time == 25){
+                tree();
+                enemy.push(new Thunder(300,100));
+            }else if(time == 26){
+                catapult(90);
+                new_viper(9);
+            }else if(time == 27){
+                enemy.push(new Thunder(300,100));
+                tree();
+            }else if(time == 29){
+                catapult(90);
+                new_viper(9);
+            }else if(time == 30){
+                scene.push(new Cloud(150));
+            }else if(time == 32){
+                tree();
+            }else if(time == 34){
+                enemy.push(new Thunder(300,100));
+                catapult(90);
+            }else if(time == 36){
+                enemy.push(new Thunder(300,100));
+                new_viper(9);
+                tree();
+            }else if(time == 38){
+                catapult(90);
+            }else if(time == 39){
+                scene.push(new Cloud(150));
+                new_viper(9);
+                enemy.push(new Thunder(300,100));
+            }else if(time == 41){
+                catapult(90);
+            }else if(time == 43){
+                tree();
+                new_viper(9);
+            }else if(time == 44){
+                scene.push(new Cloud(150));
+            }else if(time == 46){
+                tree();
+            }else if(time == 47){
+                enemy.push(new Thunder(300,100));
+                new_viper(9);
+                catapult(90);
+            }else if(time == 49){
+                catapult(90);
+                scene.push(new Cloud(150));
+            }else if(time == 51){
+                enemy.push(new Thunder(300,100));
+                new_viper(9);
+                tree();
+            }else if(time == 53){
+                enemy.push(new Thunder(300,100));
+                tree();
+            }else if(time == 55){
+                new_viper(9);
+                tree();
+                scene.push(new Cloud(150));
+            }else if(time == 57){
+                catapult(90);
+            }else if(time == 59){
+                enemy.push(new Thunder(300,100));
+                new_viper(9);
+                catapult(90);
+            }else if(time == 61){
+                tree();
+                scene.push(new Cloud(150));
+                new_viper(9);
+            }else if(time == 63){
+                tree();
+            }else if(time == 65){
+                tree();
+                scene.push(new Cloud(150));
+            }else if(time == 67){
+                catapult(90);
+            }else if(time == 69){
+                catapult(90);
+                new_viper(9);
+                enemy.push(new Thunder(300,100));
+            }else if(time == 70){
+                tree();
+            }else if(time == 72){
+                scene.push(new Cloud(150));
+                catapult(90);
+            }else if(time == 74){
+                new_viper(9);
+                tree();
+            }else if(time == 76){
+                enemy.push(new Thunder(300,100));
+                catapult(90);
+            }else if(time == 78){
+                scene.push(new Cloud(150));
+                new_viper(9);
+                tree();
+            }else if(time == 79){
+                tree();
+                enemy.push(new Thunder(300,100));
+            }else if(time == 81){
+                catapult(90);
+                new_viper(9);
+            }else if(time == 83){
+                scene.push(new Cloud(150));
+            }else if(time == 85){
+                enemy.push(new Thunder(300,100));
+                catapult(90);
+                new_viper(9);
+            }else if(time == 86){
+                tree();
+            }else if(time == 87){
+                scene.push(new Cloud(150));
+                new_viper(9);
+                tree();
+            }else if(time == 89){
+                enemy.push(new Thunder(300,100));
+                catapult(90);
+            }else if(time == 90){
+                tree();
+                new_viper(9);
+            }else if(time == 91){
+                enemy.push(new Thunder(300,100));
+                scene.push(new Cloud(150));
+            }else if(time == 92){
+                catapult(90);
+                new_viper(9);
+            }else if(time == 93){
+                tree();
+                enemy.push(new Thunder(300,100));
+            }else if(time == 95){
+                catapult(90);
+                new_viper(9);
+                tree();
+            }else if(time == 96){
+                new_viper(9);
+                scene.push(new Cloud(150));
+            }else if(time == 97){
+            
+                worm();
+            }
+
+        }
+    
         draw_screen();
 
     }else if(sel_stage == 11){ // FEAR OF THE DARK
@@ -706,7 +919,7 @@ function stage_select(sel_stage){
             }else if(time == 95){
                 new_moais("down");
             }else if(time == 96){
-                tower();
+                worm();
             }
         }
 
@@ -738,35 +951,14 @@ function draw_screen(){
 
 
 
-            // show all shottings
+            // show all m buster shottings
             for(let i=0;i<shooting.length;i++){
                 shooting[i].move(i);
             }
         
-            // show bomb
+            // show especial weapons shooting
             for(let i=0;i<special.length;i++){
                 special[i].move(i);
-            }
-            // show all enemys
-            for(let i=0;i<enemy.length;i++){
-                enemy[i].move(i);
-            }
-
-            // show background    
-            for(let i=0;i<scene.length;i++){
-                scene[i].move(i);         
-            }
-
-            // show itens    
-            for(let i=0;i<itens.length;i++){
-
-                if(collision(player,itens[i])){
-                    itens[i].hit();  
-
-                }else{
-                    itens[i].move(i);
-                }
-
             }
 
             // show boss
@@ -787,6 +979,27 @@ function draw_screen(){
                 for(let i=0; i<boss[0].energy; i+=5){
                     draw_sprite(width-60,150-i,pl_sprites.player["energy_bar"]);
                 }                  
+            }
+
+            // show all enemys
+            for(let i=0;i<enemy.length;i++){
+                enemy[i].move(i);
+            }
+
+            // show itens    
+            for(let i=0;i<itens.length;i++){
+
+                if(collision(player,itens[i])){
+                    itens[i].hit();  
+
+                }else{
+                    itens[i].move(i);
+                }
+            }
+
+            // show background    
+            for(let i=0;i<scene.length;i++){
+                scene[i].move(i);         
             }
 
             // show energy bars
@@ -1035,9 +1248,9 @@ function weapon_menu(){
     text("x"+ player.life, width/2 -20, height-50, 200, 150);
     draw_sprite(width/2 ,height-130,pl_sprites.player["main"]);
 
-    text("SHOT    "+player.max_shot+"x" , 50, height-150, 200, 150);
-    text("SPECIAL "+player.max_special+"x" , 50, height-120, 200, 150);
-    text("SPEED   +"+ (player.speed - 3) , 50, height-90, 200, 150);
+    text("SHOT "+player.max_shot+"x" , 50, height-150, 200, 150);
+    text("WEP  "+player.max_special+"x" , 50, height-120, 200, 150);
+    text("SPEED +"+ (player.speed - 3) , 50, height-90, 200, 150);
 
     if(have_joy){
         text("USE SELECT", width/2 + 150, height-180, 300, 150);
@@ -1105,6 +1318,16 @@ function start_stage(N){
             fill_second_plan(["cave_01","cave_02","cave_01","cave_02"]);
             scene.push(new Ground("cavern","arvores"));
             scene[scene.length-1].fill();
+        }else if(N == 8){ // RUN TO THE HILLS
+            back_color = [0,0,0];
+            song = loadSound('assets/music/Hills.mp3');
+            fill_second_plan(["cave_01","cave_02","cave_01","hell_04"]);
+        }else if(N == 10){ // HALLOWED BE THU NAME
+            back_color = [0,0,0];
+            fill_second_plan(["purple_stars","purple_stars","purple_stars","sunset"]);
+            song = loadSound('assets/music/Hallowed.mp3');
+            scene.push(new Ground("cavern","grass"));
+            scene[scene.length-1].fill();
 
         }else if(N == 11){ // FEAR OF THE DARK
             back_color = [0,0,0];
@@ -1129,12 +1352,12 @@ function start_stage(N){
         }else if(N == 6){ // WASTED YEARS
             kraken();
         }else if(N == 7){ // CAN I PLAY WITH MADNESS
-            big_moais();
+            tower();
         }else if(N == 8){ // RUN TO THE HILLS
         }else if(N == 9){ // ACES HIGH
         }else if(N == 10){ // HALLOWED BE THY NAME
         }else if(N == 11){ // FEAR OF THE DARK
-            tower();        
+            worm();        
         }
 
     }

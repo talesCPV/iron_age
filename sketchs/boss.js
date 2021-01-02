@@ -364,6 +364,75 @@ Tower.prototype.atack = function(N){
     scale(this.size);
     draw_sprite(0,0,en_sprites.boss[this.name[0]]);
     pop();
+}
+
+function worm(){
+    boss.push(new Worm(width - 200,height - 200));
+}
+
+class Worm extends Boss{
+	constructor(x,y){
+		super(x,y);
+        this.name = ["worm_00","worm_01","worm_02"];
+        this.background = bk_sprites.cavern.grass;
+        this.weak = [1,8];
+		this.not_effect = [2,3];
+        this.hitbox = [en_sprites.boss[this.name[0]].x * pixel * 2, en_sprites.boss[this.name[0]].y * pixel * 2];
+        this.direction = true;
+        this.index = 1;
+        this.count = 410;
+	}
+}
+
+Worm.prototype.atack = function(N){
+	this.count ++;
+	let offset = 0;
+
+	if(this.count < 400){
+
+	    if(player.x >= this.x - 50 && player.x <= this.x + 50 && !this.shoot){
+			enemy.push(new Boss_Fire(this.x - 15,this.y-50));
+	    }
+
+		if(this.direction){
+			this.x -= 8;
+		}else{
+			this.x += 8;
+		}
+
+		if(this.x < 30 || this.x > width - 30){
+			this.direction = !this.direction;
+		}
+	}else if(this.count < 410){
+		this.index = 1;
+		this.y -= 20;
+	} else if(this.count < 560){
+
+        if(this.count % 25 == 0){
+            enemy.push(new Boss_Fire(this.x - 15,this.y-50));
+        }		
+
+		if(this.count % 5 == 0){		
+		    if(this.index == 1){
+		    	this.index = 2;
+		    }else{
+		    	this.index = 1;		    	
+		    }
+		}
+	}else if(this.count < 570){
+		this.index = 1;
+		this.y += 20;
+	}else{
+		this.count = 0;
+		this.index = 0;
+	}
 
 
+	this.draw_background();
+
+    push();
+    translate(this.x, this.y);
+    scale(this.size);
+    draw_sprite(0,0,en_sprites.boss[this.name[this.index]]);
+    pop();
 }

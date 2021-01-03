@@ -36,6 +36,7 @@ function setup() {
     cmbTool.option('LINE');
     cmbTool.option('FILL');
     cmbTool.option('COPY');
+    cmbTool.option('TURN');
     cmbTool.option('PASTE');
 
     sld_R = createSlider(0, 255, 50);
@@ -113,6 +114,28 @@ function draw() {
     draw_grid();
 
 
+    if(tool == "TURN"){
+      if(copy_mem.length > 0 ) {
+        if(confirm('Deseja girar 90 graus a direita o desenho da memoria?')){
+          let new_mem = [];
+          for(let i=0; i<copy_mem[0].length; i++){
+            new_mem.push([]);
+            for(let j=0; j<copy_mem.length; j++){
+              new_mem[i].push(copy_mem[j][i]);
+            }
+            
+          }
+          copy_mem = new_mem;
+          cmbTool.selected("PASTE");        
+        }else{
+          cmbTool.selected("BRUSH");        
+        }
+      }else{
+        alert("Você não possui nenhum desenho copiado na memoria")
+        cmbTool.selected("COPY");
+      }
+    }
+
 }
 
 function mousePressed() { // only once on click
@@ -181,7 +204,6 @@ function mousePressed() { // only once on click
           copy[1] = [x,y];
           draw_line();
         }
-
       }
     }    
   }
@@ -588,7 +610,7 @@ function draw_line(){
   }
 
   let in_x = offset_x;
-  my_draw[x1][y1] = color;
+//  my_draw[x1][y1] = color;
 
   while( x1 != x2 || y1 != y2) {
 

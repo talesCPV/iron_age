@@ -596,14 +596,15 @@ Catapult.prototype.move = function(N){
 
 
 
-function rocket(n=50){
-    enemy.push(new Rocket(100,height-n));
+function rocket(n=50,s="down"){
+    enemy.push(new Rocket(100,height-n,s));
 }
 
 class Rocket extends Enemy{
-    constructor(x,y){
+    constructor(x,y,side){
         super(x,y);
         this.name = ["rocket_00","rocket_01"];
+        this.side = side;
         this.power = 30;
         this.value = 180;
         this.energy = 15;
@@ -611,7 +612,12 @@ class Rocket extends Enemy{
         this.angle = 0.03;
         this.speed = 0;
         this.shoot = false;
+        this.scale = [1,1];        
         this.hitbox = [en_sprites.enemys[this.name[0]].x * pixel , en_sprites.enemys[this.name[0]].y * pixel *2];
+        if (side == "up"){
+            this.scale = [1,-1];
+            this.y = -50;
+        }
     }
 }
 
@@ -619,7 +625,11 @@ Rocket.prototype.move = function(N){
 
     this.count ++;
     this.x -= scene_speed;
-    this.y -= this.speed;
+    if (this.side == "up"){
+        this.y += this.speed;
+    }else{
+        this.y -= this.speed;
+    }
 
     if(this.count % 2 == 0){
         this.angle *= -1;
@@ -643,10 +653,11 @@ Rocket.prototype.move = function(N){
     push();
     translate(this.x, this.y);
     rotate(this.angle);
+    scale(this.scale);
     draw_sprite(0,0,en_sprites.enemys[this.name[this.index]]);
     pop();
 
-    if(this.y <= -100 || this.energy <= 0){
+    if(this.y <= -100 || this.y >= height +100 || this.energy <= 0){
         if(this.energy <= 0){
             score += this.value;
             sort_item(this.x,this.y,90);
@@ -676,12 +687,7 @@ class Tree extends Enemy{
 }
 Tree.prototype.move = function(N){
     this.x -= scene_speed;
-/*    
-    this.count ++;
-    if(this.count == 4){
-        this.count = 0;
-    }
-*/
+
     push();
     translate(this.x, this.y);
     scale(this.scale);
@@ -699,36 +705,55 @@ Tree.prototype.move = function(N){
 
 }
 
-function hell_fire(n=80){
-    enemy.push(new Hell_fire(100,height-n));
+function hell_fire(side = "down"){
+    enemy.push(new Hell_fire(side));
 }
 
 class Hell_fire extends Enemy{
-    constructor(x,y){
-        super(x,y);
+    constructor(side){
+        let y = height - 50 ;
+        let size = 1.5
+        let scale = [size,size];
+        if(side == "top"){
+            y = 50;
+            scale = [size,-size];
+        }
+        super(1000,y);        
+        this.side = side;
+        this.size = size;
         this.name = ["fire_01","fire_02","fire_03"];
         this.power = 20;
         this.value = 500;
         this.energy = 15;
+        this.width = en_sprites.enemys[this.name[0]].x;
+        this.height = en_sprites.enemys[this.name[0]].y;
+        this.x = width + this.width * this.size * pixel;
         this.value = 50;
         this.index = 0;
-        this.scale = [2,2];
-        this.hitbox = [en_sprites.enemys[this.name[0]].x * pixel , en_sprites.enemys[this.name[0]].y * pixel *2];
+        this.scale = scale;
+        this.hitbox = [this.width * pixel * size , this.height * pixel * size];
     }
 }
 
 Hell_fire.prototype.move = function(N){
-    this.x -= scene_speed;
+    if(scene_move){
+        this.x -= scene_speed;
+    }
 
     this.count ++;
-    if(this.count == 5){
+    if(this.count % 9 == 0){
         this.index = 1;
-    }else if(this.count == 10){
+    }else if(this.count % 6 == 0){
         this.index = 2;
-    }else if(this.count == 15){
+    }else if(this.count % 3 == 0){
         this.index = 0;
-        this.count = 0;
+//        this.count = 0;
     }
+
+
+      if(this.count ==  Math.floor(this.width / scene_speed) * this.size * pixel ) {
+        hell_fire(this.side);
+      }
 
     push();
     translate(this.x, this.y);
@@ -737,9 +762,74 @@ Hell_fire.prototype.move = function(N){
     pop();
 
 
-    if(this.x <= -100 ){
-
+    if(this.x <= -this.width * this.size * pixel ){
         enemy.splice(N,1);
     } 
+
+}
+
+Hell_fire.prototype.fill = function(){
+
+  for(let i=0; i < width+this.width * this.size * pixel ; i+=this.width * pixel * this.size){
+    hell_fire(this.side);      
+      enemy[enemy.length-1].x = i;
+      enemy[enemy.length-1].count = this.width * this.size * pixel * 2;
+  }
+
+}
+
+function new_fireball(n=-60,s="down"){
+    enemy.push(new Fireball(100,height-n,s));
+}
+
+class Fireball extends Rocket{
+    constructor(x,y,side){
+        super(x,y,side);
+        this.name = ["fireball","fireball"];          
+    }
+}
+
+
+function boss_fireball(x,side){
+    let y = height;
+    if(side == "up"){
+        y = 0;
+    }
+    enemy.push(new Boss_fireball(x-width,y,side));
+}
+
+
+class Boss_fireball extends Fireball{
+    constructor(x,y,side){
+        super(x,y,side);
+        this.speed = 20;
+    }
+}
+
+Boss_fireball.prototype.move = function(N){
+
+    this.x -= scene_speed;
+    if (this.side == "up"){
+        this.y += this.speed;
+        this.scale = [1,-1]; 
+    }else{
+        this.y -= this.speed;
+        this.scale = [1,1]; 
+    }
+
+    push();
+    translate(this.x, this.y);
+    scale(this.scale);
+    draw_sprite(0,0,en_sprites.enemys[this.name[this.index]]);
+    pop();
+
+    if(this.y <= -100 || this.y >= height +100 || this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+
+        enemy.splice(N,1);
+    }     
 
 }

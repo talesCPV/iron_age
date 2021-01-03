@@ -57,7 +57,10 @@ function stage_select(sel_stage){
         back_color = [0,121,248];
         timer = [0,0];
         stage_percent = 0;
-        time = 0;        
+        time = 0;
+        scene = [];
+        scene_bk = [];
+        enemy = [];
 
         noStroke();
         text("SELECT STAGE", 280, 50, width, 150);
@@ -132,6 +135,7 @@ function stage_select(sel_stage){
         if(!defeat[7]){
             draw_sprite(602,476,pl_sprites.splash["eddie_fear"]); // FEAR OF THE DARK
         }
+
 
 
         joystick();
@@ -578,14 +582,16 @@ function stage_select(sel_stage){
 
         draw_screen();
 
-    }else if(sel_stage == 8){ // RUNTO THE HILLS
+    }else if(sel_stage == 8){ // RUN TO THE HILLS
 
         stage_percent = Math.floor(timer[0]/stage_length*100) ;
         if(time < stage_percent){
             time = stage_percent;
             if(time == 1){
-                new_enemy_balls(10);
-                hell_fire();
+                new_fireball(50,"up");
+            }else if(time == 2){
+                dragon();
+
             }
         }
 
@@ -943,14 +949,6 @@ function draw_screen(){
 
 //            draw_bg(["trees_03","trees_04","trees_03"]);
 
-            // show control screen
-            fill(letter_color);
-            text("SCORE: "+score, 10, 25, 300, 150);
-            text("HI-SCORE", 310, 25, 300, 150);
-            text(weap_names[player.weapon], 610, 25, 300, 150);
-
-
-
             // show all m buster shottings
             for(let i=0;i<shooting.length;i++){
                 shooting[i].move(i);
@@ -1001,6 +999,12 @@ function draw_screen(){
             for(let i=0;i<scene.length;i++){
                 scene[i].move(i);         
             }
+
+            // show control screen
+            fill(letter_color);
+            text("SCORE: "+score, 10, 25, 300, 150);
+            text("HI-SCORE", 310, 25, 300, 150);
+            text(weap_names[player.weapon], 610, 25, 300, 150);
 
             // show energy bars
             for(let i=0; i<player.shield; i+=5){
@@ -1260,8 +1264,6 @@ function weapon_menu(){
     draw_sprite(width/2 + 250,height-130,pl_sprites.itens.energy_tank);
     text("x"+ player.tank, width/2 + 230, height-50, 200, 150);
 
-
-
 } 
 
 
@@ -1309,6 +1311,7 @@ function start_stage(N){
         }else if(N == 6){ // WASTED YEARS
             back_color = [25,20,158];
             song = loadSound('assets/music/Wasted.mp3');
+            fill_second_plan(["night_01","night_02","night_03","night_04"]);
             scene.push(new Ground("sea","agua",false,true));
             scene[scene.length-1].fill();
 
@@ -1321,7 +1324,11 @@ function start_stage(N){
         }else if(N == 8){ // RUN TO THE HILLS
             back_color = [0,0,0];
             song = loadSound('assets/music/Hills.mp3');
-            fill_second_plan(["cave_01","cave_02","cave_01","hell_04"]);
+            fill_second_plan(["hell_01","hell_02","hell_03","hell_04"]);
+            hell_fire("top");
+            enemy[enemy.length-1].fill();
+            hell_fire("down");
+            enemy[enemy.length-1].fill();
         }else if(N == 10){ // HALLOWED BE THU NAME
             back_color = [0,0,0];
             fill_second_plan(["purple_stars","purple_stars","purple_stars","sunset"]);
@@ -1354,8 +1361,10 @@ function start_stage(N){
         }else if(N == 7){ // CAN I PLAY WITH MADNESS
             tower();
         }else if(N == 8){ // RUN TO THE HILLS
+            dragon();
         }else if(N == 9){ // ACES HIGH
         }else if(N == 10){ // HALLOWED BE THY NAME
+            worm(); 
         }else if(N == 11){ // FEAR OF THE DARK
             worm();        
         }

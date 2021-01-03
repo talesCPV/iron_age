@@ -61,8 +61,8 @@ class Kraken extends Boss{
 		this.name = ["kraken_head","kraken_arm"];
 		this.width = en_sprites.boss.kraken_head.x;
 		this.height = en_sprites.boss.kraken_head.y;
-		this.weak = [0];
-		this.not_effect = [1,2];
+		this.weak = [8];
+		this.not_effect = [1,3,4];
 		this.background = bk_sprites.sea.agua;
 		this.start = x;
 	}
@@ -435,4 +435,103 @@ Worm.prototype.atack = function(N){
     scale(this.size);
     draw_sprite(0,0,en_sprites.boss[this.name[this.index]]);
     pop();
+}
+
+function dragon(){
+    boss.push(new Dragon(width - 200,height - 40));
+}
+
+class Dragon extends Boss{
+	constructor(x,y){
+		super(x,y);
+        this.name = ["dragon_01","dragon_02"];
+        this.weak = [1,8];
+		this.not_effect = [2];
+        this.hitbox = [en_sprites.boss[this.name[0]].x * pixel * 2, en_sprites.boss[this.name[0]].y * pixel * 2];
+        hell_fire("top");
+        enemy[enemy.length-1].fill();
+        hell_fire("down");
+        enemy[enemy.length-1].fill();
+        this.count = 10;
+        this.side = 1;
+	}
+}
+
+Dragon.prototype.atack = function(){
+	this.count++;
+
+
+    if(this.count < 25){
+		this.y -= 6 * this.side;
+	}else if(this.count < 80){
+		this.index = 1;
+		if(this.count % 5 == 0){
+			enemy.push(new Boss_Fire(this.x - 20,this.y - 15));
+		}
+
+	}else if(this.count < 130){
+		this.index = 0;
+		this.y += 6 * this.side;
+	}else if(this.count < 300){	
+		if(this.count == 130 ){
+			boss_fireball(100,"up");
+		}else if(this.count == 140){
+			boss_fireball(200,"up");
+		}else if(this.count == 150){
+			boss_fireball(300,"up");
+		}else if(this.count == 160){
+			boss_fireball(400,"up");
+		}else if(this.count == 170){
+			boss_fireball(500,"up");
+		}else if(this.count == 180){
+			boss_fireball(600,"up");
+		}else if(this.count == 190){
+			boss_fireball(700,"up");
+		}else if(this.count == 200){
+			boss_fireball(700,"down");
+		}else if(this.count == 210){
+			boss_fireball(600,"down");
+		}else if(this.count == 220){
+			boss_fireball(500,"down");
+		}else if(this.count == 230){
+			boss_fireball(400,"down");
+		}else if(this.count == 240){
+			boss_fireball(300,"down");
+		}else if(this.count == 250){
+			boss_fireball(200,"down");
+		}else if(this.count == 260){
+			boss_fireball(100,"down");
+
+
+
+		}
+	}else if(this.count == 300){
+		this.count = 0;
+		this.y = height - 40;
+		this.x = 600;
+
+		let x1 = 2;
+		let y1 = 2;
+		this.side = 1;
+		if(random(0,2) > 1){
+			y1 = -2;
+			this.side = -1;
+			this.y = 40;
+		}
+		
+		if(random(0,2) > 1){
+			x1 = -2
+			this.x = 200
+		}		
+		
+		this.size=[x1,y1];
+
+	}
+
+    push();
+    translate(this.x, this.y);
+    scale(this.size);
+    draw_sprite(0,0,en_sprites.boss[this.name[this.index]]);
+    pop();	
+
 }

@@ -37,6 +37,7 @@ class Enemy{
         this.energy = 1;
         this.hitbox = [0,0];
         this.pivot = [1,1];
+        this.scale = [1,1];
         this.count = 0;
     }
 }
@@ -778,8 +779,12 @@ Hell_fire.prototype.fill = function(){
 
 }
 
-function new_fireball(n=-60,s="down"){
-    enemy.push(new Fireball(100,height-n,s));
+function new_fireball(s="down"){
+    if(s=="up"){
+        enemy.push(new Fireball(100,-40,"up"));
+    }else{
+        enemy.push(new Fireball(100,height + 80,"down"));
+    }
 }
 
 class Fireball extends Rocket{
@@ -832,4 +837,67 @@ Boss_fireball.prototype.move = function(N){
         enemy.splice(N,1);
     }     
 
+}
+
+function phenix(n=-60){
+    enemy.push(new Phenix(100, height + 10));
+}
+
+class Phenix extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.name = ["phenix_01","phenix_02","phenix_03"];
+        this.index = 0;
+        this.value = 500;
+        this.energy = 5;
+        this.power = 20;
+        this.speed = 30;
+        this.width = en_sprites.enemys[this.name[1]].x;
+        this.height = en_sprites.enemys[this.name[1]].y;
+        this.hitbox = [this.width * pixel * this.scale[0] , this.height * pixel * this.scale[1]];
+    }
+}
+
+Phenix.prototype.move = function(N){
+    this.count++;
+    this.x -= scene_speed ;
+
+    if(this.count < 3){
+        this.index = 0;
+    }else if(this.count < 4){
+        this.index = 1;
+    }else if(this.count < 5){
+        this.index = 2;
+    }else if(this.count < 6){
+        this.index = 1;
+    }else if(this.count == 6){
+        this.count = 0;
+    }
+
+    if(this.y > 300 && this.x < 700){
+        this.y -= this.speed;
+    }else if(this.x  > 610 && this.x < 620){
+        enemy.push(new Boss_Fire(this.x,this.y));
+    }else if(this.x  < 650){
+        this.x -= this.speed;
+    }
+
+
+
+
+    push();
+    translate(this.x, this.y);
+    scale(this.scale);
+    draw_sprite(0,0,en_sprites.enemys[this.name[this.index]]);
+    pop();
+
+
+    if(this.x <= -100 || this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+        enemy.splice(N,1);
+    
+    }
 }

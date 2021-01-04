@@ -588,10 +588,200 @@ function stage_select(sel_stage){
         if(time < stage_percent){
             time = stage_percent;
             if(time == 1){
-                new_fireball(50,"up");
+                new_enemy_balls(6);
+                new_fireball("up");
             }else if(time == 2){
+                phenix();
+                new_fireball();
+                new_viper(5);
+            }else if(time == 3){
+                new_fireball();
+                new_enemy_balls(6);
+                phenix();
+            }else if(time == 4){
+                new_fireball("up");
+                new_fireball();
+                phenix();
+            }else if(time == 6){
+                phenix();
+                new_fireball();
+            }else if(time == 8){
+                new_enemy_balls(6);
+                new_viper(5);
+                phenix();
+            }else if(time == 9){
+                new_fireball();
+                new_fireball("up");
+                phenix();
+            }else if(time == 10){
+                new_fireball();
+                phenix();
+                new_fireball("up");
+            }else if(time == 12){
+                new_fireball();
+                phenix();
+            }else if(time == 13){
+            }else if(time == 15){
+                new_enemy_balls(6);
+                new_fireball();
+            }else if(time == 16){
+                phenix();
+                new_fireball("up");
+            }else if(time == 18){
+                new_enemy_balls(6);
+            }else if(time == 19){
+                phenix();
+            }else if(time == 21){
+                new_fireball();
+                new_viper(5);
+            }else if(time == 22){
+                new_fireball("up");
+                phenix();
+                new_fireball();
+            }else if(time == 23){
+                new_fireball("up");
+            }else if(time == 25){
+                phenix();
+            }else if(time == 27){
+            }else if(time == 28){
+                new_fireball();
+            }else if(time == 29){
+                new_viper(5);
+            }else if(time == 30){
+                new_fireball();
+                new_fireball("up");
+                new_viper(5);
+            }else if(time == 31){
+                phenix();
+            }else if(time == 33){
+                new_fireball("up");
+                new_fireball();
+            }else if(time == 34){
+                new_enemy_balls(6);
+            }else if(time == 36){
+                new_fireball();
+                phenix();
+            }else if(time == 37){
+                new_fireball("up");
+                new_fireball();
+            }else if(time == 39){
+            }else if(time == 40){
+                new_fireball();
+                phenix();
+            }else if(time == 41){
+                new_fireball("up");
+            }else if(time == 43){
+            }else if(time == 44){
+                new_fireball();
+                phenix();
+            }else if(time == 45){
+                new_fireball("up");
+            }else if(time == 47){
+            }else if(time == 48){
+                new_fireball();
+                phenix();
+                new_fireball("up");
+            }else if(time == 49){
+                new_fireball();
+            }else if(time == 50){
+                new_fireball();
+                new_fireball("up");
+            }else if(time == 52){
+                phenix();
+            }else if(time == 53){
+                new_fireball("up");
+                new_fireball();
+            }else if(time == 54){
+                new_fireball("up");
+            }else if(time == 55){
+                new_enemy_balls(6);
+                phenix();
+            }else if(time == 57){
+                new_viper(5);
+                new_fireball();
+            }else if(time == 58){
+                new_fireball("up");
+                new_viper(5);
+            }else if(time == 59){
+                phenix();
+            }else if(time == 61){
+                new_fireball("up");
+            }else if(time == 62){
+                new_fireball("up");
+                phenix();
+            }else if(time == 64){
+                new_viper(5);
+                new_fireball("up");
+            }else if(time == 65){
+                new_fireball();
+                phenix();
+            }else if(time == 66){
+                new_enemy_balls(6);
+                new_fireball();
+            }else if(time == 68){
+                new_viper(5);
+            }else if(time == 70){
+                new_viper(5);
+                phenix();
+                new_enemy_balls(6);
+            }else if(time == 71){
+                new_fireball("up");
+            }else if(time == 72){
+                new_fireball();
+                phenix();
+            }else if(time == 73){
+                new_fireball();
+            }else if(time == 75){
+                new_fireball("up");
+                new_viper(5);
+                new_fireball();
+            }else if(time == 76){
+                phenix();
+            }else if(time == 77){
+                new_fireball();
+                new_fireball("up");
+            }else if(time == 78){
+                new_enemy_balls(6);
+            }else if(time == 79){
+                phenix();
+            }else if(time == 81){
+                new_enemy_balls(6);
+            }else if(time == 82){
+                new_fireball("up");
+                new_viper(5);
+            }else if(time == 84){
+                new_fireball();
+                phenix();
+                new_viper(5);
+                new_fireball("up");
+            }else if(time == 85){
+                new_viper(5);
+                new_fireball();
+            }else if(time == 86){
+                phenix();
+                new_enemy_balls(6);
+            }else if(time == 87){
+                new_fireball("up");
+                new_fireball();
+            }else if(time == 89){
+                new_fireball();
+            }else if(time == 90){
+            }else if(time == 91){
+                new_fireball("up");
+            }else if(time == 92){
+                phenix();
+                new_viper(5);
+                new_fireball();
+            }else if(time == 93){
+            }else if(time == 95){
+                new_fireball("up");
+            }else if(time == 96){
+                phenix();
+                new_fireball();
+                new_viper(5);
+            }else if(time == 97){
+            }else if(time == 98){
                 dragon();
-
             }
         }
 
@@ -1295,6 +1485,7 @@ function start_stage(N){
 
         if(N == 4){ // THE TROOPER
             back_color = [0,0,0];
+            letter_color = [255];
             song = loadSound('assets/music/Trooper.mp3');
             fill_second_plan(["cave_01","cave_02","cave_01","cave_02"]);
             scene.push(new Ground("cavern","montanhas",true));
@@ -1303,6 +1494,7 @@ function start_stage(N){
 
         }else if(N == 5){ // THE EVIL THAT MAN DO
             back_color = [25,20,158];
+            letter_color = [255];
             song = loadSound('assets/music/Evil.mp3');
             fill_second_plan(["degrade_01","degrade_02","degrade_03","degrade_04"]);
             scene.push(new Ground("cavern","arvores"));
@@ -1310,6 +1502,7 @@ function start_stage(N){
 
         }else if(N == 6){ // WASTED YEARS
             back_color = [25,20,158];
+            letter_color = [255];
             song = loadSound('assets/music/Wasted.mp3');
             fill_second_plan(["night_01","night_02","night_03","night_04"]);
             scene.push(new Ground("sea","agua",false,true));
@@ -1317,12 +1510,14 @@ function start_stage(N){
 
         }else if(N == 7){ // CAN I PLAY WITH MADNESS
             back_color = [0,0,0];
+            letter_color = [255];
             song = loadSound('assets/music/Madness.mp3');
             fill_second_plan(["cave_01","cave_02","cave_01","cave_02"]);
             scene.push(new Ground("cavern","arvores"));
             scene[scene.length-1].fill();
         }else if(N == 8){ // RUN TO THE HILLS
-            back_color = [0,0,0];
+            back_color = [0];
+            letter_color = [0];
             song = loadSound('assets/music/Hills.mp3');
             fill_second_plan(["hell_01","hell_02","hell_03","hell_04"]);
             hell_fire("top");
@@ -1331,6 +1526,7 @@ function start_stage(N){
             enemy[enemy.length-1].fill();
         }else if(N == 10){ // HALLOWED BE THU NAME
             back_color = [0,0,0];
+            letter_color = [255];
             fill_second_plan(["purple_stars","purple_stars","purple_stars","sunset"]);
             song = loadSound('assets/music/Hallowed.mp3');
             scene.push(new Ground("cavern","grass"));
@@ -1338,6 +1534,7 @@ function start_stage(N){
 
         }else if(N == 11){ // FEAR OF THE DARK
             back_color = [0,0,0];
+            letter_color = [255];
             song = loadSound('assets/music/Fear.mp3');
             fill_second_plan(["trees_00","trees_01","trees_02","trees_03"]);
             scene.push(new Ground("cavern","grass"));

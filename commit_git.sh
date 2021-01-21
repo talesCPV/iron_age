@@ -10,4 +10,4 @@ git remote add origin "https://github.com/talesCPV/iron_age.git"
 
 git commit -m "by_script"
 
-git push -f origin master
+git push -f origin main

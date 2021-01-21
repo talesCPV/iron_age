@@ -14,13 +14,15 @@ let count = 0;
 // new one
 let screen = [1200,800];
 let header = 200;
-let border = 50;
+let border = 100;
 
 let img;
 let zoom = 1;
 let grid_size = [20,20];
 let grid_pos = [0,0,0,0];
 let offset = [0,0];
+let cel = [50,50];
+let tool = 1;
 
 
 function setup() {
@@ -40,19 +42,16 @@ function setup() {
 //    sld_tool.position(110, 90);
     cmbTool = createSelect();
     cmbTool.position(120, 90);
-    cmbTool.option('VIEW GRID');
-    cmbTool.option('HIDE GRID');
-    cmbTool.option('LINE');
-    cmbTool.option('FILL');
-    cmbTool.option('COPY');
-    cmbTool.option('TURN');
-    cmbTool.option('PASTE');
+    cmbTool.option('SELECT');
+    cmbTool.option('MOVE');
+    cmbTool.changed(change_tool);
 
-    sld_OSX = createSlider(0, 255, 50);
+
+    sld_OSX = createSlider(0, 200, 100);
     sld_OSX.position(270, 10);
     sld_OSX.input(change_grid);
 
-    sld_OSY = createSlider(0, 255, 50);
+    sld_OSY = createSlider(0, 200, 100);
     sld_OSY.position(270, 35);
     sld_OSY.input(change_grid);
 //    sld_G.input();
@@ -138,8 +137,8 @@ function mousePressed() { // only once on click
     if(mouseY > header  && mouseY < header + img_h && mouseX > 50 && mouseX < 50 + img_w && mouseButton === LEFT){
       
 //      alert("dentro da imagem");
-        grid_pos[0] = mouseX ;//- border;
-        grid_pos[1] = mouseY ;//- header;
+        grid_pos[0] = (mouseX - border) / zoom;//- border;
+        grid_pos[1] = (mouseY - header) / zoom;//- header;
 
     }
 
@@ -154,23 +153,17 @@ function mouseStillPressed(){
     let img_h = img.height*zoom;
 
     if (mouseIsPressed) {
-        if(mouseY > header  && mouseY < header + img_h && mouseX > 50 && mouseX < 50 + img_w && mouseButton === LEFT){
-            grid_pos[2] = mouseX - grid_pos[0];
-            grid_pos[3] = mouseY - grid_pos[1];
+        if(mouseY > header  && mouseY < header + img_h && mouseX > 50 && mouseX < 50 + img_w && mouseButton === LEFT && tool == "SELECT"){
+            grid_pos[2] = (mouseX - border) / zoom - grid_pos[0];
+            grid_pos[3] = (mouseY - header) / zoom - grid_pos[1];
+            sld_OSX.elt.value = 100;
+            sld_OSY.elt.value = 100;
             offset = [0,0];
         }
     }
 }
 
 function draw_header(){ // monta o cabeçalho com as ferramentas
-//    const r = sld_R.value();
-//    const g = sld_G.value();
-//    const b = sld_B.value();
-//    const rgb = edtRGB.value();
-
-//    color = [r,g,b];
-//    grid = sld_Z.value();
-
 
     fill(0, 102, 153);
     noStroke();
@@ -201,8 +194,8 @@ function open_file(file) {
   if( ["jpeg","png","bmp"].includes(file.subtype) ){
 
 
-    img = createImg(file.data, (result) =>{
-
+    img = createImg(file.data, (result) =>{ // PROMISSE
+ 
         grid_pos = [border,header,img.width,img.height];
 
     }); 
@@ -210,11 +203,7 @@ function open_file(file) {
     img.hide();
 
        
-    image(img,50,header)
-
-
-
-
+    image(img,border,header)
 
   }else{
     alert("This format isn't suport.");
@@ -231,7 +220,15 @@ function show_img(){
 
   if( img != undefined){    
 
-    image(img,50,header, img.width*zoom,img.height*zoom);
+
+    if(width < (border + img.width*zoom) || height < (header + img.height*zoom)){
+
+        resizeCanvas(50 + border + img.width*zoom, 50 + header + img.height*zoom);
+
+    }
+
+
+    image(img,border,header, img.width*zoom,img.height*zoom);
   }
 
 }
@@ -241,27 +238,36 @@ function change_zoom(){
 }
 
 function change_grid(){
-    grid_size[0] = sld_X.value();
-    grid_size[1] = sld_Y.value();
+    grid_size[0] = sld_X.value() / zoom;
+    grid_size[1] = sld_Y.value() / zoom;
 
-    offset[0] = sld_OSX.value();
-    offset[1] = sld_OSY.value();
+    offset[0] = map(sld_OSX.value(), 0, 200, -1, 1);
+    offset[1] = map(sld_OSY.value(), 0, 200, -1, 1);
 
 }
+
+function change_tool(){
+    tool = cmbTool.value();
+}
+
 
 
 function show_grid(){
 
-    let x = grid_pos[0] + offset[0];
-    let y = grid_pos[1] + offset[1];
-    let w = grid_pos[2] ;
-    let h = grid_pos[3] ;
+    let x = border + (grid_pos[0] * zoom) + (cel[0] * offset[0]) ;//+ offset[0];
+    let y = header + (grid_pos[1] * zoom) + (cel[1] * offset[1]);//+ offset[1];
+    let w = grid_pos[2] * zoom;
+    let h = grid_pos[3] * zoom;
 
-    for(let i= x; i< x+w; i+= grid_size[0]){
+    cel[0] = grid_size[0] * zoom;
+    cel[1] = grid_size[1] * zoom;
+
+
+    for(let i= x; i< x+w; i+= cel[0]){
       line(i,y,i,y+h);
     }
 
-    for(let i= y; i< y+h; i+= grid_size[1]){
+    for(let i= y; i< y+h; i+= cel[1]){
       line(x,i,x+w,i);
     }
 

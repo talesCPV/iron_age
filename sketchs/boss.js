@@ -535,3 +535,50 @@ Dragon.prototype.atack = function(){
     pop();	
 
 }
+
+
+function farao(){
+    boss.push(new Farao(width - 200,height - 200));
+}
+
+class Farao extends Boss{
+	constructor(x,y){
+		super(x,y);
+        this.name = ["farao_01","farao_02","farao_03"];
+        this.weak = [1,8];
+		this.not_effect = [2];
+        this.hitbox = [en_sprites.boss[this.name[0]].x * pixel * 2, en_sprites.boss[this.name[0]].y * pixel * 2];
+        this.count = 0;
+        this.index = 0;
+        this.c_shot = 0;
+	}
+}
+
+Farao.prototype.atack = function(N){
+	this.count ++;
+
+	if(this.count == 20){
+		this.index = 1;
+		foice(this.x-width,this.y-200);
+	}else if(this.count == 25){
+		this.index = 2;
+	}else if(this.count == 30){
+		this.index = 0;
+		this.count = 0;
+		this.c_shot ++;
+	}
+
+
+	if(this.c_shot == 8){
+		scorpion(-300);
+		beetle();
+		this.c_shot = 0
+	}
+//	this.draw_background();
+
+    push();
+    translate(this.x, this.y);
+    scale(this.size);
+    draw_sprite(0,0,en_sprites.boss[this.name[this.index]]);
+    pop();
+}

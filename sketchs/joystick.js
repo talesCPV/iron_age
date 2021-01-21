@@ -159,7 +159,7 @@ function keyPressed() {
                     }
                 }else if( sel_opt[0] == 0 && sel_opt[1] == 2 ){ // ACES HIGH
                     if(!defeat[5]){ 
-                        alert("Aces High");
+                        start_stage(9);
                     }
                 }else if( sel_opt[0] == 1 && sel_opt[1] == 2 ){ // HALLOWED BE THY NAME
                     if(!defeat[6]){ 

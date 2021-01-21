@@ -36,8 +36,8 @@ Player.prototype.move = function (x,y) {
     if(this.y < 50){ // borda superior
       this.y = 50;
     }
-    if(this.y > height - 100){ // borda inferior
-      this.y = height - 100;
+    if(this.y > height - 50){ // borda inferior
+      this.y = height - 50;
     }
 
   }

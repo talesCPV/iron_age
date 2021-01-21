@@ -81,5 +81,34 @@ function draw() {
     background(back_color);
     fill(255);   
     stage_select(stage);
-    
+
+    save_memory();
+}
+
+function save_memory(){
+
+    let max_enemy = 20;
+    let max_shoting = 20;
+    let max_special = 20;
+    let max_itens = 5;
+    let max_scene = 20;
+    let max_bg = 10;
+    let max_boss = 1;
+
+
+    if(enemy.length > max_enemy){ enemy.splice(max_enemy,1); }
+
+    if(shooting.length > max_shoting){ shooting.splice(max_shoting,1); }
+
+    if(special.length > max_special){ special.splice(max_special,1); }
+
+    if(itens.length > max_itens){ itens.splice(max_itens,1); }
+
+    if(scene.length > max_scene){ scene.splice(max_scene,1); }
+
+    if(scene_bk.length > max_bg){ scene_bk.splice(max_bg,1); }
+
+    if(boss.length > max_boss){ boss.splice(max_boss,1); }
+
+
 }

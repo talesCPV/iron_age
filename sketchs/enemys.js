@@ -39,6 +39,7 @@ class Enemy{
         this.pivot = [1,1];
         this.scale = [1,1];
         this.count = 0;
+        this.speed = 5;
     }
 }
 
@@ -301,7 +302,11 @@ class Walker extends Enemy{
 
 Walker.prototype.move = function(N){
     this.count ++;
-    this.x -= scene_speed;
+    if(stage == 7){
+        this.x -= scene_speed/2;
+    }else{
+        this.x -= scene_speed;
+    }
 
     if(this.count == 20 || this.count == 60){
         this.name = "walker_02";
@@ -882,8 +887,132 @@ Phenix.prototype.move = function(N){
         this.x -= this.speed;
     }
 
+    push();
+    translate(this.x, this.y);
+    scale(this.scale);
+    draw_sprite(0,0,en_sprites.enemys[this.name[this.index]]);
+    pop();
 
 
+    if(this.x <= -100 || this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+        enemy.splice(N,1);
+    
+    }
+}
+
+function foice(x,y){
+    enemy.push(new Foice(x, y));
+}
+
+class Foice extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.speed = 25;
+        this.name = "foice";
+        this.angle = 0;
+        this.energy = 10;
+        this.fall = false;
+        this.side = random(0,2);
+        this.hitbox = [en_sprites.shoot[this.name].x * pixel, en_sprites.shoot[this.name].y * pixel];
+
+        let vet = Math.abs(x - player.x) + Math.abs(y - player.y)
+
+        this.offset_x = (player.x - this.x ) / vet;
+        this.offset_y = (this.y - player.y) / vet;
+        this.scale = [2,2];
+
+    }
+}
+
+Foice.prototype.move = function(N){
+    this.count++;
+
+
+    this.y -=  this.speed * this.offset_y;
+    this.x += this.speed * this.offset_x;
+    this.angle += 1;
+
+    if(this.angle > 360){
+        this.angle = 0;
+    }
+
+
+    push();
+    translate(this.x, this.y);
+    rotate(this.angle);
+    scale(this.scale);
+    draw_sprite(0,0,en_sprites.shoot[this.name]);
+    pop();
+
+
+    if(this.x <= -100 || this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+        enemy.splice(N,1);
+    
+    }
+
+}
+
+function scorpion(n=-100){
+    enemy.push(new Scorpion(n, height + 50));
+}
+
+class Scorpion extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.name = ["scorpion_01","scorpion_02","scorpion_03","scorpion_04"];
+        this.index = 0;
+        this.value = 500;
+        this.energy = 5;
+        this.power = 20;
+        this.speed = 30;
+        this.width = en_sprites.enemys[this.name[1]].x;
+        this.height = en_sprites.enemys[this.name[1]].y;
+        this.hitbox = [this.width * pixel * this.scale[0] , this.height * pixel * this.scale[1]];
+
+    }
+}
+
+Scorpion.prototype.move = function(N){
+    this.count++;
+    
+
+    this.x -= scene_speed ;
+
+    if(this.count < 3){
+        this.index = 0;
+    }else if(this.count < 4){
+        this.index = 1;
+    }else if(this.count < 5){
+        this.index = 2;
+    }else if(this.count < 6){
+        this.index = 1;
+    }else if(this.count == 6){
+        this.count = 0;
+    }
+
+    if(this.y > 550){        
+        this.y -= 1;
+        this.index = 3;
+        if(this.y %3 == 0){
+            this.scale[0] *= -1;
+        }
+    }else{
+        this.scale[0] = 1;
+  
+
+        if(this.x %50 == 0){
+            enemy.push(new Boss_Fire(this.x,this.y));
+        }       
+         
+    }
 
     push();
     translate(this.x, this.y);
@@ -900,4 +1029,64 @@ Phenix.prototype.move = function(N){
         enemy.splice(N,1);
     
     }
+}
+
+function beetle(){
+    enemy.push(new Beetle(50, 300));
+}
+
+class Beetle extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.value = 100;
+        this.energy = 8;
+        this.index = 0;
+        this.power = 25;
+        this.name = ["bug_01","bug_02"];
+        this.width = en_sprites.enemys[this.name[1]].x;
+        this.height = en_sprites.enemys[this.name[1]].y;
+        this.hitbox = [this.width * pixel , this.height * pixel ];
+        this.speed_anim = 3;
+        this.speed = 1.5;
+
+    }
+}
+
+
+Beetle.prototype.move = function(N){
+    this.count++;
+
+
+    if( player.x < this.x){
+        this.x -= this.speed;
+    }else{
+        this.x += this.speed;        
+    }
+
+    if( player.y < this.y){
+        this.y -= this.speed;
+    }else{
+        this.y += this.speed;        
+    }
+
+    if(this.count == this.speed_anim){
+        this.index = 1;
+    }else if(this.count == (this.speed_anim * 2) ){
+        this.index = 0;
+        this.count = 0;
+    }
+
+
+    draw_sprite(this.x,this.y,en_sprites.enemys[this.name[this.index]]);
+
+
+    if(this.x < 0 ||this.x > width+100 ||this.y < 0 ||this.y > height ||  this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+        enemy.splice(N,1);
+    
+    }
+
 }

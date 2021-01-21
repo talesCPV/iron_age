@@ -571,6 +571,7 @@ Farao.prototype.atack = function(N){
 
 	if(this.c_shot == 8){
 		scorpion(-300);
+		beetle();
 		this.c_shot = 0
 	}
 //	this.draw_background();

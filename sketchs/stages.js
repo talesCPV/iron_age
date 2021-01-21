@@ -464,12 +464,12 @@ function stage_select(sel_stage){
                 if(time < stage_percent){
             time = stage_percent;
             if(time == 1){
-                scorpion();
+                new_moais();
 //                new_walker();
             }else if(time == 3){
-                scorpion();
+                beetle();
             }else if(time == 4){
-                scorpion();
+                beetle();
             }else if(time == 5){
                 farao();
 
@@ -783,6 +783,17 @@ function stage_select(sel_stage){
             }else if(time == 97){
             }else if(time == 98){
                 dragon();
+            }
+        }
+
+        draw_screen();
+    }else if(sel_stage == 9){ // ACES HIGH
+
+        stage_percent = Math.floor(timer[0]/stage_length*100) ;
+        if(time < stage_percent){
+            time = stage_percent;
+            if(time == 1){
+
             }
         }
 
@@ -1523,6 +1534,10 @@ function start_stage(N){
             enemy[enemy.length-1].fill();
             hell_fire("down");
             enemy[enemy.length-1].fill();
+        }else if(N == 9){ // ACES HIGH
+            back_color = [59,130,173];
+            letter_color = [0];
+            song = loadSound('assets/music/Aces.mp3');
         }else if(N == 10){ // HALLOWED BE THU NAME
             back_color = [0,0,0];
             letter_color = [255];

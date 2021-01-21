@@ -1,5 +1,5 @@
 let screen = [1200,800];
-let header = 150;
+let header = 200;
 let grid = 34;
 let grid_size = [25,10]
 let my_draw = [];
@@ -13,12 +13,19 @@ let copy = [[0,0],[0,0]];
 let copy_mem = [];
 let cp_click = false;
 let count = 0;
+let bank_sel = 0;
+let bank_color = [];
+let bank_size = 15;
 
 function setup() {
     createCanvas(screen[0], screen[1]);
     frameRate(6)
     textSize(15);
     stroke(255);
+
+    for(let i=0;i<bank_size;i++){
+      bank_color.push([0,0,0]);
+    }
 
     btnNew = createButton('New');
     btnNew.position(25, 15);
@@ -30,7 +37,7 @@ function setup() {
 //    sld_tool = createSlider(0, 1, 0);
 //    sld_tool.position(110, 90);
     cmbTool = createSelect();
-    cmbTool.position(110, 90);
+    cmbTool.position(120, 90);
     cmbTool.option('BRUSH');
     cmbTool.option('POINT');
     cmbTool.option('LINE');
@@ -41,10 +48,13 @@ function setup() {
 
     sld_R = createSlider(0, 255, 50);
     sld_R.position(270, 10);
+    sld_R.input(update_color);
     sld_G = createSlider(0, 255, 50);
     sld_G.position(270, 35);
+    sld_G.input(update_color);
     sld_B = createSlider(0, 255, 50);
     sld_B.position(270, 60);
+    sld_B.input(update_color);
 
     sld_X = createSlider(1, 150, grid_size[0]);
     sld_X.position(560, 10);
@@ -54,12 +64,14 @@ function setup() {
     sld_Z.position(560, 60);
 
     input = createFileInput(open_file);
-    input.position(790, 17);
+    input.position(800, 17);
+
     edtName = createInput();
-    edtName.position(790, 50);
+    edtName.position(800, 50);
     edtName.elt.value = "object_name";
+    edtName.size(170);
     cmbPivot = createSelect();
-    cmbPivot.position(790, 90);
+    cmbPivot.position(800, 90);
     cmbPivot.option('X Left   | Y Top');
     cmbPivot.option('X Center | Y Top');
     cmbPivot.option('X Rigth  | Y Top');
@@ -72,14 +84,20 @@ function setup() {
     cmbPivot.selected('X Center | Y Center');
     cmbPivot.changed(change_pivot);
 
+    edtRGB = createInput();
+    edtRGB.position(270, 90);
+    edtRGB.size(120);
+    edtRGB.elt.value = sld_R.value()+","+sld_G.value()+","+sld_B.value();
+    edtRGB.changed(apply_color);
+
     btnFlipX = createButton('Flip X');
-    btnFlipX.position(300, 90);
+    btnFlipX.position(400, 90);
     btnFlipX.mousePressed(flip_x);
     btnFlipY = createButton('Flip Y');
-    btnFlipY.position(400, 90);
+    btnFlipY.position(500, 90);
     btnFlipY.mousePressed(flip_y);
     btnUnod = createButton('Undo');
-    btnUnod.position(500, 90);
+    btnUnod.position(600, 90);
     btnUnod.mousePressed(restore_undo);
 
     fill(100);
@@ -106,6 +124,8 @@ function draw() {
           sld_R.elt.value = my_draw[x][y][0];
           sld_G.elt.value = my_draw[x][y][1];
           sld_B.elt.value = my_draw[x][y][2];
+          update_color();
+          
         }
       }else if(mouseX  >= 175 && mouseX <= 230 && mouseY >= 10 && mouseY <= 55){
         bg_color = color;
@@ -135,6 +155,8 @@ function draw() {
         cmbTool.selected("COPY");
       }
     }
+
+    bank();
 
 }
 
@@ -206,6 +228,28 @@ function mousePressed() { // only once on click
         }
       }
     }    
+  }else{
+
+    if(mouseY >= 130 && mouseY <= 180){
+
+      for(let i=0; i<bank_color.length; i++){
+        if(mouseX  >= 60*i+20 && mouseX < 60*i+70){
+
+          sld_R.elt.value = bank_color[i][0];
+          sld_G.elt.value = bank_color[i][1];
+          sld_B.elt.value = bank_color[i][2];
+
+          update_color();
+
+          bank_sel = i;
+        }
+      }
+
+    }
+
+
+
+
   }
 }
 
@@ -213,25 +257,29 @@ function draw_header(){ // monta o cabeçalho com as ferramentas
     const r = sld_R.value();
     const g = sld_G.value();
     const b = sld_B.value();
+    const rgb = edtRGB.value();
+
     color = [r,g,b];
     grid = sld_Z.value();
+
+
     fill(0, 102, 153);
     noStroke();
     text('R', 240, 17);
     text('G', 240, 42);
     text('B', 240, 67);
-    text(r, 430, 17);
-    text(g, 430, 42);
-    text(b, 430, 67);
-    text(tool, 110, 75);
+//    text(r, 430, 17);
+//    text(g, 430, 42);
+//    text(b, 430, 67);
+    text("COLOR", 110, 75);
     text("BCKGD", 175, 75);
-    text("TOOL", 30, 100);
+
     text("GRID X "+sld_X.value(), 460, 17);
     text("GRID Y "+sld_Y.value(), 460, 42);
     text("ZOOM "+sld_Z.value(), 460, 67);
-    text("Open:", 725, 32);
-    text("Name:", 725, 75);
-    text("Pivot:", 730, 108);
+    text("Open:", 735, 32);
+    text("Name:", 735, 65);
+    text("Pivot:", 735, 105);
     fill(color)
     stroke(150);
     rect(110,10, 55,45)
@@ -522,6 +570,33 @@ function flip_y(){
   }
 }
 
+function apply_color(){
+
+    let rgb = edtRGB.value();
+    rgb = rgb.split(",");
+
+    if(rgb.length == 3){
+      sld_R.elt.value = rgb[0];
+      sld_G.elt.value = rgb[1];
+      sld_B.elt.value = rgb[2];
+    }else if(rgb.length == 1){
+      sld_R.elt.value = rgb[0];
+      sld_G.elt.value = rgb[0];
+      sld_B.elt.value = rgb[0];
+    }
+
+  bank_color[bank_sel] = [sld_R.value(),sld_G.value(),sld_B.value()];
+  bank_sel++;
+  if(bank_sel == bank_color.length){
+    bank_sel = 0;
+  }
+
+}
+
+function update_color(){
+  edtRGB.elt.value = sld_R.value()+","+sld_G.value()+","+sld_B.value();
+}
+
 function add_undo(){
 //  if(my_draw.length > 0){
     let copy_draw =[];
@@ -629,4 +704,18 @@ function draw_line(){
 
   my_draw[x2][y2] = color;
   
+}
+
+function bank(){
+
+  for(let i=0; i<bank_color.length; i++){
+  
+    if(i == bank_sel){
+      fill(0);
+    rect(60*i + 15,125,60,60);      
+    }    
+    fill(bank_color[i]);    
+    rect(60*i + 20,130,50,50);
+  }
+
 }

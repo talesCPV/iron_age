@@ -39,6 +39,7 @@ class Enemy{
         this.pivot = [1,1];
         this.scale = [1,1];
         this.count = 0;
+        this.speed = 5;
     }
 }
 
@@ -910,7 +911,7 @@ function foice(x,y){
 class Foice extends Enemy{
     constructor(x,y){
         super(x,y);
-        this.speed = 15
+        this.speed = 25;
         this.name = "foice";
         this.angle = 0;
         this.energy = 10;
@@ -920,8 +921,8 @@ class Foice extends Enemy{
 
         let vet = Math.abs(x - player.x) + Math.abs(y - player.y)
 
-        this.offset_x = (x - player.x) / vet;
-        this.offset_y = (y - player.y) / vet;
+        this.offset_x = (player.x - this.x ) / vet;
+        this.offset_y = (this.y - player.y) / vet;
         this.scale = [2,2];
 
     }
@@ -929,9 +930,11 @@ class Foice extends Enemy{
 
 Foice.prototype.move = function(N){
     this.count++;
+
+
     this.y -=  this.speed * this.offset_y;
     this.x += this.speed * this.offset_x;
-    this.angle += 0.5;
+    this.angle += 1;
 
     if(this.angle > 360){
         this.angle = 0;
@@ -1026,4 +1029,64 @@ Scorpion.prototype.move = function(N){
         enemy.splice(N,1);
     
     }
+}
+
+function beetle(){
+    enemy.push(new Beetle(50, 300));
+}
+
+class Beetle extends Enemy{
+    constructor(x,y){
+        super(x,y);
+        this.value = 100;
+        this.energy = 8;
+        this.index = 0;
+        this.power = 25;
+        this.name = ["bug_01","bug_02"];
+        this.width = en_sprites.enemys[this.name[1]].x;
+        this.height = en_sprites.enemys[this.name[1]].y;
+        this.hitbox = [this.width * pixel , this.height * pixel ];
+        this.speed_anim = 3;
+        this.speed = 1.5;
+
+    }
+}
+
+
+Beetle.prototype.move = function(N){
+    this.count++;
+
+
+    if( player.x < this.x){
+        this.x -= this.speed;
+    }else{
+        this.x += this.speed;        
+    }
+
+    if( player.y < this.y){
+        this.y -= this.speed;
+    }else{
+        this.y += this.speed;        
+    }
+
+    if(this.count == this.speed_anim){
+        this.index = 1;
+    }else if(this.count == (this.speed_anim * 2) ){
+        this.index = 0;
+        this.count = 0;
+    }
+
+
+    draw_sprite(this.x,this.y,en_sprites.enemys[this.name[this.index]]);
+
+
+    if(this.x < 0 ||this.x > width+100 ||this.y < 0 ||this.y > height ||  this.energy <= 0){
+        if(this.energy <= 0){
+            score += this.value;
+            sort_item(this.x,this.y,90);
+        }
+        enemy.splice(N,1);
+    
+    }
+
 }

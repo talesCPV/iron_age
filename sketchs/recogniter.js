@@ -151,12 +151,15 @@ function mousePressed() { // only once on click
         // click dentro do grid
         if(mouseX >= x && mouseX <= x+w && mouseY >= y && mouseY <= mouseY + h){
 
+          let size = [cel_size[0] * zoom, cel_size[1] * zoom];
 
-          let cel_x = Math.floor(map((mouseX), 0, x+w, 0, grid_size[0]));
-          let cel_y = Math.floor(map((mouseY), 0, y+h, 0, grid_size[1]));
+          let cel_x = Math.floor((mouseX - x) / size[0] );
+          let cel_y = Math.floor((mouseY - y) / size[1] );
 
-//          alert([cel_x,cel_y]);
-          alert([mouseX, x, w, x+w]);
+          getCelColor([cel_x,cel_y]);
+
+//            console.log(get(mouseX, mouseY));
+
 
         }
 
@@ -286,7 +289,6 @@ function change_tool(){
 }
 
 
-
 function show_grid(){
 
     let x = border + (grid_pos[0] * zoom) + (cel_size[0] * offset[0]) ;//+ offset[0];
@@ -304,3 +306,84 @@ function show_grid(){
     }
 
 }   
+
+
+function getCelColor(cel){
+        
+    let range_pt = 30; // maximo aceito p/ soma dos pt_color (distancia maxima da cor comparada)
+    let range_cl = 80; // % minima da cor escolhida dentro das encontradas
+
+    let size = [cel_size[0] * zoom, cel_size[1] * zoom];
+    let x = (border + (grid_pos[0] * zoom) + (cel_size[0] * offset[0])) + cel[0] * size[0] ;
+    let y = (header + (grid_pos[1] * zoom) + (cel_size[1] * offset[1])) + cel[1] * size[1] ;
+
+    let colors = [];
+
+    function addColor(rgb){
+        let find = false;
+
+        for(let i=0; i<colors.length; i++){
+
+            let pt_color = 0;
+            pt_color += Math.abs(colors[i].color[0] - rgb[0]);
+            pt_color += Math.abs(colors[i].color[1] - rgb[1]);
+            pt_color += Math.abs(colors[i].color[2] - rgb[2]);
+
+//            alert(pt_color);
+
+            if(pt_color <= range_pt){
+                find = true;
+                colors[i].cont ++;
+            }
+        }
+        if(!find){
+
+            let color = new Object();
+            color.color = [rgb[0],rgb[1],rgb[2]]
+            color.cont = 1;
+
+            colors.push(color);
+        }
+
+    }
+
+
+/*
+    fill(255,255,0);
+    rect( x  , y , size[0] , size[1]);
+    noFill();
+*/
+    console.clear();
+    let tot = 0;
+
+
+    for(let i=x+1; i<x+size[0];i++){
+        for(let j=y+1; j<y+size[1];j++){
+            
+            addColor(get(i, j))
+            tot++;
+        }
+    }
+
+    console.log(colors);
+
+    let great_colors = [];
+    let percent = 0;
+    let sel_color = [0,0,0];
+
+    while(percent <= range_cl){
+    let max = 0;
+        for(let i=0; i<colors.length; i++){
+            if(colors[i].cont > max && !great_colors.includes(i)){
+                max = i;
+            }
+        }
+        great_colors.push(i);
+        percent += (colors[i].cont/tot) * 100;
+
+    }
+
+
+
+
+}

@@ -18,10 +18,10 @@ let border = 100;
 
 let img;
 let zoom = 1;
-let grid_size = [20,20];
+let cel_size = [20,20];
+let grid_size = [0,0];
 let grid_pos = [0,0,0,0];
 let offset = [0,0];
-let cel = [50,50];
 let tool = 1;
 
 
@@ -44,6 +44,7 @@ function setup() {
     cmbTool.position(120, 90);
     cmbTool.option('SELECT');
     cmbTool.option('MOVE');
+    cmbTool.option('CEL');
     cmbTool.changed(change_tool);
 
 
@@ -134,11 +135,33 @@ function mousePressed() { // only once on click
     let img_w = img.width*zoom;
     let img_h = img.height*zoom;
 
+    // click dentro da imagem
     if(mouseY > header  && mouseY < header + img_h && mouseX > 50 && mouseX < 50 + img_w && mouseButton === LEFT){
       
-//      alert("dentro da imagem");
+      if(tool == "SELECT" || tool == "MOVE"){
         grid_pos[0] = (mouseX - border) / zoom;//- border;
-        grid_pos[1] = (mouseY - header) / zoom;//- header;
+        grid_pos[1] = (mouseY - header) / zoom;//- header;        
+      }else if(tool == "CEL"){
+
+        let x = border + (grid_pos[0] * zoom) + (cel_size[0] * offset[0]) ;//+ offset[0];
+        let y = header + (grid_pos[1] * zoom) + (cel_size[1] * offset[1]);//+ offset[1];
+        let w = grid_pos[2] * zoom;
+        let h = grid_pos[3] * zoom;
+
+        // click dentro do grid
+        if(mouseX >= x && mouseX <= x+w && mouseY >= y && mouseY <= mouseY + h){
+
+
+          let cel_x = Math.floor(map((mouseX), 0, x+w, 0, grid_size[0]));
+          let cel_y = Math.floor(map((mouseY), 0, y+h, 0, grid_size[1]));
+
+//          alert([cel_x,cel_y]);
+          alert([mouseX, x, w, x+w]);
+
+        }
+
+
+      }
 
     }
 
@@ -159,6 +182,8 @@ function mouseStillPressed(){
             sld_OSX.elt.value = 100;
             sld_OSY.elt.value = 100;
             offset = [0,0];
+            grid_size[0] = Math.ceil(grid_pos[2] / cel_size[0]);
+            grid_size[1] = Math.ceil(grid_pos[3] / cel_size[1]);
         }
     }
 }
@@ -174,8 +199,8 @@ function draw_header(){ // monta o cabeçalho com as ferramentas
     text("COLOR", 110, 75);
     text("BCKGD", 175, 75);
 
-    text("GRID X "+sld_X.value(), 460, 17);
-    text("GRID Y "+sld_Y.value(), 460, 42);
+    text("GRID X "+grid_size[0], 460, 17);
+    text("GRID Y "+grid_size[1], 460, 42);
     text("ZOOM "+sld_Z.value(), 460, 67);
     text("Open:", 735, 32);
     text("Name:", 735, 65);
@@ -196,7 +221,14 @@ function open_file(file) {
 
     img = createImg(file.data, (result) =>{ // PROMISSE
  
-        grid_pos = [border,header,img.width,img.height];
+        grid_pos = [0,0,img.width,img.height];
+        sld_OSX.elt.value = 100;
+        sld_OSY.elt.value = 100;
+        sld_Z.elt.value = 0;
+        offset = [0,0];
+       
+        grid_size[0] = Math.ceil(grid_pos[2] / cel_size[0]);
+        grid_size[1] = Math.ceil(grid_pos[3] / cel_size[1]);
 
     }); 
 
@@ -238,11 +270,14 @@ function change_zoom(){
 }
 
 function change_grid(){
-    grid_size[0] = sld_X.value() / zoom;
-    grid_size[1] = sld_Y.value() / zoom;
+    cel_size[0] = sld_X.value() / zoom;
+    cel_size[1] = sld_Y.value() / zoom;
 
     offset[0] = map(sld_OSX.value(), 0, 200, -1, 1);
     offset[1] = map(sld_OSY.value(), 0, 200, -1, 1);
+
+    grid_size[0] = Math.ceil(grid_pos[2] / cel_size[0]);
+    grid_size[1] = Math.ceil(grid_pos[3] / cel_size[1]);
 
 }
 
@@ -254,20 +289,17 @@ function change_tool(){
 
 function show_grid(){
 
-    let x = border + (grid_pos[0] * zoom) + (cel[0] * offset[0]) ;//+ offset[0];
-    let y = header + (grid_pos[1] * zoom) + (cel[1] * offset[1]);//+ offset[1];
+    let x = border + (grid_pos[0] * zoom) + (cel_size[0] * offset[0]) ;//+ offset[0];
+    let y = header + (grid_pos[1] * zoom) + (cel_size[1] * offset[1]);//+ offset[1];
     let w = grid_pos[2] * zoom;
     let h = grid_pos[3] * zoom;
 
-    cel[0] = grid_size[0] * zoom;
-    cel[1] = grid_size[1] * zoom;
 
-
-    for(let i= x; i< x+w; i+= cel[0]){
+    for(let i= x; i< x+w; i+= cel_size[0] * zoom){
       line(i,y,i,y+h);
     }
 
-    for(let i= y; i< y+h; i+= cel[1]){
+    for(let i= y; i< y+h; i+= cel_size[1] * zoom){
       line(x,i,x+w,i);
     }
 
